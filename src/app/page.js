@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import Services from "@/components/Services/Services";
 import landingpageImage from "../../public/landingpageImage.svg";
 import Image from "next/image";
 
@@ -20,11 +18,11 @@ export default function Example() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
                 href="http://localhost:3000/api/auth/signin"
-                className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-main-light"
               >
                 Get started
               </a>
-              <a href="#" className="text-sm/6 font-semibold text-gray-900">
+              <a href="#" className="text-sm/6 hover:text-main font-semibold text-gray-900">
                 Learn more <span aria-hidden="true">→</span>
               </a>
             </div>
@@ -33,7 +31,10 @@ export default function Example() {
             <Image src={landingpageImage} alt="open working on laptop" />
           </div>
         </div>
+       
       </div>
+
+      <Services/>
     </div>
   );
 }
