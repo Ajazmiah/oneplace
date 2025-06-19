@@ -5,9 +5,9 @@ import Image from "next/image";
 export default function Example() {
   return (
     <div className="bg-white">
-      <div className="relative isolate px-6 pt-14 lg:px-6">
+      <div className="relative isolate px-6 pt-10 lg:px-6">
         {/* Main content */}
-        <div className="block md:flex gap-[4em] justify-around  items-center mx-auto md:w-[70%] md:min-w-[800px] py-32 sm:py-48 lg:py-56">
+        <div className="block md:flex gap-[4em] justify-around  items-center mx-auto md:w-[80%] md:min-w-[800px] py-30 sm:py-48 lg:py-30">
           <div className="text-center">
             <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">
               Track your job applications
