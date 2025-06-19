@@ -1,6 +1,6 @@
 import React from "react";
 
-function Heading({ text, size = 1, classes,noTrim }) {
+function Heading({ text, size = 1, classes, noTrim }) {
   if (!text) return;
 
   const HeadingTag = `h${size}`;
@@ -19,12 +19,6 @@ function Heading({ text, size = 1, classes,noTrim }) {
       </HeadingTag>
     );
   }
-
-  //   const headingSizes = {
-  //     1: <h1>{textWithLineBreak}</h1>,
-  //     2: <h2>{textWithLineBreak}</h2>,
-  //     3: <h3>{textWithLineBreak}</h3>,
-  //   };
 
   return textWithLineBreak;
 }

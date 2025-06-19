@@ -25,6 +25,12 @@ export default function RootLayout({ children }) {
       >
         <Header />
         {children}
+
+        <footer>
+         <section className="p-20 bg-[green]">
+          THIS IS THE FOOTER
+         </section>
+        </footer>
       </body>
     </html>
   );

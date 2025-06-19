@@ -20,6 +20,8 @@
   --color-gray-dark: #b7b7b7;
 }
 
+
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #ffffff;
