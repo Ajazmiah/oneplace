@@ -12,7 +12,7 @@ function Services() {
           <div className="">
             <Heading
               classes="text-[2em] md:text-[4em] text-main pb-10 font-extrabold md:w-[60%]"
-              text="Upload resume and cover letter"
+              text="Watch how it works"
               noTrim
               size={2}
             />
