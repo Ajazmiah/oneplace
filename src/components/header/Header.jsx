@@ -1,4 +1,4 @@
-"use server";
+
 import React from "react";
 import { auth } from "../../auth"
 
@@ -25,8 +25,9 @@ async function header() {
 
   const navigation =  session?.user ? loggedInNavigation : loggedOutNavigation
 
+
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    <header className="sticky inset-x-0 top-0 z-50 transition-colors duration-300 bg-main">
       <Navigation navigation={navigation} session={session} />
     </header>
   );
