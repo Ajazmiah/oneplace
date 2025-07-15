@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Form from '@/components/Form/form'
 import {
   Select,
   SelectContent,
@@ -11,7 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Search, ExternalLink } from "lucide-react";
+import { Search, ExternalLink,PlusCircle, FileText } from "lucide-react";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 const applications = [
   {
@@ -63,17 +65,7 @@ export default function JobApplicationsPage() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r p-6 space-y-6">
-        <div className="text-xl font-semibold">JobTracker</div>
-        <nav className="space-y-3">
-          <Button variant="secondary" className="w-full justify-start">
-            My Applications
-          </Button>
-          <Button variant="ghost" className="w-full justify-start">
-            + Add Application
-          </Button>
-        </nav>
-      </aside>
+      <Sidebar />
 
       {/* Main Content */}
       <main className="flex-1 p-8 space-y-6  max-w-[1460px] mx-auto">
@@ -176,6 +168,8 @@ export default function JobApplicationsPage() {
           ))}
         </div>
       </main>
+
+      <Form />
     </div>
   );
 }
