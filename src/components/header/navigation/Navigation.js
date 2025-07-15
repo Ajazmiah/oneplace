@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import LoginButton from "../../UI/LoginButton";
+import LoginButton from "../../ui/LoginButton";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 

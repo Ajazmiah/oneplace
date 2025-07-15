@@ -1,5 +1,5 @@
 import React from "react";
-import Heading from "../UI/Heading";
+import Heading from "../ui/Heading";
 import Image from "next/image";
 import ResumeImg from "../../../public/resume.png";
 import CoverLetterImg from "../../../public/Coverletter.png";
