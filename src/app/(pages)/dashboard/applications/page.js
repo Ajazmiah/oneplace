@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Form from "@/components/Form/form";
+
 import {
   Select,
   SelectContent,
@@ -11,14 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
-import { Search, ExternalLink, PlusCircle, FileText } from "lucide-react";
+
+import { Search, ExternalLink } from "lucide-react";
 import Sidebar from "@/components/Sidebar/Sidebar";
 
 export default function JobApplicationsPage() {
-  const [activeDashboardContent, setActiveDashboardContent] =
-    useState("applications");
   const applications = [
     {
       title: "Senior Frontend Developer",
@@ -121,9 +118,7 @@ export default function JobApplicationsPage() {
           </SelectContent>
         </Select>
         <Button variant="outline">Export CSV</Button>
-        <Button className="bg-blue-600 text-white hover:bg-blue-700">
-          + Add Application
-        </Button>
+
       </div>
 
       {/* Application Table */}
@@ -168,20 +163,5 @@ export default function JobApplicationsPage() {
     </>
   );
 
-  const ACTIVE = {
-    applications: APPLICATIONS,
-    ["add_application"]: <Form />,
-  };
-
-  return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <Sidebar clickHandler={(content) => setActiveDashboardContent(content)} />
-
-      {/* Main Content */}
-      <main className="flex-1 p-8 space-y-6  max-w-[1460px] mx-auto">
-        {ACTIVE[activeDashboardContent]}
-      </main>
-    </div>
-  );
+  return <>{APPLICATIONS}</>;
 }
