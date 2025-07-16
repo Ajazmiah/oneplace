@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +11,7 @@ import {
 } from "@/components/ui/select";
 
 import { Search, ExternalLink } from "lucide-react";
-import Sidebar from "@/components/Sidebar/Sidebar";
+
 
 export default function JobApplicationsPage() {
   const applications = [
@@ -118,7 +116,6 @@ export default function JobApplicationsPage() {
           </SelectContent>
         </Select>
         <Button variant="outline">Export CSV</Button>
-
       </div>
 
       {/* Application Table */}

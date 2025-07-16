@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { createApplication } from "@/app/actions/application";
 import {
   Select,
   SelectContent,
@@ -12,25 +13,30 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { FileText } from "lucide-react";
 
-
 export default function AddApplicationForm() {
   return (
-    <>
-      <div className="max-w-[760px] mx-auto">
-        <h2 className="text-xl font-semibold border-b pb-5">
-          Application Details
-        </h2>
+    <div className="max-w-[760px] mx-auto">
+      <h2 className="text-xl font-semibold border-b pb-5">
+        Application Details
+      </h2>
 
+      <form action={createApplication}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             required
+            name="jobTitle"
             placeholder="Job Title *"
             defaultValue="Senior Software Engineer"
           />
-          <Input required placeholder="Company *" />
-          <Input placeholder="Location" />
-          <Input type="date" placeholder="Application Date" />
-          <Select>
+          <Input required name="company" placeholder="Company *" />
+          <Input name="location" placeholder="Location" />
+          <Input
+            name="applicationDate"
+            type="date"
+            placeholder="Application Date"
+          />
+
+          <Select name="status">
             <SelectTrigger>
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -41,15 +47,19 @@ export default function AddApplicationForm() {
               <SelectItem value="rejected">Rejected</SelectItem>
             </SelectContent>
           </Select>
+
           <Input
+            name="salaryRange"
             className="md:col-span-2"
             placeholder="Salary Range"
-            //   defaultValue="$80,000 - $120,000"
           />
         </div>
 
         <div className="my-3">
-          <Textarea placeholder="Add any notes about the role, requirements, or interview process..." />
+          <Textarea
+            name="notes"
+            placeholder="Add any notes about the role, requirements, or interview process..."
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -57,15 +67,26 @@ export default function AddApplicationForm() {
             <FileText className="w-6 h-6 mb-2 text-gray-500" />
             <span className="text-sm font-medium">Click to upload resume</span>
             <span className="text-xs text-gray-400">PDF, DOC, DOCX</span>
-            <input type="file" accept=".pdf,.doc,.docx" className="hidden" />
+            <input
+              name="resume"
+              type="file"
+              accept=".pdf,.doc,.docx"
+              className="hidden"
+            />
           </label>
+
           <label className="flex flex-col items-center justify-center border border-dashed border-gray-300 p-6 rounded-lg cursor-pointer text-center">
             <FileText className="w-6 h-6 mb-2 text-gray-500" />
             <span className="text-sm font-medium">
               Click to upload cover letter
             </span>
             <span className="text-xs text-gray-400">PDF, DOC, DOCX</span>
-            <input type="file" accept=".pdf,.doc,.docx" className="hidden" />
+            <input
+              name="coverLetter"
+              type="file"
+              accept=".pdf,.doc,.docx"
+              className="hidden"
+            />
           </label>
         </div>
 
@@ -74,7 +95,7 @@ export default function AddApplicationForm() {
             Save Application
           </Button>
         </div>
-      </div>
-    </>
+      </form>
+    </div>
   );
 }

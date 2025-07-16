@@ -16,16 +16,13 @@ export default function Sidebar({ clickHandler }) {
     ["add-application"]: <PlusCircle className="h-5 w-4" />,
   };
 
-
-
   return (
     <>
       <aside className="w-64 bg-white border-r p-6 space-y-6">
-        <div className="text-xl font-semibold">JobTracker</div>
         <nav className="space-y-3">
           {dashboardNav.map((nav) => (
             <Button
-              variant={pathname.endsWith(nav)? "dashboardActive" : "dashboard"}
+              variant={pathname.endsWith(nav) ? "dashboardActive" : "dashboard"}
               className="w-full justify-start "
             >
               <Link

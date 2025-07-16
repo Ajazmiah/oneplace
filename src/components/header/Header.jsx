@@ -1,16 +1,14 @@
-
 import React from "react";
-import { auth } from "../../auth"
+import { auth } from "../../auth";
 
 import Navigation from "./navigation/Navigation";
 
 async function header() {
-
-  const session = await auth()
+  const session = await auth();
 
   const Allnavigation = [
     { name: "Home", href: "/" },
-    { name: "Profile", href: "#" },
+    { name: "dashboard", href: "/dashboard/applications" },
     { name: "Features", href: "#" },
     { name: "About", href: "/about" },
     { name: "Company", href: "#" },
@@ -23,8 +21,7 @@ async function header() {
     { name: "Company", href: "#" },
   ];
 
-  const navigation =  session?.user ? loggedInNavigation : loggedOutNavigation
-
+  const navigation = session?.user ? loggedInNavigation : loggedOutNavigation;
 
   return (
     <header className="sticky inset-x-0 top-0 z-50 transition-colors duration-300 bg-main">
