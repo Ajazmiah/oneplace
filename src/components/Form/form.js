@@ -12,8 +12,8 @@ import { FileText } from "lucide-react";
 
 export default function AddApplicationForm() {
   return (
-    <div className="bg-white rounded-lg border p-6 space-y-6 max-w-4xl mx-auto mt-10">
-      <h2 className="text-xl font-semibold">Application Details</h2>
+    <div className="max-w-[760px] mx-auto">
+      <h2 className="text-xl font-semibold border-b pb-5">Application Details</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input
@@ -21,9 +21,8 @@ export default function AddApplicationForm() {
           placeholder="Job Title *"
           defaultValue="Senior Software Engineer"
         />
-        <Input required placeholder="Company *" defaultValue="Tech Corp Inc." />
-        <Input required placeholder="Position *" defaultValue="Full-time" />
-        <Input placeholder="Location" defaultValue="San Francisco, CA" />
+        <Input required placeholder="Company *"  />
+        <Input placeholder="Location"/>
         <Input type="date" placeholder="Application Date" />
         <Select>
           <SelectTrigger>
@@ -39,12 +38,12 @@ export default function AddApplicationForm() {
         <Input
           className="md:col-span-2"
           placeholder="Salary Range"
-          defaultValue="$80,000 - $120,000"
+        //   defaultValue="$80,000 - $120,000"
         />
       </div>
 
-      <div>
-        <p className="text-sm font-medium mb-1">Job Description / Notes</p>
+      <div className="my-3">
+    
         <Textarea placeholder="Add any notes about the role, requirements, or interview process..." />
       </div>
 
@@ -65,9 +64,8 @@ export default function AddApplicationForm() {
         </label>
       </div>
 
-      <div className="flex justify-end gap-2">
-        <Button variant="outline">Cancel</Button>
-        <Button className="bg-blue-600 text-white hover:bg-blue-700">
+      <div className="flex justify-end gap-2 my-3">
+        <Button className="bg-main text-white hover:bg-blue-700">
           Save Application
         </Button>
       </div>
