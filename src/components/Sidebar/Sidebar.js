@@ -24,6 +24,7 @@ export default function Sidebar({ clickHandler }) {
             <Button
               variant={pathname.endsWith(nav) ? "dashboardActive" : "dashboard"}
               className="w-full justify-start "
+              key={nav}
             >
               <Link
                 key={nav}

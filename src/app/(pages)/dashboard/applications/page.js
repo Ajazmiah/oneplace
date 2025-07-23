@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,8 +15,11 @@ import {
 
 import { Search, ExternalLink } from "lucide-react";
 
-
 export default function JobApplicationsPage() {
+  const [filteredApplications, setFilteredApplications] = useState([]);
+  const [filterQuery, setFilterQuery] = useState("");
+  console.log("v", filterQuery);
+
   const applications = [
     {
       title: "Senior Frontend Developer",
@@ -52,6 +58,16 @@ export default function JobApplicationsPage() {
       date: "Dec 9",
     },
   ];
+
+  useEffect(() => {
+    setFilteredApplications(
+      applications.filter((application) =>
+        application.title
+          .toLocaleLowerCase()
+          .includes(filterQuery.toLocaleLowerCase())
+      )
+    );
+  }, [filterQuery]);
 
   const statusStyles = {
     interviewing: "bg-yellow-100 text-yellow-800",
@@ -101,7 +117,11 @@ export default function JobApplicationsPage() {
       <div className="flex flex-wrap items-center gap-4">
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
-          <Input placeholder="Search jobs or companies..." className="pl-8" />
+          <Input
+            placeholder="Search jobs or companies..."
+            className="pl-8"
+            onChange={(e) => setFilterQuery(e.target.value)}
+          />
         </div>
         <Select>
           <SelectTrigger className="w-[180px]">
@@ -120,7 +140,7 @@ export default function JobApplicationsPage() {
 
       {/* Application Table */}
       <div className="space-y-2">
-        {applications.map((app, idx) => (
+        {filteredApplications.map((app, idx) => (
           <div
             key={idx}
             className="flex flex-wrap lg:flex-nowrap justify-between items-center bg-white shadow-sm rounded-lg p-4 border"
