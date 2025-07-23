@@ -18,7 +18,7 @@ function Navigation({ navigation, session }) {
       >
         <div className="flex lg:flex-1">
           <a href="#" className="-m-1.5 p-1.5">
-            <span>JobLogs</span>
+            <span>Resumind</span>
           </a>
         </div>
         <div className="flex">

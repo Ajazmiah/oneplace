@@ -25,7 +25,7 @@ export default function Example() {
                   Get started
                 </a>
                 <a
-                  href="#"
+                  href="#services"
                   className="text-sm/6 hover:text-main font-semibold text-gray-900"
                 >
                   Learn more <span aria-hidden="true">→</span>
@@ -38,7 +38,10 @@ export default function Example() {
           </div>
         </div>
       </div>
-      <Services />
+
+      <div id="services">
+        <Services />
+      </div>
     </div>
   );
 }

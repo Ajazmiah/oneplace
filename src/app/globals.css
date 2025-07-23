@@ -14,14 +14,15 @@
   --color-main-light: #0bbcaaab;
 
   /*Gray*/
-  --color-gray:#f2f2f2;
+  --color-gray: #f2f2f2;
   --color-gray-dark: #b7b7b7;
 
-  --width-max: 1120px ;
+  --width-max: 1120px;
 }
-h1,h2{
+h1,
+h2 {
   margin: 0;
-  line-height:90%;
+  line-height: 90%;
 }
 
 @theme inline {
@@ -138,4 +139,8 @@ h1,h2{
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }

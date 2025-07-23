@@ -58,6 +58,33 @@ export default function JobApplicationsPage() {
       status: "rejected",
       date: "Dec 9",
     },
+    {
+      title: "Frontend Engineer",
+      company: "NextGen Solutions",
+      location: "Austin, TX",
+      position: "Full-time",
+      salary: "$110,000 - $140,000",
+      status: "applied",
+      date: "Dec 7",
+    },
+    {
+      title: "Backend Developer",
+      company: "Cloudify",
+      location: "Denver, CO",
+      position: "Remote",
+      salary: "$115,000 - $145,000",
+      status: "interviewing",
+      date: "Dec 5",
+    },
+    {
+      title: "Technical Project Manager",
+      company: "EnterpriseSoft",
+      location: "Chicago, IL",
+      position: "Full-time",
+      salary: "$105,000 - $125,000",
+      status: "rejected",
+      date: "Dec 2",
+    },
   ];
 
   //filter
@@ -72,7 +99,7 @@ export default function JobApplicationsPage() {
       filtered = filtered.filter((application) =>
         application.status.includes(filterByStatus)
       );
-    } 
+    }
     filtered = filtered.filter((application) => {
       if (queryExists(application.title)) {
         return true;
@@ -94,7 +121,6 @@ export default function JobApplicationsPage() {
   const APPLICATIONS = (
     <>
       <div>
-        <h1 className="text-3xl font-bold">Job Applications</h1>
         <p className="text-gray-500">
           Track and manage your job application journey
         </p>
