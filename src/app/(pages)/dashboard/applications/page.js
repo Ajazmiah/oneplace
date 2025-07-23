@@ -18,6 +18,7 @@ import { Search, ExternalLink } from "lucide-react";
 export default function JobApplicationsPage() {
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
+  const [filterByStatus, setFilterByStatus] = useState("all");
   console.log("v", filterQuery);
 
   const applications = [
@@ -59,15 +60,29 @@ export default function JobApplicationsPage() {
     },
   ];
 
+  //filter
   useEffect(() => {
-    setFilteredApplications(
-      applications.filter((application) =>
-        application.title
-          .toLocaleLowerCase()
-          .includes(filterQuery.toLocaleLowerCase())
-      )
-    );
-  }, [filterQuery]);
+    //checks if search query matches the searchFiled
+    const queryExists = (searchFiled) =>
+      searchFiled.toLowerCase().includes(filterQuery.toLowerCase());
+
+    let filtered = [...applications];
+
+    if (filterByStatus.trim() !== "all") {
+      filtered = filtered.filter((application) =>
+        application.status.includes(filterByStatus)
+      );
+    } 
+    filtered = filtered.filter((application) => {
+      if (queryExists(application.title)) {
+        return true;
+      } else if (queryExists(application.company)) {
+        return true;
+      }
+    });
+
+    setFilteredApplications(filtered);
+  }, [filterQuery, filterByStatus]);
 
   const statusStyles = {
     interviewing: "bg-yellow-100 text-yellow-800",
@@ -123,9 +138,9 @@ export default function JobApplicationsPage() {
             onChange={(e) => setFilterQuery(e.target.value)}
           />
         </div>
-        <Select>
+        <Select onValueChange={(value) => setFilterByStatus(value)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="All Status" />
+            <SelectValue placeholder="All" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
