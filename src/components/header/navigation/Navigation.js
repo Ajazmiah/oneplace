@@ -17,8 +17,13 @@ function Navigation({ navigation, session }) {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
-            <span>Resumind</span>
+          <a href="/" className="-m-1.5 p-1.5">
+          <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
+              style={{ backgroundColor: "#0bbcaa" }}
+            >
+              <span className="text-white font-bold text-lg">R</span>
+            </div>
           </a>
         </div>
         <div className="flex">

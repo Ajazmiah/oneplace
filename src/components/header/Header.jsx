@@ -26,7 +26,6 @@ async function header() {
   return (
     <header className="sticky inset-x-0 top-0 z-50 transition-colors duration-300 bg-black">
       <Navigation navigation={navigation} session={session} />
-      <div class="border-t border-gray-700"></div>
     </header>
   );
 }
