@@ -8,7 +8,7 @@ async function header() {
 
   const Allnavigation = [
     { name: "Home", href: "/" },
-    { name: "dashboard", href: "/dashboard/applications" },
+    { name: "Dashboard", href: "/dashboard/applications" },
     { name: "Features", href: "#" },
     { name: "About", href: "/about" },
     { name: "Company", href: "#" },
