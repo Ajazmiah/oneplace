@@ -4,11 +4,14 @@ import React, { useState } from "react";
 import LoginButton from "../../ui/LoginButton";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Dropdown } from "./DropDownMenu";
 
 function Navigation({ navigation, session }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const loggedIn = session?.user || null;
+
+  console.log("SESSION", session);
 
   return (
     <>
@@ -18,7 +21,7 @@ function Navigation({ navigation, session }) {
       >
         <div className="flex lg:flex-1">
           <a href="/" className="-m-1.5 p-1.5">
-          <div
+            <div
               className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
               style={{ backgroundColor: "#0bbcaa" }}
             >
@@ -51,7 +54,15 @@ function Navigation({ navigation, session }) {
           ))}
         </div>
 
-        <LoginButton display="desktop" loggedIn={loggedIn} />
+        {/* <LoginButton display="desktop" loggedIn={loggedIn} /> */}
+
+        <div className="lg:flex lg:flex-1 lg:justify-end">
+          {session ? (
+            <Dropdown loggedIn={loggedIn} session={session} />
+          ) : (
+            <LoginButton display="mobile" loggedIn={loggedIn} />
+          )}
+        </div>
       </nav>
 
       <Dialog
