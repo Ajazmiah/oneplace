@@ -1,5 +1,7 @@
+
 import "../../globals.css";
 import Sidebar from "@/components/Sidebar/Sidebar";
+
 
 export const metadata = {
   title: "Resumind | Dashboard",
