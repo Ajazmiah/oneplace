@@ -37,6 +37,7 @@ export default function SignupPage() {
       setError(result.error);
     } else {
       // redirect or show success
+      console.log("RESULT", result)
       window.location.href = "/signin";
     }
   };

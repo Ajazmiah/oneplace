@@ -30,7 +30,6 @@ export async function signup({ name, email, password }) {
   const user = {
     name,
     email,
-    password: hashedPassword,
   };
 
   return { success: true , user };
