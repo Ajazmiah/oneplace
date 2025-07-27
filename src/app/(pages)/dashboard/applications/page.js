@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,7 +21,7 @@ export default function JobApplicationsPage() {
   const [filterByStatus, setFilterByStatus] = useState("all");
   console.log("v", filterQuery);
 
-  const applications = [
+  const applications = useMemo(() => [
     {
       title: "Senior Frontend Developer",
       company: "TechCorp",
@@ -85,8 +85,26 @@ export default function JobApplicationsPage() {
       status: "rejected",
       date: "Dec 2",
     },
-  ];
+  ], []);
 
+
+  const status = {
+    rejected: 0,
+    interviewing: 0,
+    offer: 0,
+    applied:0
+  }
+
+  const [applicationStatus, setApplicationStatus] = useState(status)
+  useEffect(() => {
+    applications.forEach(application => {
+      setApplicationStatus(prev => ({
+        ...prev,
+        [application.status]: (prev[application.status] || 0) + 1,
+      }));
+    });
+  }, [applications]);
+  
   //filter
   useEffect(() => {
     //checks if search query matches the searchFiled
@@ -130,26 +148,26 @@ export default function JobApplicationsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Total Applications</p>
-            <p className="text-2xl font-bold">4</p>
+            <p className="text-sm text-gray-500">Applied / Number of Application </p>
+            <p className="text-2xl font-bold">{applicationStatus.applied} / {applications.length}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">In Progress</p>
-            <p className="text-2xl font-bold">2</p>
+            <p className="text-sm text-gray-500">Interviewing</p>
+            <p className="text-2xl font-bold">{applicationStatus.interviewing}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-gray-500">Offers Received</p>
-            <p className="text-2xl font-bold">1</p>
+            <p className="text-2xl font-bold">{applicationStatus.offer}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-gray-500">Rejections</p>
-            <p className="text-2xl font-bold">1</p>
+            <p className="text-2xl font-bold">{applicationStatus['rejected']}</p>
           </CardContent>
         </Card>
       </div>
