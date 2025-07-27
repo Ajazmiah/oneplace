@@ -29,7 +29,7 @@ export async function signup({ name, email, password }) {
 
   const user = {
     name,
-    email,
+    email: email
   };
 
   return { success: true , user };
