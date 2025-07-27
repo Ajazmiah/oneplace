@@ -14,6 +14,7 @@ import LoginButton from "@/components/ui/LoginButton";
 export function Dropdown({ loggedIn, session }) {
   const user_name = session.user.name;
   return (
+    <div className="cursor-pointer">
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar session={session} />
@@ -31,10 +32,12 @@ export function Dropdown({ loggedIn, session }) {
         <DropdownMenuItem>GitHub</DropdownMenuItem>
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+       
           <LoginButton display="desktop" loggedIn={loggedIn} />
-        </DropdownMenuItem>
+       
       </DropdownMenuContent>
     </DropdownMenu>
+
+    </div>
   );
 }
