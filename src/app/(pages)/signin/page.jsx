@@ -1,37 +1,37 @@
 // app/auth/page.tsx (Next.js 14+ with App Router)
-'use client'
+"use client";
 import { getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { PlusCircle, FileText } from "lucide-react";
-import {
-  login,
-  logout,
-} from "@/app/lib/actions/authentication/authenticationAction";
+import Link from "next/link";
 
 export default function AuthPage() {
   const [providers, setProviders] = useState(null);
 
   useEffect(() => {
-
     (async () => {
       const res = await getProviders();
       setProviders(res);
-      
     })();
   }, []);
   const providerIcons = {
-    google: '',
-    github:''
-  }
+    google: "",
+    github: "",
+  };
 
-  if(providers)console.log(providers)
+  if (providers) console.log(providers);
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="max-w-md w-full p-8 shadow-xl rounded-2xl border border-gray-100">
-        <h1 className="text-3xl font-bold text-center mb-6 text-[#0bbcaa]">Resumind Login</h1>
+        <h1 className="text-3xl font-bold text-center mb-6 text-[#0bbcaa]">
+          Resumind Login
+        </h1>
 
-        <form method="post" action="/api/auth/callback/credentials" className="space-y-4">
+        <form
+          method="post"
+          action="/api/auth/callback/credentials"
+          className="space-y-4"
+        >
           <input
             name="username"
             type="text"
@@ -68,12 +68,21 @@ export default function AuthPage() {
                     onClick={() => signIn(provider.id)}
                     className="w-full py-3 border rounded-lg hover:bg-gray-50 font-medium"
                   >
-                   {providerIcons[provider.id]} Sign in with {provider.name}
+                    {providerIcons[provider.id]} Sign in with {provider.name}
                   </button>
                 </div>
               );
             })}
         </div>
+        <p className="text-sm text-gray-500 mt-2">
+          Don’t have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-gray-700 hover:text-black font-medium underline"
+          >
+            Sign up
+          </Link>
+        </p>
       </div>
     </main>
   );
