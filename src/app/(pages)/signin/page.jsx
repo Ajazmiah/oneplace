@@ -3,6 +3,10 @@
 import { getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { PlusCircle, FileText } from "lucide-react";
+import {
+  login,
+  logout,
+} from "@/app/lib/actions/authentication/authenticationAction";
 
 export default function AuthPage() {
   const [providers, setProviders] = useState(null);
