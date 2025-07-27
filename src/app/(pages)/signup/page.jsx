@@ -26,6 +26,10 @@ export default function SignupPage() {
       setError("Passwords do not match");
       return;
     }
+    if (!form.email.includes("@")) {
+      setError("Enter a valid email");
+      return;
+    }
 
     const result = await signup({
       name: form.name,
@@ -37,7 +41,7 @@ export default function SignupPage() {
       setError(result.error);
     } else {
       // redirect or show success
-      console.log("RESULT", result)
+      console.log("RESULT", result);
       window.location.href = "/signin";
     }
   };
