@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createApplication } from "@/app/actions/application";
+import { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -14,6 +15,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileText } from "lucide-react";
 
 export default function AddApplicationForm() {
+  const [resume, setResume] = useState(null);
+  const [coverLetter, setCoverLetter] = useState(null);
   const handleFileUpload = (e) => {
     const file = e.target.files[0]; // ✅ Get the first file
 
@@ -30,11 +33,16 @@ export default function AddApplicationForm() {
       "application/msword", // .doc
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
     ];
+     
+    const inputName = e.target.name
 
     if (!allowedTypes.includes(type)) {
       console.log("Invalid file type:", type);
       return;
     }
+
+    if (inputName === "resume") setResume({ type, size, name });
+    else setCoverLetter(type, name, size);
 
     // ✅ Success
     console.log("File is valid:", { name, type, size });
@@ -87,7 +95,7 @@ export default function AddApplicationForm() {
           <label className="flex flex-col items-center justify-center border border-dashed border-gray-300 p-6 rounded-lg cursor-pointer text-center">
             <FileText className="w-6 h-6 mb-2 text-gray-500" />
             <span className="text-sm font-medium">Click to upload resume</span>
-            <span className="text-xs text-gray-400">PDF, DOC, DOCX</span>
+            <span className="text-xs text-gray-400">{resume ? resume.name : 'PDF, DOC, DOCX'}</span>
             <input
               name="resume"
               type="file"
