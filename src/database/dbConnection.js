@@ -26,9 +26,6 @@ export const connectDb = async () => {
 
   try {
     const db = await mongoose.connect(process.env.MONGO_URI, {
-      // ✅ Use the new MongoDB connection string parser (more reliable)
-      useNewUrlParser: true,
-
       // ✅ Use the new unified topology engine (handles connection pooling better)
       useUnifiedTopology: true,
     });
