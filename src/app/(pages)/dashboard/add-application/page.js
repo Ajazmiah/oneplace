@@ -30,11 +30,7 @@ export default function AddApplicationForm() {
           />
           <Input required name="company" placeholder="Company *" />
           <Input name="location" placeholder="Location" />
-          <Input
-            name="applicationDate"
-            type="date"
-            placeholder="Application Date"
-          />
+         
 
           <Select name="status">
             <SelectTrigger>
