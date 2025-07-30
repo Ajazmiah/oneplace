@@ -14,6 +14,32 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileText } from "lucide-react";
 
 export default function AddApplicationForm() {
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0]; // ✅ Get the first file
+
+    if (!file) {
+      console.log("No file selected");
+      return;
+    }
+
+    const { type, size, name } = file;
+
+    // ✅ Optional: check MIME type for PDF or Word
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword", // .doc
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+    ];
+
+    if (!allowedTypes.includes(type)) {
+      console.log("Invalid file type:", type);
+      return;
+    }
+
+    // ✅ Success
+    console.log("File is valid:", { name, type, size });
+  };
+
   return (
     <div className="max-w-[760px] mx-auto">
       <h2 className="text-xl font-semibold border-b pb-5">
@@ -30,7 +56,6 @@ export default function AddApplicationForm() {
           />
           <Input required name="company" placeholder="Company *" />
           <Input name="location" placeholder="Location" />
-         
 
           <Select name="status">
             <SelectTrigger>
@@ -68,6 +93,7 @@ export default function AddApplicationForm() {
               type="file"
               accept=".pdf,.doc,.docx"
               className="hidden"
+              onChange={(e) => handleFileUpload(e)}
             />
           </label>
 
