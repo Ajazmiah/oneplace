@@ -33,8 +33,8 @@ export default function AddApplicationForm() {
       "application/msword", // .doc
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
     ];
-     
-    const inputName = e.target.name
+
+    const inputName = e.target.name;
 
     if (!allowedTypes.includes(type)) {
       console.log("Invalid file type:", type);
@@ -42,11 +42,26 @@ export default function AddApplicationForm() {
     }
 
     if (inputName === "resume") setResume({ type, size, name });
-    else setCoverLetter(type, name, size);
+    else setCoverLetter({type, name, size});
 
     // ✅ Success
     console.log("File is valid:", { name, type, size });
   };
+
+  const fileInputs = [
+    {
+      key: "resume",
+      label: "Click to upload resume",
+      file: resume,
+      onChange: handleFileUpload,
+    },
+    {
+      key: "coverLetter",
+      label: "Click to upload cover letter",
+      file: coverLetter,
+      onChange: handleFileUpload, // or a different handler if needed
+    },
+  ];
 
   return (
     <div className="max-w-[760px] mx-auto">
@@ -92,32 +107,25 @@ export default function AddApplicationForm() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <label className="flex flex-col items-center justify-center border border-dashed border-gray-300 p-6 rounded-lg cursor-pointer text-center">
-            <FileText className="w-6 h-6 mb-2 text-gray-500" />
-            <span className="text-sm font-medium">Click to upload resume</span>
-            <span className="text-xs text-gray-400">{resume ? resume.name : 'PDF, DOC, DOCX'}</span>
-            <input
-              name="resume"
-              type="file"
-              accept=".pdf,.doc,.docx"
-              className="hidden"
-              onChange={(e) => handleFileUpload(e)}
-            />
-          </label>
-
-          <label className="flex flex-col items-center justify-center border border-dashed border-gray-300 p-6 rounded-lg cursor-pointer text-center">
-            <FileText className="w-6 h-6 mb-2 text-gray-500" />
-            <span className="text-sm font-medium">
-              Click to upload cover letter
-            </span>
-            <span className="text-xs text-gray-400">PDF, DOC, DOCX</span>
-            <input
-              name="coverLetter"
-              type="file"
-              accept=".pdf,.doc,.docx"
-              className="hidden"
-            />
-          </label>
+          {fileInputs.map(({ key, label, file, onChange }) => (
+            <label
+              key={key}
+              className="flex flex-col items-center justify-center border border-dashed border-gray-300 p-6 rounded-lg cursor-pointer text-center"
+            >
+              <FileText className="w-6 h-6 mb-2 text-gray-500" />
+              <span className="text-sm font-medium">{label}</span>
+              <span className="text-xs text-gray-400">
+                {file ? file.name : "PDF, DOC, DOCX"}
+              </span>
+              <input
+                name={key}
+                type="file"
+                accept=".pdf,.doc,.docx"
+                className="hidden"
+                onChange={onChange}
+              />
+            </label>
+          ))}
         </div>
 
         <div className="flex justify-end gap-2 my-3">
