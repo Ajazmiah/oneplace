@@ -17,36 +17,6 @@ import { FileText } from "lucide-react";
 export default function AddApplicationForm() {
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0]; // ✅ Get the first file
-
-    if (!file) {
-      console.log("No file selected");
-      return;
-    }
-
-    const { type, size, name } = file;
-
-    // ✅ Optional: check MIME type for PDF or Word
-    const allowedTypes = [
-      "application/pdf",
-      "application/msword", // .doc
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-    ];
-
-    const inputName = e.target.name;
-
-    if (!allowedTypes.includes(type)) {
-      console.log("Invalid file type:", type);
-      return;
-    }
-
-    if (inputName === "resume") setResume({ type, size, name });
-    else setCoverLetter({type, name, size});
-
-    // ✅ Success
-    console.log("File is valid:", { name, type, size });
-  };
 
   const fileInputs = [
     {
@@ -62,6 +32,37 @@ export default function AddApplicationForm() {
       onChange: handleFileUpload, // or a different handler if needed
     },
   ];
+
+  function handleFileUpload(e) {
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword", // .doc
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+    ];
+    const file = e.target.files[0]; // ✅ Get the first file
+
+    if (!file) {
+      console.log("No file selected");
+      return;
+    }
+
+    const { type, size, name } = file;
+
+    // ✅ Optional: check MIME type for PDF or Word
+
+    const inputName = e.target.name;
+
+    if (!allowedTypes.includes(type)) {
+      console.log("Invalid file type:", type);
+      return;
+    }
+
+    if (inputName === "resume") setResume({ type, size, name });
+    else setCoverLetter({ type, name, size });
+
+    // ✅ Success
+    console.log("File is valid:", { name, type, size });
+  }
 
   return (
     <div className="max-w-[760px] mx-auto">
@@ -116,6 +117,9 @@ export default function AddApplicationForm() {
               <span className="text-sm font-medium">{label}</span>
               <span className="text-xs text-gray-400">
                 {file ? file.name : "PDF, DOC, DOCX"}
+                {file ? <span onClick={() => {
+                  key === 'resume' ? setResume(null) : setCoverLetter(null)
+                }}>x</span>:null} 
               </span>
               <input
                 name={key}
