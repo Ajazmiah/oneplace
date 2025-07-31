@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import getUserApplications from '../../../DataAccessLayer/getUserApplications'
 
 import {
   Select,
@@ -94,6 +95,8 @@ export default function JobApplicationsPage() {
     offer: 0,
     applied:0
   }
+
+
 
   const [applicationStatus, setApplicationStatus] = useState(status)
   useEffect(() => {
