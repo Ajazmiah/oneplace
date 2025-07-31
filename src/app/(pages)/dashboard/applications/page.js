@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import getUserApplications from '../../../DataAccessLayer/getUserApplications'
+import getUserApplications from '../../../lib/DataAccessLayer/server/getUserApplications'
 
 import {
   Select,
