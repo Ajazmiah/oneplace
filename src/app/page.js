@@ -2,8 +2,11 @@ import Services from "@/components/Services/Services";
 import landingpageImage from "../../public/landingpageImage.svg";
 import Image from "next/image";
 import { connectDb } from "@/database/dbConnection";
+import getUserApplications from './DataAccessLayer/getUserApplications'
 
 export default async function Example() {
+
+  console.log("USER_APP", await getUserApplications())
 
   await connectDb()
   return (
