@@ -1,14 +1,12 @@
 import Services from "@/components/Services/Services";
 import landingpageImage from "../../public/landingpageImage.svg";
 import Image from "next/image";
-import { connectDb } from "@/database/dbConnection";
-import getUserApplications from './lib/DataAccessLayer/server/getUserApplications'
+
+
 
 export default async function Example() {
 
-  console.log("USER_APP", await getUserApplications())
 
-  await connectDb()
   return (
     <div className="bg-white">
       <div className="px-10 pt-10">
