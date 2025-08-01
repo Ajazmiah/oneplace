@@ -1,5 +1,6 @@
 export const formatDate = (date) => {
-  const formatDate = (month, day, year) => {
+
+
     const monthNames = [
       "Jan",
       "Feb",
@@ -15,9 +16,7 @@ export const formatDate = (date) => {
       "Dec",
     ];
 
-    const monthName = monthNames[month - 1];
-    return `${monthName} ${day}, ${year}`;
-  };
+
 
   let DATE = new Date(date);
 

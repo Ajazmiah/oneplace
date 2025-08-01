@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 
 import { Search, ExternalLink } from "lucide-react";
+import { formatDate } from "@/utils";
 
 export default function ApplicationTable({ applications }) {
   console.log("APP", applications);
@@ -162,7 +163,7 @@ export default function ApplicationTable({ applications }) {
                 {app.status}
               </span>
             </div>
-            <div className="w-1/6 text-sm text-gray-500">📅 {app.date}</div>
+            <div className="w-1/6 text-sm text-gray-500">📅 {formatDate(app.createdAt)}</div>
             <div className="w-1/6 text-sm text-gray-500 hidden md:block">
               No resume
             </div>
