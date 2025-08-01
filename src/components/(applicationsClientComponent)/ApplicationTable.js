@@ -14,6 +14,7 @@ import {
 
 import { Search, ExternalLink } from "lucide-react";
 import { formatDate } from "@/utils";
+import Link from "next/link";
 
 export default function ApplicationTable({ applications }) {
   console.log("APP", applications);
@@ -86,7 +87,7 @@ export default function ApplicationTable({ applications }) {
               Applied / Number of Application{" "}
             </p>
             <p className="text-2xl font-bold">
-              {applicationStatus.applied} / {applications.length}
+              {`${applicationStatus.applied} / ${applications.length}`}
             </p>
           </CardContent>
         </Card>
@@ -140,9 +141,11 @@ export default function ApplicationTable({ applications }) {
       </div>
 
       {/* Application Table */}
+  
       <div className="space-y-2">
         {filteredApplications.map((app, idx) => (
-          <div
+          <Link 
+            href={`applications/${app._id}`}
             key={app._id}
             className="flex flex-wrap lg:flex-nowrap justify-between items-center bg-white shadow-sm rounded-lg p-4 border"
           >
@@ -165,19 +168,16 @@ export default function ApplicationTable({ applications }) {
             </div>
             <div className="w-1/6 text-sm text-gray-500">📅 {formatDate(app.createdAt)}</div>
             <div className="w-1/6 text-sm text-gray-500 hidden md:block">
-              No resume
+              Resume
             </div>
             <div className="w-1/6 text-sm text-gray-500 hidden md:block">
-              No cover letter
+              Cover Letter
             </div>
-            <div className="w-10">
-              <Button variant="ghost" size="icon">
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+           
+          </Link>
         ))}
       </div>
+      
     </>
   );
 

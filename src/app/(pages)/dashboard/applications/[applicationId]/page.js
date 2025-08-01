@@ -1,9 +1,9 @@
 import React from 'react'
 
-function page() {
+function Application({params}) {
   return (
-    <div>page</div>
+    <div>{params.applicationId}</div>
   )
 }
 
-export default page
+export default  Application
