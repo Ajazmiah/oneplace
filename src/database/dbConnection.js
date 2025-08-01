@@ -25,10 +25,7 @@ export const connectDb = async () => {
   }
 
   try {
-    const db = await mongoose.connect(process.env.MONGO_URI, {
-      // ✅ Use the new unified topology engine (handles connection pooling better)
-      useUnifiedTopology: true,
-    });
+    const db = await mongoose.connect(process.env.MONGO_URI);
 
     // Mark as connected
     isConnected = true;
