@@ -16,3 +16,9 @@ async function getApplications() {
   return applications;
 }
 export default getApplications;
+
+
+
+// function getSingleApplication(id) {
+
+// }
