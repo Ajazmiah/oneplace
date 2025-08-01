@@ -1,6 +1,7 @@
 "use server";
 
 import addApplicationModel from "@/database/models/addApplicationModel";
+import { revalidatePath } from "next/cache";
 
 export async function createApplication(formData) {
   try {
@@ -26,6 +27,8 @@ export async function createApplication(formData) {
       location,
       salaryRange,
     });
+
+    revalidatePath('/dashboard/applications')
 
     return {
       success: true,
