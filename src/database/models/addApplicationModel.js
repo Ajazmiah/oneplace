@@ -36,7 +36,7 @@ const addApplicationSchema = new mongoose.Schema(
 
 // ✅ Avoid OverwriteModelError in dev
 const AddApplication =
-  mongoose.models.application ||
+  mongoose.models?.application ||
   mongoose.model("application", addApplicationSchema);
 
 export default AddApplication;

@@ -1,11 +1,12 @@
 import Services from "@/components/Services/Services";
 import landingpageImage from "../../public/landingpageImage.svg";
 import Image from "next/image";
-import { connectDb } from "@/database/dbConnection";
+
+
 
 export default async function Example() {
 
-  await connectDb()
+
   return (
     <div className="bg-white">
       <div className="px-10 pt-10">
