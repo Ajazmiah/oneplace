@@ -80,7 +80,7 @@ export default function ApplicationTable({ applications }) {
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-white">
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-gray-500">
@@ -99,15 +99,15 @@ export default function ApplicationTable({ applications }) {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className='bg-main text-white'>
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Offers Received</p>
+            <p className="text-sm">Offers Received</p>
             <p className="text-2xl font-bold">{applicationStatus.offer}</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className='bg-[red] text-white'>
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Rejections</p>
+            <p className="text-sm">Rejections</p>
             <p className="text-2xl font-bold">
               {applicationStatus["rejected"]}
             </p>
