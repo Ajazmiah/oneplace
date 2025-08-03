@@ -59,7 +59,7 @@ export default function ApplicationTable({ applications }) {
     applications.forEach((application) => {
       setApplicationStatus((prev) => ({
         ...prev,
-        [application.status]: (prev[application.status] || 0) + 1,
+        [application.status]: prev[application.status] + 1,
       }));
     });
   }, [applications]);
