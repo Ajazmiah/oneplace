@@ -1,14 +1,16 @@
 // app/signup/actions.ts
 "use server";
 
-// import bcrypt from "bcryptjs";
-// import { db } from "@/lib/db"; // or your DB instance
-// import { redirect } from "next/navigation";
-// import { use } from "react";
+import { connectDb } from "@/database/dbConnection";
+import userModel from "../../database/models/userModel";
 
-export async function signup({ name, email, password }) {
-  if (!name || !email || !password) {
-    return { error: "All fields are required" };
+export async function signup({ name, email, password, authUser = null } = {}) {
+  await connectDb();
+
+  if (!authUser) {
+    if (!name || !email || !password) {
+      return { error: "All fields are required" };
+    }
   }
 
   //   const existingUser = await db.user.findUnique({ where: { email } });
@@ -19,18 +21,10 @@ export async function signup({ name, email, password }) {
 
   //   const hashedPassword = await bcrypt.hash(password, 10);
 
-  //   await db.user.create({
-  //     data: {
-  //       name,
-  //       email,
-  //       password: hashedPassword,
-  //     },
-  //   });
+  const user = await userModel.create({
+    fullname: authUser.name,
+    email: authUser.email,
+  });
 
-  const user = {
-    name,
-    email: email
-  };
-
-  return { success: true , user };
+  return { success: true, user };
 }

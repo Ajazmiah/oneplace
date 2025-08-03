@@ -22,13 +22,13 @@ export async function createApplication(formData) {
     const application = await addApplicationModel.create({
       jobTitle,
       companyName,
-      status,
+      status: status === "" ? "applied" : status,
       description,
       location,
       salaryRange,
     });
 
-    revalidatePath('/dashboard/applications')
+    revalidatePath("/dashboard/applications");
 
     return {
       success: true,
