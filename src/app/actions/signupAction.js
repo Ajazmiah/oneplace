@@ -13,17 +13,18 @@ export async function signup({ name, email, password, authUser = null } = {}) {
     }
   }
 
-  //   const existingUser = await db.user.findUnique({ where: { email } });
+   const existingUser = await userModel.findOne({ email });
 
-  //   if (existingUser) {
-  //     return { error: "User already exists with this email" };
-  //   }
+    if (existingUser) {
+      return { error: "User already exists with this email" };
+    }
 
   //   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await userModel.create({
     fullname: authUser.name,
     email: authUser.email,
+    _id: authUser.id
   });
 
   return { success: true, user };
