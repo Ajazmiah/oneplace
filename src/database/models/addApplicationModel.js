@@ -29,7 +29,7 @@ const addApplicationSchema = new mongoose.Schema(
       trim: true,
     },
     userId: {
-      type: "ObjectId",
+      type: String,
       ref: "users",
     },
   },
