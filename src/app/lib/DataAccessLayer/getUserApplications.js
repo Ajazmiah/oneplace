@@ -11,7 +11,7 @@ async function getApplications() {
   }
   await connectDb();
 
-  const applications = await AddApplicationModel.find();
+  const applications = await AddApplicationModel.find({userId:session.user._id});
 
   return applications;
 }

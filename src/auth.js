@@ -19,6 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // and on every subsequent request where the session is accessed.
     async jwt({ token, user }) {
       if (user) {
+        console.log("USER_JWT", user)
         token.id = user.id;
       }
 
@@ -28,7 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // (e.g., using `auth()` or `useSession()`).
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
+        session.user._id = token.id;
       }
       return session;
     },
@@ -38,7 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const authUser = {
           name: user.name,
           email: user.email,
-          _id: user?.id,
+          _id: user.id,
         };
 
         await signup({ authUser });
