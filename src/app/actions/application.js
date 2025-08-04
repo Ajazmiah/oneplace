@@ -27,7 +27,6 @@ export async function createApplication(formData) {
       description,
       location,
       salaryRange,
-      userId: session.user._id,
     });
 
     revalidatePath("/dashboard/applications");
