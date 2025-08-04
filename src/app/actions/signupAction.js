@@ -13,21 +13,18 @@ export async function signup({ name, email, password, authUser = null } = {}) {
     }
   }
 
-   const existingUser = await userModel.findOne({ email });
+  const existingUser = await userModel.findOne({ email });
 
-    if (existingUser) {
-      return { error: "User already exists with this email" };
-    }
-
-
+  if (existingUser) {
+    return { existingUser };
+  }
 
   const user = await userModel.create({
     fullname: authUser.name,
     email: authUser.email,
-    _id: authUser._id
   });
 
-  console.log("FROM ACTION USER :", authUser)
+  console.log("FROM ACTION USER :", authUser);
 
   return { success: true, user };
 }
