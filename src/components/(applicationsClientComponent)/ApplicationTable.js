@@ -59,7 +59,7 @@ export default function ApplicationTable({ applications }) {
     applications.forEach((application) => {
       setApplicationStatus((prev) => ({
         ...prev,
-        [application.status]: (prev[application.status] || 0) + 1,
+        [application.status]: prev[application.status] + 1,
       }));
     });
   }, [applications]);
@@ -99,13 +99,13 @@ export default function ApplicationTable({ applications }) {
             </p>
           </CardContent>
         </Card>
-        <Card className='bg-main text-white'>
+        <Card className=''>
           <CardContent className="p-4">
             <p className="text-sm">Offers Received</p>
             <p className="text-2xl font-bold">{applicationStatus.offer}</p>
           </CardContent>
         </Card>
-        <Card className='bg-[red] text-white'>
+        <Card >
           <CardContent className="p-4">
             <p className="text-sm">Rejections</p>
             <p className="text-2xl font-bold">
