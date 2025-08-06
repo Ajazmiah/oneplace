@@ -1,9 +1,10 @@
 "use server";
-
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { revalidatePath } from "next/cache";
+import { auth } from "../../auth";
 
 export async function createApplication(formData) {
+  const session = await auth();
   try {
     const jobTitle = formData.get("jobTitle");
     const companyName = formData.get("company");
@@ -22,13 +23,13 @@ export async function createApplication(formData) {
     const application = await addApplicationModel.create({
       jobTitle,
       companyName,
-      status,
+      status: status === "" ? "applied" : status,
       description,
       location,
       salaryRange,
     });
 
-    revalidatePath('/dashboard/applications')
+    revalidatePath("/dashboard/applications");
 
     return {
       success: true,
