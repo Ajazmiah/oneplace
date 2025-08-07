@@ -5,7 +5,7 @@ import Credentials from "next-auth/providers/credentials";
 import { signup } from "./app/actions/signupAction";
 // import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { connectDb } from "./database/dbConnection";
-import { use } from "react";
+import { getUserByEmail } from "./app/actions/utilsActions";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -17,33 +17,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // Redirect to dashboard after login
       return "/dashboard/applications";
     },
-    // This callback is called whenever a new JWT is created (on sign-in)
-    // and on every subsequent request where the session is accessed.
-    // async jwt({ token, user }) {
-    //   if (user) {
-    //     console.log("USER_JWT", user);
-    //     token.id = user.id;
-    //   }
 
-    //   return token;
-    // },
-    // This callback is called on every request where the session is accessed
-    // (e.g., using `auth()` or `useSession()`).
-    // async session({ session, token }) {
-    //   if (token) {
-    //     session.user._id = token.id;
-    //   }
-    //   return session;
-    // },
     async signIn({ user, account, profile, email }) {
-      console.log("USER____", user);
       try {
-        const authUser = {
-          name: user.name,
-          email: user.email,
-        };
+        const existingUser = await getUserByEmail(user.email);
 
-        await signup({ authUser });
+        if (!existingUser) {
+          const authUser = {
+            name: user.name,
+            email: user.email,
+          };
+          await signup({ authUser });
+        }
 
         return true;
       } catch (e) {
@@ -52,6 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     },
   },
+
   trustHost: true,
 
   providers: [
@@ -62,7 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
-      allowDangerousEmailAccountLinking: true 
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
 });

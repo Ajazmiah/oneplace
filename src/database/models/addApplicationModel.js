@@ -28,13 +28,18 @@ const addApplicationSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId, // ✅ Correct type for ObjectId
+      ref: "users", // ✅ Make sure this matches your user model name (see note below)
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// ✅ Avoid OverwriteModelError in dev
+// ✅ Avoid OverwriteModelError in dev (especially with Next.js)
 const AddApplication =
   mongoose.models?.application ||
   mongoose.model("application", addApplicationSchema);

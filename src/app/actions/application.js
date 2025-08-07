@@ -1,10 +1,29 @@
 "use server";
+
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { revalidatePath } from "next/cache";
 import { auth } from "../../auth";
+import userModel from "@/database/models/userModel";
 
 export async function createApplication(formData) {
   const session = await auth();
+
+  if (!session?.user?.email) {
+    return {
+      success: false,
+      message: "Not authenticated.",
+    };
+  }
+
+  const user = await userModel.findOne({ email: session.user.email });
+
+  if (!user) {
+    return {
+      success: false,
+      message: "User not found.",
+    };
+  }
+
   try {
     const jobTitle = formData.get("jobTitle");
     const companyName = formData.get("company");
@@ -27,6 +46,7 @@ export async function createApplication(formData) {
       description,
       location,
       salaryRange,
+      userId: user._id, // ✅ this is now safe
     });
 
     revalidatePath("/dashboard/applications");
