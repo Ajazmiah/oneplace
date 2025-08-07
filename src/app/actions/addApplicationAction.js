@@ -2,11 +2,11 @@
 
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { revalidatePath } from "next/cache";
-import { auth } from "../../auth";
-import userModel from "@/database/models/userModel";
+import { getUserByEmail } from "./utilsActions";
+import { getUserSession } from "../lib/DataAccessLayer/getSession";
 
 export async function createApplication(formData) {
-  const session = await auth();
+  const session = await getUserSession()
 
   if (!session?.user?.email) {
     return {
@@ -15,7 +15,7 @@ export async function createApplication(formData) {
     };
   }
 
-  const user = await userModel.findOne({ email: session.user.email });
+  const user = await getUserByEmail(session.user.email);
 
   if (!user) {
     return {
