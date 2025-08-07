@@ -2,6 +2,9 @@
 "use client";
 import { getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+
 import Link from "next/link";
 
 export default function AuthPage() {
@@ -14,8 +17,8 @@ export default function AuthPage() {
     })();
   }, []);
   const providerIcons = {
-    google: "",
-    github: "",
+    Google: <FcGoogle className="w-6 h-6"/>,
+    GitHub: <FaGithub className="w-6 h-6"/>,
   };
 
   if (providers) console.log(providers);
@@ -66,9 +69,9 @@ export default function AuthPage() {
                 <div key={provider.name}>
                   <button
                     onClick={() => signIn(provider.id)}
-                    className="w-full py-3 border rounded-lg hover:bg-gray-50 font-medium"
+                    className="flex justify-center items-center gap-1.5 w-full py-3 border rounded-lg hover:bg-gray-50 font-medium cursor-pointer"
                   >
-                    {providerIcons[provider.id]} Sign in with {provider.name}
+                    {providerIcons[provider.name]} Sign in with {provider.name}
                   </button>
                 </div>
               );
