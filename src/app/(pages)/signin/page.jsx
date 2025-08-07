@@ -17,8 +17,8 @@ export default function AuthPage() {
     })();
   }, []);
   const providerIcons = {
-    Google: <FcGoogle className="w-6 h-6"/>,
-    GitHub: <FaGithub className="w-6 h-6"/>,
+    Google: <FcGoogle className="w-6 h-6" />,
+    GitHub: <FaGithub className="w-6 h-6" />,
   };
 
   if (providers) console.log(providers);
@@ -26,10 +26,6 @@ export default function AuthPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="max-w-md w-full p-8 shadow-xl rounded-2xl border border-gray-100">
-        <h1 className="text-3xl font-bold text-center mb-6 text-[#0bbcaa]">
-          Resumind Login
-        </h1>
-
         <form
           method="post"
           action="/api/auth/callback/credentials"
@@ -49,7 +45,7 @@ export default function AuthPage() {
           />
           <button
             type="submit"
-            className="w-full bg-[#0bbcaa] text-white py-3 rounded-lg font-semibold hover:bg-opacity-90"
+            className="w-full bg-main text-white py-3 rounded-lg font-semibold hover:bg-opacity-90"
           >
             Sign in with Credentials
           </button>
