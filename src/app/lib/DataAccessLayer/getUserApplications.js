@@ -1,7 +1,4 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import AddApplicationModel from "@/database/models/addApplicationModel";
-import { connectDb } from "@/database/dbConnection";
 import { getUserByEmail } from "@/app/actions/utilsActions";
 import { getUserSession } from "./getSession";
 
