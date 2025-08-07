@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { signup } from "../../actions/signupAction"; // server action
+import { signup } from "../../lib/actions/signupAction"; // server action
 import Link from "next/link";
 
 export default function SignupPage() {

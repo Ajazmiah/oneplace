@@ -1,7 +1,7 @@
 // app/signup/actions.ts
 
 import { connectDb } from "@/database/dbConnection";
-import userModel from "../../database/models/userModel";
+import userModel from "@/database/models/userModel";
 
 export async function signup({ name, email, password, authUser = null } = {}) {
   await connectDb();

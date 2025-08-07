@@ -1,4 +1,4 @@
-import ApplicationTable from "@/components/(applicationsClientComponent)/ApplicationTable";
+import ApplicationTable from "@/components/Applications/ApplicationTable";
 import getApplications from "@/app/lib/DataAccessLayer/getUserApplications";
 
 export default async function JobApplicationsPage() {

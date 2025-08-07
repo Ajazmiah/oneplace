@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { signup } from "./app/actions/signupAction";
+import { signup } from "./app/lib/actions/signupAction";
 // import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { connectDb } from "./database/dbConnection";
 import { getUserByEmail } from "./app/actions/utilsActions";
