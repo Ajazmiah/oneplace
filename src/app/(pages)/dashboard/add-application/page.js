@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createApplication } from "@/app/actions/application";
+import { createApplication } from "@/app/actions/addApplicationAction";
 import { useState } from "react";
 import {
   Select,
@@ -117,9 +117,15 @@ export default function AddApplicationForm() {
               <span className="text-sm font-medium">{label}</span>
               <span className="text-xs text-gray-400">
                 {file ? file.name : "PDF, DOC, DOCX"}
-                {file ? <span onClick={() => {
-                  key === 'resume' ? setResume(null) : setCoverLetter(null)
-                }}>x</span>:null} 
+                {file ? (
+                  <span
+                    onClick={() => {
+                      key === "resume" ? setResume(null) : setCoverLetter(null);
+                    }}
+                  >
+                    x
+                  </span>
+                ) : null}
               </span>
               <input
                 name={key}
