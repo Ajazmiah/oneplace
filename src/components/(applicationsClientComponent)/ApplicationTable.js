@@ -16,7 +16,7 @@ import { Search, ExternalLink } from "lucide-react";
 import { formatDate } from "@/utils";
 import Link from "next/link";
 
-export default function ApplicationTable({ applications }) {
+export default function ApplicationTable({ applications}) {
   console.log("APP", applications);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");

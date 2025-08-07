@@ -1,5 +1,4 @@
 // app/signup/actions.ts
-"use server";
 
 import { connectDb } from "@/database/dbConnection";
 import userModel from "../../database/models/userModel";
@@ -13,18 +12,10 @@ export async function signup({ name, email, password, authUser = null } = {}) {
     }
   }
 
-  const existingUser = await userModel.findOne({ email });
-
-  if (existingUser) {
-    return { existingUser };
-  }
-
   const user = await userModel.create({
     fullname: authUser.name,
     email: authUser.email,
   });
-
-  console.log("FROM ACTION USER :", authUser);
 
   return { success: true, user };
 }
