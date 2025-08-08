@@ -29,7 +29,7 @@ export default function Sidebar({ clickHandler }) {
               <Link
                 key={nav}
                 href={nav}
-                className="flex items-center gap-[5px]"
+                className="flex w-full items-center gap-[5px]"
               >
                 {dashboardNavIcon[nav]}
                 {nav}
