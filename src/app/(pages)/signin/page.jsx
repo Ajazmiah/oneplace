@@ -2,6 +2,9 @@
 "use client";
 import { getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+
 import Link from "next/link";
 
 export default function AuthPage() {
@@ -14,8 +17,8 @@ export default function AuthPage() {
     })();
   }, []);
   const providerIcons = {
-    google: "",
-    github: "",
+    Google: <FcGoogle className="w-6 h-6" />,
+    GitHub: <FaGithub className="w-6 h-6" />,
   };
 
   if (providers) console.log(providers);
@@ -23,10 +26,6 @@ export default function AuthPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="max-w-md w-full p-8 shadow-xl rounded-2xl border border-gray-100">
-        <h1 className="text-3xl font-bold text-center mb-6 text-[#0bbcaa]">
-          Resumind Login
-        </h1>
-
         <form
           method="post"
           action="/api/auth/callback/credentials"
@@ -46,7 +45,7 @@ export default function AuthPage() {
           />
           <button
             type="submit"
-            className="w-full bg-[#0bbcaa] text-white py-3 rounded-lg font-semibold hover:bg-opacity-90"
+            className="w-full bg-main text-white py-3 rounded-lg font-semibold hover:bg-opacity-90"
           >
             Sign in with Credentials
           </button>
@@ -66,9 +65,9 @@ export default function AuthPage() {
                 <div key={provider.name}>
                   <button
                     onClick={() => signIn(provider.id)}
-                    className="w-full py-3 border rounded-lg hover:bg-gray-50 font-medium"
+                    className="flex justify-center items-center gap-1.5 w-full py-3 border rounded-lg hover:bg-gray-50 font-medium cursor-pointer"
                   >
-                    {providerIcons[provider.id]} Sign in with {provider.name}
+                    {providerIcons[provider.name]} Sign in with {provider.name}
                   </button>
                 </div>
               );

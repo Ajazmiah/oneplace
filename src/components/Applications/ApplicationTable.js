@@ -12,12 +12,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Search, ExternalLink } from "lucide-react";
-import { formatDate } from "@/utils";
+import { Search } from "lucide-react";
+import { formatDate } from "@/app/lib/utils/utils";
 import Link from "next/link";
 
 export default function ApplicationTable({ applications}) {
-  console.log("APP", applications);
+ 
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
   const [filterByStatus, setFilterByStatus] = useState("all");
@@ -84,10 +84,10 @@ export default function ApplicationTable({ applications}) {
         <Card>
           <CardContent className="p-4">
             <p className="text-sm text-gray-500">
-              Applied / Number of Application{" "}
+             Applications
             </p>
             <p className="text-2xl font-bold">
-              {`${applicationStatus.applied} / ${applications.length}`}
+              {`${applications.length}`}
             </p>
           </CardContent>
         </Card>
