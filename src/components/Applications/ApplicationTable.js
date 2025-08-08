@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 
 import { Search } from "lucide-react";
-import { formatDate } from "@/utils";
+import { formatDate } from "@/app/lib/utils/utils";
 import Link from "next/link";
 
 export default function ApplicationTable({ applications}) {

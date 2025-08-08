@@ -142,10 +142,13 @@ h2 {
 }
 
 .pageContainer {
-  min-height: 100dvh;
+  min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: minmax(0,1fr);
+}
+.wrapper {
+  min-height: 100vh;
 }
 html {
   scroll-behavior: smooth;

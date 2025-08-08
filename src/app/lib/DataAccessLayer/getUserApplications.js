@@ -1,5 +1,5 @@
 import AddApplicationModel from "@/database/models/addApplicationModel";
-import { getUserByEmail } from "@/app/actions/utilsActions";
+import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
 
 async function getApplications() {
