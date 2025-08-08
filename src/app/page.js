@@ -60,7 +60,7 @@ export default async function Example() {
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-white wrapper">
       <div className="px-10 pt-10">
         <div className="relative isolate   max-w-[1460px] mx-auto">
           {/* Main content */}

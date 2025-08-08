@@ -2,7 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createApplication } from "@/app/actions/addApplicationAction";
+import { createApplication } from "@/app/lib/actions/addApplication/addApplicationAction";
 import { useState } from "react";
 import {
   Select,

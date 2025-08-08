@@ -2,8 +2,8 @@
 
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { revalidatePath } from "next/cache";
-import { getUserByEmail } from "./utilsActions";
-import { getUserSession } from "../lib/DataAccessLayer/getSession";
+import { getUserByEmail } from "../../utils/databaseUtils";
+import { getUserSession } from "../../DataAccessLayer/getSession";
 
 export async function createApplication(formData) {
   const session = await getUserSession()
