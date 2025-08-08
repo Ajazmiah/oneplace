@@ -41,13 +41,13 @@ export default async function Example() {
   if (session) {
     authContent = (
       <div>
-        <h1 className="text-2xl font-semibold">
+        <h1 className="text-5xl font-semibold">
           Hey {session.user.name}, welcome back!
         </h1>
         <p className="mt-2 text-gray-600">
           Ready to continue where you left off?
         </p>
-       <div className="mt-[10px] flex gap-3">
+       <div className="mt-[20px] flex gap-3">
        <Link href='/dashboard/applications'className="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-black">
           View Applications
         </Link>
@@ -70,9 +70,9 @@ export default async function Example() {
         </div>
       </div>
 
-      <div id="services">
+      {session ? null : <div id="services">
         <Services />
-      </div>
+      </div>}
     </div>
   );
 }
