@@ -3,9 +3,10 @@ import landingpageImage from "../../public/landingpageImage.svg";
 import Image from "next/image";
 import { getUserSession } from "./lib/DataAccessLayer/getSession";
 import Link from "next/link";
+import { auth } from "@/auth";
 
 export default async function Example() {
-  const session = await getUserSession();
+  const session = await auth();
 
   let authContent = (
     <>
@@ -47,14 +48,20 @@ export default async function Example() {
         <p className="mt-2 text-gray-600">
           Ready to continue where you left off?
         </p>
-       <div className="mt-[20px] flex gap-3">
-       <Link href='/dashboard/applications'className="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-black">
-          View Applications
-        </Link>
-        <Link href='/dashboard/add-application' className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-main-light">
-          Add Applications
-        </Link>
-       </div>
+        <div className="mt-[20px] flex gap-3">
+          <Link
+            href="/dashboard/applications"
+            className="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-black"
+          >
+            View Applications
+          </Link>
+          <Link
+            href="/dashboard/add-application"
+            className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-main-light"
+          >
+            Add Applications
+          </Link>
+        </div>
       </div>
     );
   }
@@ -70,9 +77,11 @@ export default async function Example() {
         </div>
       </div>
 
-      {session ? null : <div id="services">
-        <Services />
-      </div>}
+      {session ? null : (
+        <div id="services">
+          <Services />
+        </div>
+      )}
     </div>
   );
 }
