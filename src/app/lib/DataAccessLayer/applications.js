@@ -2,7 +2,7 @@ import AddApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
 
-async function getApplications() {
+export const getApplications = async () =>  {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
 
@@ -12,4 +12,10 @@ async function getApplications() {
 
   return applications;
 }
-export default getApplications;
+
+export const getSingleApplication = async(id) => {}
+
+export const editApplication = async(id) => {}
+
+export const deleteApplication = async(id) => {}
+
