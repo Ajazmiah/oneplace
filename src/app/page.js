@@ -8,6 +8,7 @@ import { auth } from "@/auth";
 export default async function Example() {
   const session = await auth();
 
+  
   let authContent = (
     <>
       <div className="lg:w-[100%] flex flex-col items-center display flex">
@@ -20,11 +21,12 @@ export default async function Example() {
 
         <div className="mt-5 flex gap-3 items-center">
           <a
-            href="http://localhost:3000/api/auth/signin"
+            href={`${process.env.BASE_URL}/api/auth/signin`}
             className="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-main-light"
           >
             Get started
           </a>
+          
           <a
             href="#services"
             className="text-sm/6 hover:text-main font-semibold text-gray-900"
