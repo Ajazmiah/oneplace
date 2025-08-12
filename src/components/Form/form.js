@@ -1,13 +1,13 @@
-import { Input } from "@/Components/ui/Input";
-import { Button } from "@/Components/ui/Button";
+import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/Select";
-import { Textarea } from "@/Components/ui/Textarea";
+} from "@/Components/ui/select";
+import { Textarea } from "@/Components/ui/textarea";
 import { FileText } from "lucide-react";
 
 export default function AddApplicationForm() {
