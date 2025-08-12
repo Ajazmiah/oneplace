@@ -1,5 +1,5 @@
 import { getApplications } from "@/app/lib/DataAccessLayer/applications";
-import ApplicationTable from "@/components/Applications/ApplicationTable";
+import ApplicationTable from "@/Components/Applications/ApplicationTable";
 
 export default async function JobApplicationsPage() {
   const applications = JSON.parse(JSON.stringify(await getApplications()));

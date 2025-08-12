@@ -1,5 +1,5 @@
-import Avatar from "@/components/Avatar/Avatar";
-import { Button } from "@/components/ui/Button";
+import Avatar from "@/Components/Avatar/Avatar";
+import { Button } from "@/Components/ui/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,8 +8,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import LoginButton from "@/components/ui/LoginButton";
+} from "@/Components/ui/dropdown-menu";
+import LoginButton from "@/Components/ui/LoginButton";
 
 export function Dropdown({ loggedIn, session }) {
   const user_name = session.user.name;
