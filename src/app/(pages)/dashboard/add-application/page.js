@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
+import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
 import { createApplication } from "@/app/lib/actions/addApplication/addApplicationAction";
 import { useState } from "react";
 import {
@@ -10,8 +10,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
-import { Textarea } from "@/components/ui/Textarea";
+} from "@/Components/ui/select";
+import { Textarea } from "@/Components/ui/textarea";
 import { FileText } from "lucide-react";
 
 export default function AddApplicationForm() {

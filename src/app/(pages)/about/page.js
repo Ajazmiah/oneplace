@@ -1,4 +1,4 @@
-import Heading from "@/components/ui/Heading";
+import Heading from "@/Components/ui/Heading";
 import React from "react";
 
 function about() {

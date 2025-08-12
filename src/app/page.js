@@ -1,4 +1,4 @@
-import Services from "@/components/Services/Services";
+import Services from "@/Components/Services/Services";
 import landingpageImage from "../../public/landingpageImage.svg";
 import Image from "next/image";
 import { getUserSession } from "./lib/DataAccessLayer/getSession";

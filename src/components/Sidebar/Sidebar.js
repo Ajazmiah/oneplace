@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/Components/ui/Button";
 
 import { usePathname } from "next/navigation";
 

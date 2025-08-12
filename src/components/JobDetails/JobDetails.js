@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/Components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import {
   ArrowLeft,
   MapPin,
@@ -12,7 +12,7 @@ import {
   Briefcase,
   Building,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/Components/ui/badge";
 
 const statusColors = {
   applied: "bg-blue-100 text-blue-800 border-blue-200",

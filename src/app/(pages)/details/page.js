@@ -1,4 +1,4 @@
-import JobDetails from "@/components/JobDetails/JobDetails";
+import JobDetails from "@/Components/JobDetails/JobDetails";
 
 
 export default function JobDetailsPage() {
