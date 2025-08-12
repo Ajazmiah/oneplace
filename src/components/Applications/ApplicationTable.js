@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/Components/ui/card";
-import { Button } from "@/Components/ui/Button";
-import { Input } from "@/Components/ui/Input";
+import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
 
 import {
   Select,
@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/Select";
+} from "@/Components/ui/select";
 
 import { Search } from "lucide-react";
 import { formatDate } from "@/app/lib/utils/utils";

@@ -1,5 +1,5 @@
 import Avatar from "@/Components/Avatar/Avatar";
-import { Button } from "@/Components/ui/Button";
+import { Button } from "@/Components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
