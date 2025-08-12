@@ -6,7 +6,7 @@ import {
   logout,
 } from "@/app/lib/actions/authentication/authenticationAction";
 
-function LoginButton({ display, loggedIn }) {
+function LoginButton({ display, loggedIn, ...rest }) {
   const isMobile = display === "mobile";
 
   const authText = loggedIn ? "Sign Out" : "Sign In";
