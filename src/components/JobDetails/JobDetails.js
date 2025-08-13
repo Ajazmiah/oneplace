@@ -23,6 +23,10 @@ const statusColors = {
 };
 
 export default function JobDetails({ job }) {
+
+  const handleEdit = (id) => {
+   
+  }
   return (
     <div className="p-6 lg:p-8 bg-slate-50 min-h-screen">
       <div className="max-w-5xl mx-auto">
@@ -149,6 +153,7 @@ export default function JobDetails({ job }) {
             </Card>
 
             <Button
+              onClick={() => handleEdit(job._id)}
               className="w-full text-white"
               style={{ backgroundColor: "#0bbcaa" }}
             >
