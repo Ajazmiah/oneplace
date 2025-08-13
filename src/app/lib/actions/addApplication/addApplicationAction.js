@@ -26,9 +26,9 @@ export async function createApplication(formData) {
 
   try {
     const jobTitle = formData.get("jobTitle");
-    const companyName = formData.get("company");
+    const companyName = formData.get("companyName");
     const status = formData.get("status");
-    const description = formData.get("notes");
+    const description = formData.get("details");
     const location = formData.get("location");
     const salaryRange = formData.get("salaryRange");
 
