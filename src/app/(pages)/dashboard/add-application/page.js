@@ -18,6 +18,14 @@ export default function AddApplicationForm() {
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
 
+  const [jobTitle, setJobTitle] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [location, setLocation] = useState("");
+
+  const [salaryRange, setSalaryRange] = useState("");
+  const [details, setDetails] = useState("");
+  const [status, setStatus] = useState("applied");
+
   const fileInputs = [
     {
       key: "resume",
@@ -64,24 +72,72 @@ export default function AddApplicationForm() {
     console.log("File is valid:", { name, type, size });
   }
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!jobTitle || !companyName) {
+      return alert("Job title and company are required");
+    }
+
+    const formData = new FormData();
+
+    // formData.append("resume", resume);
+    // formData.append("coverLetter", coverLetter);
+
+    formData.append("jobTitle", jobTitle);
+    formData.append("status", status);
+    formData.append("companyName", companyName);
+    formData.append("location", location);
+    formData.append("salaryRange", salaryRange);
+    formData.append("details", details);
+
+    const response = await createApplication(formData);
+
+    if (!response.success) {
+      console.error("Error:", response.message);
+      alert(response.message);
+      return;
+    }
+    setResume(null);
+    setCoverLetter(null);
+    setJobTitle("");
+    setCompanyName("");
+    setLocation("");
+    setSalaryRange("");
+    setDetails("");
+    setStatus("");
+
+    alert("Application added successfully");
+  }
   return (
     <div className="max-w-[760px] mx-auto">
       <h2 className="text-xl font-semibold border-b pb-5">
         Application Details
       </h2>
 
-      <form action={createApplication}>
+      <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             required
             name="jobTitle"
             placeholder="Job Title *"
-            defaultValue="Senior Software Engineer"
+            value={jobTitle}
+            onChange={(e) => setJobTitle(e.target.value)}
           />
-          <Input required name="company" placeholder="Company *" />
-          <Input name="location" placeholder="Location" />
+          <Input
+            required
+            name="company"
+            placeholder="Company *"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+          />
+          <Input
+            name="location"
+            placeholder="Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
 
-          <Select name="status">
+          <Select name="status" onValueChange={(value) => setStatus(value)}>
             <SelectTrigger>
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -97,6 +153,8 @@ export default function AddApplicationForm() {
             name="salaryRange"
             className="md:col-span-2"
             placeholder="Salary Range"
+            value={salaryRange}
+            onChange={(e) => setSalaryRange(e.target.value)}
           />
         </div>
 
@@ -104,6 +162,8 @@ export default function AddApplicationForm() {
           <Textarea
             name="notes"
             placeholder="Add any notes about the role, requirements, or interview process..."
+            value={details}
+            onChange={(e) => setDetails(e.target.value)}
           />
         </div>
 
@@ -139,7 +199,10 @@ export default function AddApplicationForm() {
         </div>
 
         <div className="flex justify-end gap-2 my-3">
-          <Button className="bg-main text-white hover:bg-blue-700">
+          <Button
+            className="bg-main text-white hover:bg-blue-700"
+            type="submit"
+          >
             Save Application
           </Button>
         </div>
