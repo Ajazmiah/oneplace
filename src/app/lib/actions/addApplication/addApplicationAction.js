@@ -11,7 +11,7 @@ export async function createApplication(formData) {
   if (!session?.user?.email) {
     return {
       success: false,
-      message: "Not authenticated.",
+      message: "Not authenticated",
     };
   }
 
@@ -20,7 +20,7 @@ export async function createApplication(formData) {
   if (!user) {
     return {
       success: false,
-      message: "User not found.",
+      message: "User Not Found!",
     };
   }
 
