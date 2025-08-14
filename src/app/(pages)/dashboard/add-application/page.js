@@ -74,26 +74,39 @@ export default function AddApplicationForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-
-    try {
-      if (!jobTitle || !companyName) {
-        throw new Error({ message: "Job title and company are required." });
-      }
-      const formData = new FormData();
-
-      // formData.append("resume", resume);
-      // formData.append("coverLetter", coverLetter);
-
-      formData.append("jobTitle", jobTitle);
-      formData.append("status", status);
-      formData.append("companyName", companyName);
-      formData.append("location", location);
-      formData.append("salaryRange", salaryRange);
-      formData.append("details", details);
-      await createApplication(formData);
-    } catch (e) {
-      alert(e.message);
+    if (!jobTitle || !companyName) {
+      return alert("Job title and company are required");
     }
+
+    const formData = new FormData();
+
+    // formData.append("resume", resume);
+    // formData.append("coverLetter", coverLetter);
+
+    formData.append("jobTitle", jobTitle);
+    formData.append("status", status);
+    formData.append("companyName", companyName);
+    formData.append("location", location);
+    formData.append("salaryRange", salaryRange);
+    formData.append("details", details);
+
+    const response = await createApplication(formData);
+
+    if (!response.success) {
+      console.error("Error:", response.message);
+      alert(response.message);
+      return;
+    }
+    setResume(null);
+    setCoverLetter(null);
+    setJobTitle("");
+    setCompanyName("");
+    setLocation("");
+    setSalaryRange("");
+    setDetails("");
+    setStatus("");
+
+    alert("Application added successfully");
   }
   return (
     <div className="max-w-[760px] mx-auto">
