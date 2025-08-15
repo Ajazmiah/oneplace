@@ -9,10 +9,14 @@ import {
   FileText,
   Mail,
   Edit,
-  Briefcase,
   Building,
 } from "lucide-react";
 import { Badge } from "@/Components/ui/badge";
+import { ApplicationContextProvider, useMyApplicationContext } from "@/context";
+import withApplicationContext from "../ContextWrapper/ContextWrapper";
+import { useEffect } from "react";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const statusColors = {
   applied: "bg-blue-100 text-blue-800 border-blue-200",
@@ -22,11 +26,20 @@ const statusColors = {
   withdrawn: "bg-gray-100 text-gray-800 border-gray-200",
 };
 
-export default function JobDetails({ job }) {
+function JobDetails({ job }) {
+  const { application, setApplication } = useMyApplicationContext();
+
+  const router = useRouter();
+
 
   const handleEdit = (id) => {
-   
-  }
+    setApplication(job);
+    router.push('/dashboard/add-application')
+    
+  };
+
+  console.log("CONTEXT", application);
+
   return (
     <div className="p-6 lg:p-8 bg-slate-50 min-h-screen">
       <div className="max-w-5xl mx-auto">
@@ -166,3 +179,5 @@ export default function JobDetails({ job }) {
     </div>
   );
 }
+
+export default withApplicationContext(JobDetails);
