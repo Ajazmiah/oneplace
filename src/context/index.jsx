@@ -3,7 +3,7 @@ import { useContext, useState, createContext } from "react";
 const ApplicationContext = createContext();
 
 export function ApplicationContextProvider({ children }) {
-  const [application, setApplication] = useState({});
+  const [application, setApplication] = useState('hello');
 
   return (
     <ApplicationContext.Provider value={{ application, setApplication }}>
