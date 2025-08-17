@@ -14,8 +14,6 @@ import {
 import { Badge } from "@/Components/ui/badge";
 import { ApplicationContextProvider, useMyApplicationContext } from "@/context";
 import withApplicationContext from "../ContextWrapper/ContextWrapper";
-import { useEffect } from "react";
-import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 const statusColors = {
@@ -31,11 +29,9 @@ function JobDetails({ job }) {
 
   const router = useRouter();
 
-
   const handleEdit = (id) => {
-    setApplication(job);
-    router.push('/dashboard/add-application')
-    
+    localStorage.setItem("application", JSON.stringify(job));
+    router.push("/dashboard/add-application");
   };
 
   console.log("CONTEXT", application);

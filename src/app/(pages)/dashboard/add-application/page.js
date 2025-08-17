@@ -3,7 +3,7 @@
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { createApplication } from "@/app/lib/actions/addApplication/addApplicationAction";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -13,18 +13,32 @@ import {
 } from "@/Components/ui/select";
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText } from "lucide-react";
+import withApplicationContext from "@/Components/ContextWrapper/ContextWrapper";
 
-export default function AddApplicationForm() {
+function AddApplicationForm() {
+
+  const [application, setApplication] = useState(() => {
+    const stored = localStorage?.getItem("application");
+    return stored ? JSON.parse(stored) : null;
+  });
+
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
 
-  const [jobTitle, setJobTitle] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [location, setLocation] = useState("");
+  const [jobTitle, setJobTitle] = useState(application?.jobTitle || "");
+  const [companyName, setCompanyName] = useState(
+    application?.companyName || ""
+  );
+  const [location, setLocation] = useState(application?.location || "");
+  const [salaryRange, setSalaryRange] = useState(
+    application?.salaryRange || ""
+  );
+  const [details, setDetails] = useState(application?.description || "");
+  const [status, setStatus] = useState(application?.status || "applied");
 
-  const [salaryRange, setSalaryRange] = useState("");
-  const [details, setDetails] = useState("");
-  const [status, setStatus] = useState("applied");
+  useEffect(() => {
+    console.log("USEEFFECT", application);
+  }, [application]);
 
   const fileInputs = [
     {
@@ -106,6 +120,8 @@ export default function AddApplicationForm() {
     setDetails("");
     setStatus("");
 
+    localStorage.removeItem('application')
+
     alert("Application added successfully");
   }
   return (
@@ -137,7 +153,7 @@ export default function AddApplicationForm() {
             onChange={(e) => setLocation(e.target.value)}
           />
 
-          <Select name="status" onValueChange={(value) => setStatus(value)}>
+          <Select name="status" onValueChange={(value) => setStatus(value)} defaultValue={status}>
             <SelectTrigger>
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -210,3 +226,5 @@ export default function AddApplicationForm() {
     </div>
   );
 }
+
+export default withApplicationContext(AddApplicationForm);
