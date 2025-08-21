@@ -31,7 +31,7 @@ function JobDetails({ job }) {
 
   const handleEdit = (id) => {
     localStorage.setItem("application", JSON.stringify(job));
-    router.push("/dashboard/add-application");
+    router.push(`/dashboard/applications/${id}/edit`);
   };
 
   console.log("CONTEXT", application);
