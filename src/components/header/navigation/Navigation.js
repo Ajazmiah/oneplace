@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import React, { useState } from "react";
 import LoginButton from "../../ui/LoginButton";
 import { Dialog, DialogPanel } from "@headlessui/react";
