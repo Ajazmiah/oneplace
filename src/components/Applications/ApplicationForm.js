@@ -13,8 +13,10 @@ import {
 } from "@/Components/ui/select";
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText } from "lucide-react";
+import { editApplication } from "@/app/lib/DataAccessLayer/applications";
+import { redirect } from "next/navigation";
 
-function ApplicationForm({ application = {}}, props) {
+function ApplicationForm({ application = null}, props) {
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
 
@@ -97,12 +99,21 @@ function ApplicationForm({ application = {}}, props) {
     formData.append("salaryRange", salaryRange);
     formData.append("details", details);
 
-    const response = await createApplication(formData);
+    let response;
+    if(!application) {
+      response = await createApplication(formData);
+    }else {
+      response = await editApplication(application._id, formData)
+    }
+
+    
 
     if (!response.success) {
       console.error("Error:", response.message);
       alert(response.message);
       return;
+    } else {
+      alert(application ? 'Application added' : 'Application edited successfully')
     }
     setResume(null);
     setCoverLetter(null);

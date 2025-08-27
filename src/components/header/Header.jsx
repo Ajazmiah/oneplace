@@ -1,10 +1,11 @@
+
 import React from "react";
 import { auth } from "../../auth";
 
 
 import Navigation from "./navigation/Navigation";
 
-async function header() {
+async function Header() {
   const session = await auth();
 
   const Allnavigation = [
@@ -31,4 +32,4 @@ async function header() {
   );
 }
 
-export default header;
+export default Header;

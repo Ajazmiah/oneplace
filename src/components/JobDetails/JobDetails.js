@@ -15,6 +15,7 @@ import { Badge } from "@/Components/ui/badge";
 import { ApplicationContextProvider, useMyApplicationContext } from "@/context";
 import withApplicationContext from "../ContextWrapper/ContextWrapper";
 import { useRouter } from "next/navigation";
+import { deleteApplication } from "@/app/lib/DataAccessLayer/applications";
 
 const statusColors = {
   applied: "bg-blue-100 text-blue-800 border-blue-200",
@@ -168,6 +169,14 @@ function JobDetails({ job }) {
             >
               <Edit className="w-4 h-4 mr-2" />
               Edit Application
+            </Button>
+
+            <Button
+              onClick={() => deleteApplication(job._id)}
+              className="w-full text-white"
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              Delete Application
             </Button>
           </div>
         </div>
