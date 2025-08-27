@@ -15,29 +15,27 @@ export function Dropdown({ loggedIn, session }) {
   const user_name = session.user.name;
   return (
     <div className="cursor-pointer">
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar session={session} />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="start">
-        <DropdownMenuLabel>{user_name}</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Avatar session={session} />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="start">
+          <DropdownMenuLabel>{user_name}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Profile</DropdownMenuItem>
 
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>GitHub</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuSeparator />
-       
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>GitHub</DropdownMenuItem>
+          <DropdownMenuItem>Support</DropdownMenuItem>
+          <DropdownMenuSeparator />
+
           <LoginButton display="desktop" loggedIn={loggedIn} />
-       
-      </DropdownMenuContent>
-    </DropdownMenu>
-
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

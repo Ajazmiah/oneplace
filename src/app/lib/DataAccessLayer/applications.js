@@ -1,7 +1,9 @@
+"use server";
 import AddApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
 import { notFound } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export const getApplications = async () => {
   const session = await getUserSession();
@@ -32,6 +34,53 @@ export const getSingleApplication = async (id) => {
   }
 };
 
-export const editApplication = async (id) => {};
+export const editApplication = async (id, formData) => {
+  try {
+    const application = await AddApplicationModel.findOneAndUpdate({ _id: id });
 
-export const deleteApplication = async (id) => {};
+    console.log("FROM EDIT", application);
+    const jobTitle = formData.get("jobTitle");
+    const companyName = formData.get("companyName");
+    const status = formData.get("status");
+    const description = formData.get("details");
+    const location = formData.get("location");
+    const salaryRange = formData.get("salaryRange");
+
+    application.jobTitle = jobTitle;
+    application.companyName = companyName;
+    application.status = status;
+    application.description = description;
+    application.description = description;
+    application.location = location;
+    application.salaryRange = salaryRange;
+
+    await application.save();
+
+    revalidatePath("/dashboard/applications");
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Error fetching application:", error.message);
+    throw error;
+  }
+};
+
+export const deleteApplication = async (id) => {
+  try {
+    await AddApplicationModel.findByIdAndDelete({
+      _id: id,
+    });
+    revalidatePath("/dashboard/applications");
+    return {
+      success: true,
+      message: "application deleted successfully",
+    };
+  } catch (error) {
+    console.log("ERROR", error.message);
+    return {
+      success: false,
+      message: "deleting application failed!",
+    };
+  }
+};
