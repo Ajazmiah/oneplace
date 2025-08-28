@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "../Components/header/Header";
 import Footer from "@/Components/footer/Footer";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Resumind – Track Job Applications Effortlessly",
-  description: "Easily track your job applications, save resumes, cover letters, and important details—all in one place to stay organized and interview-ready.",
+  description:
+    "Easily track your job applications, save resumes, cover letters, and important details—all in one place to stay organized and interview-ready.",
 };
 
 export default function RootLayout({ children }) {
@@ -27,7 +29,8 @@ export default function RootLayout({ children }) {
         <Header />
         {children}
 
-      <Footer/>
+        <Footer />
+        <Toaster />
       </body>
     </html>
   );
