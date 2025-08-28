@@ -4,6 +4,8 @@ import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { createApplication } from "@/app/lib/actions/addApplication/addApplicationAction";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -16,7 +18,7 @@ import { FileText } from "lucide-react";
 import { editApplication } from "@/app/lib/DataAccessLayer/applications";
 import { redirect } from "next/navigation";
 
-function ApplicationForm({ application = null}, props) {
+function ApplicationForm({ application = null }, props) {
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
 
@@ -30,6 +32,8 @@ function ApplicationForm({ application = null}, props) {
   );
   const [details, setDetails] = useState(application?.description || "");
   const [status, setStatus] = useState(application?.status || "applied");
+
+  const router = useRouter();
 
   useEffect(() => {
     console.log("USEEFFECT", application);
@@ -100,20 +104,17 @@ function ApplicationForm({ application = null}, props) {
     formData.append("details", details);
 
     let response;
-    if(!application) {
+    if (!application) {
       response = await createApplication(formData);
-    }else {
-      response = await editApplication(application._id, formData)
+    } else {
+      response = await editApplication(application._id, formData);
+      toast("Successfully edited");
     }
-
-    
 
     if (!response.success) {
       console.error("Error:", response.message);
       alert(response.message);
       return;
-    } else {
-      alert(application ? 'Application added' : 'Application edited successfully')
     }
     setResume(null);
     setCoverLetter(null);
@@ -125,8 +126,9 @@ function ApplicationForm({ application = null}, props) {
     setStatus("");
 
     localStorage.removeItem("application");
+    application ? toast("Successfully edited") : toast("application added");
 
-    alert("Application added successfully");
+    router.push("/dashboard/applications");
   }
   return (
     <div className="max-w-[760px] mx-auto">
