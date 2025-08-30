@@ -17,10 +17,12 @@ import { Textarea } from "@/Components/ui/textarea";
 import { FileText } from "lucide-react";
 import { editApplication } from "@/app/lib/DataAccessLayer/applications";
 import { redirect } from "next/navigation";
+import AlertDialogBox from "../AlertDialog/AlertDialog";
 
 function ApplicationForm({ application = null }, props) {
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const [jobTitle, setJobTitle] = useState(application?.jobTitle || "");
   const [companyName, setCompanyName] = useState(
@@ -85,12 +87,7 @@ function ApplicationForm({ application = null }, props) {
     console.log("File is valid:", { name, type, size });
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!jobTitle || !companyName) {
-      return alert("Job title and company are required");
-    }
-
+  const getFormData = () => {
     const formData = new FormData();
 
     // formData.append("resume", resume);
@@ -103,17 +100,35 @@ function ApplicationForm({ application = null }, props) {
     formData.append("salaryRange", salaryRange);
     formData.append("details", details);
 
-    let response;
+    return formData;
+  };
+
+  let response;
+  const handleConfirmed = async () => {
+    const formData = getFormData();
+    setOpen(false);
+    response = await editApplication(application._id, formData);
+    toast(response.message);
+    router.back();
+  };
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!jobTitle || !companyName) {
+      return alert("Job title and company are required");
+    }
+
+    const formData = getFormData();
+
     if (!application) {
       response = await createApplication(formData);
     } else {
-      response = await editApplication(application._id, formData);
-      toast("Successfully edited");
+      setOpen(true);
     }
 
-    if (!response.success) {
+    if (!response?.success) {
       console.error("Error:", response.message);
-      alert(response.message);
+      toast.error(response.message);
       return;
     }
     setResume(null);
@@ -132,6 +147,12 @@ function ApplicationForm({ application = null }, props) {
   }
   return (
     <div className="max-w-[760px] mx-auto">
+      <AlertDialogBox
+        open={open}
+        onCancel={() => setOpen(false)}
+        onConfirm={handleConfirmed}
+        title="Are you sure you want to edit?"
+      />
       <h2 className="text-xl font-semibold border-b pb-5">
         Application Details
       </h2>

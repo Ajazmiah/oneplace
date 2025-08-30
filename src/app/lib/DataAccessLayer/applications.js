@@ -59,10 +59,14 @@ export const editApplication = async (id, formData) => {
     revalidatePath("/dashboard/applications");
     return {
       success: true,
+      message: 'Successfully edited'
     };
   } catch (error) {
     console.error("Error fetching application:", error.message);
-    throw error;
+    return {
+      success: false,
+      message: 'Edit failed! something went wrong'
+    };
   }
 };
 

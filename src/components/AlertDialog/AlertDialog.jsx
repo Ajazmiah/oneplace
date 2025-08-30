@@ -10,15 +10,19 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function AlertDialogBox({ open, onCancel, onConfirm, title, description}) {
+export default function AlertDialogBox({
+  open,
+  onCancel,
+  onConfirm,
+  title,
+  description = "",
+}) {
   return (
     <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>
-           {description}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
