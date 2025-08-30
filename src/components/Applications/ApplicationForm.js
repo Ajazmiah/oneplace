@@ -35,6 +35,8 @@ function ApplicationForm({ application = null }, props) {
   const [details, setDetails] = useState(application?.description || "");
   const [status, setStatus] = useState(application?.status || "applied");
 
+  const [jobUrl, setJobUrl] = useState(application?.jobUrl || '')
+
   const router = useRouter();
 
   useEffect(() => {
@@ -155,6 +157,14 @@ function ApplicationForm({ application = null }, props) {
       onChange: (e) => setJobTitle(e.target.value),
     },
     {
+      name: "URL",
+      placeholder: "Job URL",
+      value: jobUrl,
+      required: false,
+      onChange: (e) => setJobUrl(e.target.value),
+      
+    },
+    {
       name: "company",
       placeholder: "Company *",
       value: companyName,
@@ -184,7 +194,7 @@ function ApplicationForm({ application = null }, props) {
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {Inputs.map((input,index) => (
+          {Inputs.map((input, index) => (
             <Input
               key={index}
               {...input} // spreads name, placeholder, value, required, onChange
