@@ -145,6 +145,31 @@ function ApplicationForm({ application = null }, props) {
 
     router.push("/dashboard/applications");
   }
+
+  const Inputs = [
+    {
+      name: "jobTitle",
+      placeholder: "Job Title *",
+      value: jobTitle,
+      required: true,
+      onChange: (e) => setJobTitle(e.target.value),
+    },
+    {
+      name: "company",
+      placeholder: "Company *",
+      value: companyName,
+      required: true,
+      onChange: (e) => setCompanyName(e.target.value),
+    },
+    {
+      name: "location",
+      placeholder: "Location",
+      value: location,
+      required: false,
+      onChange: (e) => setLocation(e.target.value),
+    },
+  ];
+
   return (
     <div className="max-w-[760px] mx-auto">
       <AlertDialogBox
@@ -159,26 +184,12 @@ function ApplicationForm({ application = null }, props) {
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            required
-            name="jobTitle"
-            placeholder="Job Title *"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-          />
-          <Input
-            required
-            name="company"
-            placeholder="Company *"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-          />
-          <Input
-            name="location"
-            placeholder="Location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
+          {Inputs.map((input,index) => (
+            <Input
+              key={index}
+              {...input} // spreads name, placeholder, value, required, onChange
+            />
+          ))}
 
           <Select
             name="status"
