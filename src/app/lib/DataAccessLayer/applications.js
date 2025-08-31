@@ -12,7 +12,6 @@ export const getApplications = async () => {
   const applications = await AddApplicationModel.find({
     userId: user._id,
   }).populate({ path: "userId" });
-  console.log("APPLI", applications);
 
   return applications;
 };
@@ -37,8 +36,6 @@ export const getSingleApplication = async (id) => {
 export const editApplication = async (id, formData) => {
   try {
     const application = await AddApplicationModel.findOneAndUpdate({ _id: id });
-
-    console.log("FROM EDIT", application);
     const jobTitle = formData.get("jobTitle");
     const companyName = formData.get("companyName");
     const status = formData.get("status");
