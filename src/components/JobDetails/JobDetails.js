@@ -29,10 +29,9 @@ const statusColors = {
 };
 
 function JobDetails({ job }) {
+  console.log("JOBBB INSIDE DETAILS ", job)
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
-
 
   const handleEdit = (id) => {
     localStorage.setItem("application", JSON.stringify(job));
@@ -50,6 +49,13 @@ function JobDetails({ job }) {
     setOpen(true);
   };
 
+  const handleShowFile = async (file) => {
+    const blob = await file.blob();
+
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="p-6 lg:p-8 bg-slate-50 min-h-screen">
       {/* Alert Dialog */}
@@ -64,7 +70,11 @@ function JobDetails({ job }) {
 
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
-          <Button variant="outline" className="border-slate-200 mb-6" onClick={()=> router.back()}>
+          <Button
+            variant="outline"
+            className="border-slate-200 mb-6"
+            onClick={() => router.back()}
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Applications
           </Button>
@@ -160,7 +170,7 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => window.open(job.resume, "_blank")}
+                    onClick={() => handleShowFile(job.coverLetter)}
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     View Resume
@@ -172,7 +182,7 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => window.open(job.coverLetter, "_blank")}
+                    onClick={() => handleShowFile(job.coverLetter)}
                   >
                     <Mail className="w-4 h-4 mr-2" />
                     View Cover Letter

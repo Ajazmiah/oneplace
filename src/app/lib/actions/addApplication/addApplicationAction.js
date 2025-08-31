@@ -31,6 +31,10 @@ export async function createApplication(formData) {
     const description = formData.get("details");
     const location = formData.get("location");
     const salaryRange = formData.get("salaryRange");
+    const coverLetter= formData.get("coverLetter");
+    const resume = formData.get("resume");
+
+    console.log("RESSS", resume)
 
     if (!jobTitle || !companyName) {
       return {
@@ -39,6 +43,8 @@ export async function createApplication(formData) {
       };
     }
 
+    
+
     const application = await addApplicationModel.create({
       jobTitle,
       companyName,
@@ -46,6 +52,8 @@ export async function createApplication(formData) {
       description,
       location,
       salaryRange,
+      resume: resume.buffer,
+      coverLetter: coverLetter.buffer,
       userId: user._id, // ✅ this is now safe
     });
 

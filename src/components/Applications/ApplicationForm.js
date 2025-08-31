@@ -39,9 +39,6 @@ function ApplicationForm({ application = null }, props) {
 
   const router = useRouter();
 
-  useEffect(() => {
-    console.log("USEEFFECT", application);
-  }, [application]);
 
   const fileInputs = [
     {
@@ -66,6 +63,7 @@ function ApplicationForm({ application = null }, props) {
     ];
     const file = e.target.files[0]; // ✅ Get the first file
 
+
     if (!file) {
       console.log("No file selected");
       return;
@@ -82,18 +80,18 @@ function ApplicationForm({ application = null }, props) {
       return;
     }
 
-    if (inputName === "resume") setResume({ type, size, name });
-    else setCoverLetter({ type, name, size });
+    if (inputName === "resume") setResume(file);
+    else setCoverLetter(file);
 
     // ✅ Success
-    console.log("File is valid:", { name, type, size });
+    console.log("File is valid:", file);
   }
 
   const getFormData = () => {
     const formData = new FormData();
 
-    // formData.append("resume", resume);
-    // formData.append("coverLetter", coverLetter);
+    formData.append("resume", resume);
+    formData.append("coverLetter", coverLetter);
 
     formData.append("jobTitle", jobTitle);
     formData.append("status", status);

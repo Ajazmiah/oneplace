@@ -20,6 +20,12 @@ const addApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    resume: {
+      type: Object,
+    },
+    coverLetter: {
+      type: Object
+    },
     description: {
       type: String,
       trim: true,
