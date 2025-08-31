@@ -17,10 +17,12 @@ import { Textarea } from "@/Components/ui/textarea";
 import { FileText } from "lucide-react";
 import { editApplication } from "@/app/lib/DataAccessLayer/applications";
 import { redirect } from "next/navigation";
+import AlertDialogBox from "../AlertDialog/AlertDialog";
 
 function ApplicationForm({ application = null }, props) {
   const [resume, setResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
+  const [open, setOpen] = useState(false);
 
   const [jobTitle, setJobTitle] = useState(application?.jobTitle || "");
   const [companyName, setCompanyName] = useState(
@@ -32,6 +34,8 @@ function ApplicationForm({ application = null }, props) {
   );
   const [details, setDetails] = useState(application?.description || "");
   const [status, setStatus] = useState(application?.status || "applied");
+
+  const [jobUrl, setJobUrl] = useState(application?.jobUrl || '')
 
   const router = useRouter();
 
@@ -85,12 +89,7 @@ function ApplicationForm({ application = null }, props) {
     console.log("File is valid:", { name, type, size });
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!jobTitle || !companyName) {
-      return alert("Job title and company are required");
-    }
-
+  const getFormData = () => {
     const formData = new FormData();
 
     // formData.append("resume", resume);
@@ -103,17 +102,35 @@ function ApplicationForm({ application = null }, props) {
     formData.append("salaryRange", salaryRange);
     formData.append("details", details);
 
-    let response;
+    return formData;
+  };
+
+  let response;
+  const handleConfirmed = async () => {
+    const formData = getFormData();
+    setOpen(false);
+    response = await editApplication(application._id, formData);
+    toast(response.message);
+    router.back();
+  };
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!jobTitle || !companyName) {
+      return alert("Job title and company are required");
+    }
+
+    const formData = getFormData();
+
     if (!application) {
       response = await createApplication(formData);
     } else {
-      response = await editApplication(application._id, formData);
-      toast("Successfully edited");
+      setOpen(true);
     }
 
-    if (!response.success) {
+    if (!response?.success) {
       console.error("Error:", response.message);
-      alert(response.message);
+      toast.error(response.message);
       return;
     }
     setResume(null);
@@ -130,34 +147,59 @@ function ApplicationForm({ application = null }, props) {
 
     router.push("/dashboard/applications");
   }
+
+  const Inputs = [
+    {
+      name: "jobTitle",
+      placeholder: "Job Title *",
+      value: jobTitle,
+      required: true,
+      onChange: (e) => setJobTitle(e.target.value),
+    },
+    {
+      name: "URL",
+      placeholder: "Job URL",
+      value: jobUrl,
+      required: false,
+      onChange: (e) => setJobUrl(e.target.value),
+      
+    },
+    {
+      name: "company",
+      placeholder: "Company *",
+      value: companyName,
+      required: true,
+      onChange: (e) => setCompanyName(e.target.value),
+    },
+    {
+      name: "location",
+      placeholder: "Location",
+      value: location,
+      required: false,
+      onChange: (e) => setLocation(e.target.value),
+    },
+  ];
+
   return (
     <div className="max-w-[760px] mx-auto">
+      <AlertDialogBox
+        open={open}
+        onCancel={() => setOpen(false)}
+        onConfirm={handleConfirmed}
+        title="Are you sure you want to edit?"
+      />
       <h2 className="text-xl font-semibold border-b pb-5">
         Application Details
       </h2>
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            required
-            name="jobTitle"
-            placeholder="Job Title *"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-          />
-          <Input
-            required
-            name="company"
-            placeholder="Company *"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-          />
-          <Input
-            name="location"
-            placeholder="Location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
+          {Inputs.map((input, index) => (
+            <Input
+              key={index}
+              {...input} // spreads name, placeholder, value, required, onChange
+            />
+          ))}
 
           <Select
             name="status"
