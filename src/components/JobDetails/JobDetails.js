@@ -32,6 +32,8 @@ function JobDetails({ job }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
+
+
   const handleEdit = (id) => {
     localStorage.setItem("application", JSON.stringify(job));
     router.push(`/dashboard/applications/${id}/edit`);
@@ -62,7 +64,7 @@ function JobDetails({ job }) {
 
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
-          <Button variant="outline" className="border-slate-200 mb-6">
+          <Button variant="outline" className="border-slate-200 mb-6" onClick={()=> router.back()}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Applications
           </Button>
