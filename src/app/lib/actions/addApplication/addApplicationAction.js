@@ -4,6 +4,7 @@ import addApplicationModel from "@/database/models/addApplicationModel";
 import { revalidatePath } from "next/cache";
 import { getUserByEmail } from "../../utils/databaseUtils";
 import { getUserSession } from "../../DataAccessLayer/getSession";
+import { getBuffer } from "../../utils/utils";
 
 export async function createApplication(formData) {
   const session = await getUserSession();
@@ -34,9 +35,9 @@ export async function createApplication(formData) {
     const coverLetter = formData.get("coverLetter");
     const resume = formData.get("resume");
 
-    const buffer = Buffer.from(await resume.arrayBuffer());
+    const buffer = await getBuffer(resume)
 
-    console.log("RESSS", resume);
+
 
     if (!jobTitle || !companyName) {
       return {

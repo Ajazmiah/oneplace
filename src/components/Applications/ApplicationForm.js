@@ -35,10 +35,9 @@ function ApplicationForm({ application = null }, props) {
   const [details, setDetails] = useState(application?.description || "");
   const [status, setStatus] = useState(application?.status || "applied");
 
-  const [jobUrl, setJobUrl] = useState(application?.jobUrl || '')
+  const [jobUrl, setJobUrl] = useState(application?.jobUrl || "");
 
   const router = useRouter();
-
 
   const fileInputs = [
     {
@@ -62,7 +61,6 @@ function ApplicationForm({ application = null }, props) {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
     ];
     const file = e.target.files[0]; // ✅ Get the first file
-
 
     if (!file) {
       console.log("No file selected");
@@ -90,7 +88,9 @@ function ApplicationForm({ application = null }, props) {
   const getFormData = () => {
     const formData = new FormData();
 
-    formData.append("resume", resume);
+    if (resume !== null) {
+      formData.append("resume", resume);
+    }
     formData.append("coverLetter", coverLetter);
 
     formData.append("jobTitle", jobTitle);
@@ -160,7 +160,6 @@ function ApplicationForm({ application = null }, props) {
       value: jobUrl,
       required: false,
       onChange: (e) => setJobUrl(e.target.value),
-      
     },
     {
       name: "company",
