@@ -34,6 +34,9 @@ export async function createApplication(formData) {
     const coverLetter= formData.get("coverLetter");
     const resume = formData.get("resume");
 
+    const buffer = Buffer.from(await resume.arrayBuffer());
+
+
     console.log("RESSS", resume)
 
     if (!jobTitle || !companyName) {
@@ -52,7 +55,9 @@ export async function createApplication(formData) {
       description,
       location,
       salaryRange,
-      resume: resume.buffer,
+      resume: { filename: resume.name,
+        mimetype: resume.type,
+        data: buffer},
       coverLetter: coverLetter.buffer,
       userId: user._id, // ✅ this is now safe
     });

@@ -50,8 +50,17 @@ function JobDetails({ job }) {
   };
 
   const handleShowFile = async (file) => {
-    const blob = await file.blob();
-
+    const byteCharacters = atob(file.data); // file.data is base64 string
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+  
+    // Make a Blob from bytes
+    const blob = new Blob([byteArray], { type: file.mimetype });
+  
+    // Create URL and open
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
@@ -170,7 +179,7 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => handleShowFile(job.coverLetter)}
+                    onClick={() => handleShowFile(job.resume)}
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     View Resume
