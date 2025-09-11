@@ -24,7 +24,9 @@ const addApplicationSchema = new mongoose.Schema(
       type: Object,
     },
     coverLetter: {
-      type: Object
+      filename: String,
+      MimeType: String,
+      data: Buffer,// stores PDF/Word as binary
     },
     description: {
       type: String,
