@@ -6,7 +6,7 @@ import { getUserByEmail } from "../../utils/databaseUtils";
 import { getUserSession } from "../../DataAccessLayer/getSession";
 
 export async function createApplication(formData) {
-  const session = await getUserSession()
+  const session = await getUserSession();
 
   if (!session?.user?.email) {
     return {
@@ -31,13 +31,12 @@ export async function createApplication(formData) {
     const description = formData.get("details");
     const location = formData.get("location");
     const salaryRange = formData.get("salaryRange");
-    const coverLetter= formData.get("coverLetter");
+    const coverLetter = formData.get("coverLetter");
     const resume = formData.get("resume");
 
     const buffer = Buffer.from(await resume.arrayBuffer());
 
-
-    console.log("RESSS", resume)
+    console.log("RESSS", resume);
 
     if (!jobTitle || !companyName) {
       return {
@@ -46,7 +45,11 @@ export async function createApplication(formData) {
       };
     }
 
-    
+    const resumeData = {
+      filename: resume.name,
+      mimetype: resume.type,
+      data: buffer,
+    };
 
     const application = await addApplicationModel.create({
       jobTitle,
@@ -55,19 +58,18 @@ export async function createApplication(formData) {
       description,
       location,
       salaryRange,
-      resume: { filename: resume.name,
-        mimetype: resume.type,
-        data: buffer},
-      coverLetter: coverLetter.buffer,
+      resume: resumeData,
+ 
       userId: user._id, // ✅ this is now safe
     });
 
     revalidatePath("/dashboard/applications");
 
-    return {
-      success: true,
-      data: JSON.parse(JSON.stringify(application)),
-    };
+    // remove binary data from response
+    const responseData = application.toObject();
+    delete responseData.resume?.data;
+
+    return { success: true, data: responseData };
   } catch (error) {
     console.error("Error creating application:", error);
     return {
