@@ -29,7 +29,7 @@ const statusColors = {
 };
 
 function JobDetails({ job }) {
-  console.log("JOBBB INSIDE DETAILS ", job)
+  console.log("JOBBB INSIDE DETAILS ", job);
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
@@ -56,10 +56,10 @@ function JobDetails({ job }) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
-  
+
     // Make a Blob from bytes
     const blob = new Blob([byteArray], { type: file.mimetype });
-  
+
     // Create URL and open
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
@@ -182,7 +182,14 @@ function JobDetails({ job }) {
                     onClick={() => handleShowFile(job.resume)}
                   >
                     <FileText className="w-4 h-4 mr-2" />
-                    View Resume
+                    <a
+                      href={`/api/application/${job._id}/resume`}
+                      className="w-full justify-start border-slate-200 text-left"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Resume
+                    </a>
                   </Button>
                 ) : (
                   <p className="text-sm text-slate-500">No resume uploaded.</p>
@@ -191,10 +198,17 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => handleShowFile(job.coverLetter)}
+                    onClick={() => handleShowFile(job.resume)}
                   >
                     <Mail className="w-4 h-4 mr-2" />
-                    View Cover Letter
+                    <a
+                      href={`/api/application/${job._id}/resume`}
+                      className="w-full justify-start border-slate-200 text-left"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Resume
+                    </a>
                   </Button>
                 ) : (
                   <p className="text-sm text-slate-500">
