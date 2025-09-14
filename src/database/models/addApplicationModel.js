@@ -20,6 +20,18 @@ const addApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    resume: {
+      filename: { type: String, required: true }, // Original filename
+      mimetype: { type: String, required: true }, // e.g. "application/pdf"
+      data: { type: Buffer, required: true }, // The file itself (BLOB)
+      // userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
+      // jobId: { type: Schema.Types.ObjectId, ref: "Job", required: true }
+    },
+    // coverLetter: {
+    //   filename: { type: String, required: true }, // Original filename
+    //   mimeType: { type: String, required: true }, // e.g. "application/pdf"
+    //   data: { type: Buffer, required: true }, // The file itself (BLOB)
+    // },
     description: {
       type: String,
       trim: true,

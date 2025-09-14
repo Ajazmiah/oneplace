@@ -35,13 +35,9 @@ function ApplicationForm({ application = null }, props) {
   const [details, setDetails] = useState(application?.description || "");
   const [status, setStatus] = useState(application?.status || "applied");
 
-  const [jobUrl, setJobUrl] = useState(application?.jobUrl || '')
+  const [jobUrl, setJobUrl] = useState(application?.jobUrl || "");
 
   const router = useRouter();
-
-  useEffect(() => {
-    console.log("USEEFFECT", application);
-  }, [application]);
 
   const fileInputs = [
     {
@@ -82,18 +78,20 @@ function ApplicationForm({ application = null }, props) {
       return;
     }
 
-    if (inputName === "resume") setResume({ type, size, name });
-    else setCoverLetter({ type, name, size });
+    if (inputName === "resume") setResume(file);
+    else setCoverLetter(file);
 
     // ✅ Success
-    console.log("File is valid:", { name, type, size });
+    console.log("File is valid:", file);
   }
 
   const getFormData = () => {
     const formData = new FormData();
 
-    // formData.append("resume", resume);
-    // formData.append("coverLetter", coverLetter);
+    if (resume !== null) {
+      formData.append("resume", resume);
+    }
+    formData.append("coverLetter", coverLetter);
 
     formData.append("jobTitle", jobTitle);
     formData.append("status", status);
@@ -162,7 +160,6 @@ function ApplicationForm({ application = null }, props) {
       value: jobUrl,
       required: false,
       onChange: (e) => setJobUrl(e.target.value),
-      
     },
     {
       name: "company",
