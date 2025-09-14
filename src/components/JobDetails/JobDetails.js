@@ -29,10 +29,9 @@ const statusColors = {
 };
 
 function JobDetails({ job }) {
+  console.log("JOBBB INSIDE DETAILS ", job);
   const router = useRouter();
   const [open, setOpen] = useState(false);
-
-
 
   const handleEdit = (id) => {
     localStorage.setItem("application", JSON.stringify(job));
@@ -50,6 +49,22 @@ function JobDetails({ job }) {
     setOpen(true);
   };
 
+  const handleShowFile = async (file) => {
+    const byteCharacters = atob(file.data); // file.data is base64 string
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+
+    // Make a Blob from bytes
+    const blob = new Blob([byteArray], { type: file.mimetype });
+
+    // Create URL and open
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  };
+
   return (
     <div className="p-6 lg:p-8 bg-slate-50 min-h-screen">
       {/* Alert Dialog */}
@@ -64,7 +79,11 @@ function JobDetails({ job }) {
 
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
-          <Button variant="outline" className="border-slate-200 mb-6" onClick={()=> router.back()}>
+          <Button
+            variant="outline"
+            className="border-slate-200 mb-6"
+            onClick={() => router.back()}
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Applications
           </Button>
@@ -160,10 +179,17 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => window.open(job.resume, "_blank")}
+                    onClick={() => handleShowFile(job.resume)}
                   >
                     <FileText className="w-4 h-4 mr-2" />
-                    View Resume
+                    <a
+                      href={`/api/application/${job._id}/resume`}
+                      className="w-full justify-start border-slate-200 text-left"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Resume
+                    </a>
                   </Button>
                 ) : (
                   <p className="text-sm text-slate-500">No resume uploaded.</p>
@@ -172,10 +198,17 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => window.open(job.coverLetter, "_blank")}
+                    onClick={() => handleShowFile(job.resume)}
                   >
                     <Mail className="w-4 h-4 mr-2" />
-                    View Cover Letter
+                    <a
+                      href={`/api/application/${job._id}/resume`}
+                      className="w-full justify-start border-slate-200 text-left"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Resume
+                    </a>
                   </Button>
                 ) : (
                   <p className="text-sm text-slate-500">

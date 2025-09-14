@@ -4,6 +4,7 @@ import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
 import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { getBuffer } from "../utils/utils";
 
 export const getApplications = async () => {
   const session = await getUserSession();
@@ -12,7 +13,6 @@ export const getApplications = async () => {
   const applications = await AddApplicationModel.find({
     userId: user._id,
   }).populate({ path: "userId" });
-  console.log("APPLI", applications);
 
   return applications;
 };
@@ -37,14 +37,22 @@ export const getSingleApplication = async (id) => {
 export const editApplication = async (id, formData) => {
   try {
     const application = await AddApplicationModel.findOneAndUpdate({ _id: id });
-
-    console.log("FROM EDIT", application);
     const jobTitle = formData.get("jobTitle");
     const companyName = formData.get("companyName");
     const status = formData.get("status");
     const description = formData.get("details");
     const location = formData.get("location");
     const salaryRange = formData.get("salaryRange");
+    const resume = formData.get("resume")
+
+    console.log("RESS EM EEEEE", formData)
+
+    const resumeData = {
+      filename: resume?.name,
+      mimetype: resume?.type,
+      data: await getBuffer(resume) 
+    };
+
 
     application.jobTitle = jobTitle;
     application.companyName = companyName;
@@ -53,6 +61,7 @@ export const editApplication = async (id, formData) => {
     application.description = description;
     application.location = location;
     application.salaryRange = salaryRange;
+    application.resume = resume ? resumeData : application.resume
 
     await application.save();
 

@@ -28,3 +28,7 @@ export const formatDate = (date) => {
 
   return formatedDate;
 };
+
+export const getBuffer = async (file) => {
+  return Buffer.from(await file.arrayBuffer());
+}
