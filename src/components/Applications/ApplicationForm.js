@@ -16,7 +16,6 @@ import {
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText } from "lucide-react";
 import { editApplication } from "@/app/lib/DataAccessLayer/applications";
-import { redirect } from "next/navigation";
 import AlertDialogBox from "../AlertDialog/AlertDialog";
 
 function ApplicationForm({ application = null }, props) {
@@ -91,7 +90,9 @@ function ApplicationForm({ application = null }, props) {
     if (resume !== null) {
       formData.append("resume", resume);
     }
-    formData.append("coverLetter", coverLetter);
+    if (coverLetter !== null) {
+      formData.append("coverLetter", coverLetter);
+    }
 
     formData.append("jobTitle", jobTitle);
     formData.append("status", status);

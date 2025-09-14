@@ -179,7 +179,7 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => handleShowFile(job.resume)}
+                    // onClick={() => handleShowFile(job.resume)}
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     <a
@@ -198,7 +198,7 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => handleShowFile(job.resume)}
+                    // onClick={() => handleShowFile(job.resume)}
                   >
                     <Mail className="w-4 h-4 mr-2" />
                     <a
@@ -207,7 +207,7 @@ function JobDetails({ job }) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      View Resume
+                      View Cover Letter
                     </a>
                   </Button>
                 ) : (
