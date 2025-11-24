@@ -27,6 +27,7 @@ const statusColors = {
   rejected: "bg-red-100 text-red-800 border-red-200",
   withdrawn: "bg-gray-100 text-gray-800 border-gray-200",
 };
+console.log("hi") 
 
 function JobDetails({ job }) {
   console.log("JOBBB INSIDE DETAILS ", job);
@@ -179,7 +180,7 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => handleShowFile(job.resume)}
+                    // onClick={() => handleShowFile(job.resume)}
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     <a
@@ -198,7 +199,7 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => handleShowFile(job.resume)}
+                    // onClick={() => handleShowFile(job.resume)}
                   >
                     <Mail className="w-4 h-4 mr-2" />
                     <a
@@ -207,7 +208,7 @@ function JobDetails({ job }) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      View Resume
+                      View Cover Letter
                     </a>
                   </Button>
                 ) : (

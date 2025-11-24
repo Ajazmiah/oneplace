@@ -35,10 +35,6 @@ export async function createApplication(formData) {
     const coverLetter = formData.get("coverLetter");
     const resume = formData.get("resume");
 
-    const buffer = await getBuffer(resume)
-
-
-
     if (!jobTitle || !companyName) {
       return {
         success: false,
@@ -46,11 +42,23 @@ export async function createApplication(formData) {
       };
     }
 
-    const resumeData = {
-      filename: resume.name,
-      mimetype: resume.type,
-      data: buffer,
-    };
+    let resumeData = null;
+    let coverLetterData = null;
+
+    if (resume) {
+      resumeData = {
+        filename: resume.name,
+        mimetype: resume.type,
+        data: await getBuffer(resume),
+      };
+    }
+    if (coverLetter) {
+      coverLetterData = {
+        filename: coverLetter.name,
+        mimetype: coverLetter.type,
+        data: await getBuffer(coverLetter),
+      };
+    }
 
     const application = await addApplicationModel.create({
       jobTitle,
@@ -60,7 +68,8 @@ export async function createApplication(formData) {
       location,
       salaryRange,
       resume: resumeData,
- 
+      coverLetter: coverLetterData,
+
       userId: user._id, // ✅ this is now safe
     });
 
@@ -69,10 +78,11 @@ export async function createApplication(formData) {
     // remove binary data from response
     const responseData = application.toObject();
     delete responseData.resume?.data;
+    delete responseData.coverLetter?.data;
 
     return { success: true, data: responseData };
   } catch (error) {
-    console.error("Error creating application:", error);
+    console.error("Error creating application:", error.errors.message);
     return {
       success: false,
       message: "Failed to create application.",

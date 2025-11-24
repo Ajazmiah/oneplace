@@ -43,16 +43,28 @@ export const editApplication = async (id, formData) => {
     const description = formData.get("details");
     const location = formData.get("location");
     const salaryRange = formData.get("salaryRange");
-    const resume = formData.get("resume")
+    const resume = formData.get("resume");
+    const coverLetter = formData.get("coverLetter");
 
-    console.log("RESS EM EEEEE", formData)
+    console.log("RESS EM EEEEE", formData);
 
-    const resumeData = {
-      filename: resume?.name,
-      mimetype: resume?.type,
-      data: await getBuffer(resume) 
-    };
+    let resumeData = null;
+    let coverLetterData = null;
 
+    if (resume) {
+      resumeData = {
+        filename: resume.name,
+        mimetype: resume.type,
+        data: await getBuffer(resume),
+      };
+    }
+    if (coverLetter) {
+      coverLetterData = {
+        filename: coverLetter?.name,
+        mimetype: coverLetter?.type,
+        data: await getBuffer(coverLetter),
+      };
+    }
 
     application.jobTitle = jobTitle;
     application.companyName = companyName;
@@ -61,20 +73,23 @@ export const editApplication = async (id, formData) => {
     application.description = description;
     application.location = location;
     application.salaryRange = salaryRange;
-    application.resume = resume ? resumeData : application.resume
+    application.resume = resume ? resumeData : application.resume;
+    application.coverLetter = coverLetter
+      ? coverLetterData
+      :application?.coverLetter
 
     await application.save();
 
     revalidatePath("/dashboard/applications");
     return {
       success: true,
-      message: 'Successfully edited'
+      message: "Successfully edited",
     };
   } catch (error) {
     console.error("Error fetching application:", error.message);
     return {
       success: false,
-      message: 'Edit failed! something went wrong'
+      message: "Edit failed! something went wrong",
     };
   }
 };
