@@ -27,6 +27,7 @@ const statusColors = {
   rejected: "bg-red-100 text-red-800 border-red-200",
   withdrawn: "bg-gray-100 text-gray-800 border-gray-200",
 };
+console.log("hi") 
 
 function JobDetails({ job }) {
   console.log("JOBBB INSIDE DETAILS ", job);

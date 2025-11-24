@@ -107,7 +107,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("Error creating application:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to create application." },
+      { success: false, message: error },
       { status: 500 } // Internal Server Error
     );
   }

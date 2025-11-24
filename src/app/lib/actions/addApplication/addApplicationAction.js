@@ -82,7 +82,7 @@ export async function createApplication(formData) {
 
     return { success: true, data: responseData };
   } catch (error) {
-    console.error("Error creating application:", error);
+    console.error("Error creating application:", error.errors.message);
     return {
       success: false,
       message: "Failed to create application.",
