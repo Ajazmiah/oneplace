@@ -3,9 +3,9 @@ import { revalidatePath } from "next/cache";
 
 // Assuming these imports are correctly configured with path aliases in your project
 import addApplicationModel from "@/database/models/addApplicationModel";
-import { getUserByEmail } from "../../utils/databaseUtils";
-import { getUserSession } from "../../DataAccessLayer/getSession";
-import { getBuffer } from "../../utils/utils";
+import { getUserByEmail } from "../../../lib/utils/databaseUtils";
+import { getUserSession } from "../../../lib/DataAccessLayer/getSession";
+import { getBuffer } from "../../../lib/utils/utils";
 
 /**
  * Handles POST requests to create a new application.
@@ -13,6 +13,8 @@ import { getBuffer } from "../../utils/utils";
  * @param {Request} request The incoming Next.js Request object.
  */
 export async function POST(request) {
+
+  console.log("___REQ____", request)
   // 1. Get Session & Authenticate
   const session = await getUserSession();
 
@@ -63,14 +65,14 @@ export async function POST(request) {
     let coverLetterData = null;
 
     // Check if the file fields are non-null and an actual File object (not an empty string)
-    if (resume instanceof File && resume.size > 0) {
+    if (resume && typeof resume === "object" && resume.size > 0) {
       resumeData = {
         filename: resume.name,
         mimetype: resume.type,
         data: await getBuffer(resume), // Convert File object to a Buffer
       };
     }
-    if (coverLetter instanceof File && coverLetter.size > 0) {
+    if (coverLetter  && typeof resume === "object" && coverLetter.size > 0) {
       coverLetterData = {
         filename: coverLetter.name,
         mimetype: coverLetter.type,
