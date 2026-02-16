@@ -34,6 +34,7 @@ export async function createApplication(formData) {
     const salaryRange = formData.get("salaryRange");
     const coverLetter = formData.get("coverLetter");
     const resume = formData.get("resume");
+    const jobUrl = formData.get("jobUrl")
 
     if (!jobTitle || !companyName) {
       return {
@@ -69,7 +70,7 @@ export async function createApplication(formData) {
       salaryRange,
       resume: resumeData,
       coverLetter: coverLetterData,
-
+      jobUrl,
       userId: user._id, // ✅ this is now safe
     });
 

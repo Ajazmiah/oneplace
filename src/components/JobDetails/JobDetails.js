@@ -10,6 +10,7 @@ import {
   Mail,
   Edit,
   Building,
+  LinkIcon,
 } from "lucide-react";
 import { Badge } from "@/Components/ui/badge";
 import { ApplicationContextProvider, useMyApplicationContext } from "@/context";
@@ -27,7 +28,7 @@ const statusColors = {
   rejected: "bg-red-100 text-red-800 border-red-200",
   withdrawn: "bg-gray-100 text-gray-800 border-gray-200",
 };
-console.log("hi") 
+console.log("hi");
 
 function JobDetails({ job }) {
   console.log("JOBBB INSIDE DETAILS ", job);
@@ -166,6 +167,16 @@ function JobDetails({ job }) {
                   <DollarSign className="w-4 h-4 mr-3 text-slate-500" />
                   <span className="font-medium text-slate-800">
                     {job.salaryRange || "N/A"}
+                  </span>
+                </div>
+                <div className="flex items-center text-sm">
+                  <LinkIcon className="w-4 h-4 mr-3 text-slate-500" />
+                  <span className="font-medium text-slate-800">
+                    {job.jobUrl ? (
+                      <a href={job.jobUrl}> Go To Job Post</a>
+                    ) : (
+                      "N/A"
+                    )}
                   </span>
                 </div>
               </CardContent>

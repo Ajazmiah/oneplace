@@ -32,6 +32,10 @@ const addApplicationSchema = new mongoose.Schema(
       mimetype: { type: String,  }, // e.g. "application/pdf"
       data: { type: Buffer,  }, // The file itself (BLOB)
     },
+    jobUrl: {
+      type: String,
+      required: false
+    },
     description: {
       type: String,
       trim: true,
