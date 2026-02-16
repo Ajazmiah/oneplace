@@ -16,8 +16,7 @@ import { Search } from "lucide-react";
 import { formatDate } from "@/app/lib/utils/utils";
 import Link from "next/link";
 
-export default function ApplicationTable({ applications}) {
- 
+export default function ApplicationTable({ applications }) {
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
   const [filterByStatus, setFilterByStatus] = useState("all");
@@ -37,24 +36,25 @@ export default function ApplicationTable({ applications}) {
     //checks if search query matches the searchFiled
     const queryExists = (searchFiled) =>
       searchFiled?.toLowerCase().includes(filterQuery.toLowerCase());
-
-    let filtered = [...applications];
+    let filtered;
 
     if (filterByStatus.trim() !== "all") {
-      filtered = filtered.filter((application) =>
+      filtered = applications.filter((application) =>
         application.status.includes(filterByStatus)
       );
     }
-    filtered = filtered.filter((application) => {
-      if (queryExists(application.jobTitle)) {
-        return true;
-      } else if (queryExists(application.company)) {
+    filtered = applications.filter((application) => {
+      if (
+        queryExists(application.jobTitle) ||
+        queryExists(application.companyName)
+      ) {
         return true;
       }
     });
 
     setFilteredApplications(filtered);
-  }, [filterQuery, filterByStatus, applications]);
+  }, [filterQuery, filterByStatus]);
+
   useEffect(() => {
     applications.forEach((application) => {
       setApplicationStatus((prev) => ({
@@ -83,12 +83,8 @@ export default function ApplicationTable({ applications}) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-white">
         <Card>
           <CardContent className="p-4">
-            <p className="text-sm text-gray-500">
-             Applications
-            </p>
-            <p className="text-2xl font-bold">
-              {`${applications.length}`}
-            </p>
+            <p className="text-sm text-gray-500">Applications</p>
+            <p className="text-2xl font-bold">{`${applications.length}`}</p>
           </CardContent>
         </Card>
         <Card>
@@ -99,13 +95,13 @@ export default function ApplicationTable({ applications}) {
             </p>
           </CardContent>
         </Card>
-        <Card className=''>
+        <Card className="">
           <CardContent className="p-4">
             <p className="text-sm">Offers Received</p>
             <p className="text-2xl font-bold">{applicationStatus.offer}</p>
           </CardContent>
         </Card>
-        <Card >
+        <Card>
           <CardContent className="p-4">
             <p className="text-sm">Rejections</p>
             <p className="text-2xl font-bold">
@@ -141,10 +137,10 @@ export default function ApplicationTable({ applications}) {
       </div>
 
       {/* Application Table */}
-  
+
       <div className="space-y-2">
         {filteredApplications.map((app, idx) => (
-          <Link 
+          <Link
             href={`applications/${app._id}`}
             key={app._id}
             className="flex flex-wrap lg:flex-nowrap justify-between items-center bg-white shadow-sm rounded-lg p-4 border"
@@ -166,18 +162,18 @@ export default function ApplicationTable({ applications}) {
                 {app.status}
               </span>
             </div>
-            <div className="w-1/6 text-sm text-gray-500">📅 {formatDate(app.createdAt)}</div>
+            <div className="w-1/6 text-sm text-gray-500">
+              📅 {formatDate(app.createdAt)}
+            </div>
             <div className="w-1/6 text-sm text-gray-500 hidden md:block">
               Resume
             </div>
             <div className="w-1/6 text-sm text-gray-500 hidden md:block">
               Cover Letter
             </div>
-           
           </Link>
         ))}
       </div>
-      
     </>
   );
 
