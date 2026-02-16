@@ -1,0 +1,53 @@
+import React from "react";
+import Link from "next/link";
+import { formatDate } from "@/app/lib/utils/utils";
+
+function Application({ filteredApplications }) {
+  const statusStyles = {
+    interviewing: "bg-yellow-100 text-yellow-800",
+    applied: "bg-blue-100 text-blue-800",
+    offer: "bg-green-100 text-green-800",
+    rejected: "bg-red-100 text-red-800",
+  };
+
+  return (
+    <>
+      {filteredApplications.map((app, idx) => (
+        <Link
+          href={`applications/${app._id}`}
+          key={app._id}
+          className="flex flex-wrap lg:flex-nowrap justify-between items-center bg-white shadow-sm rounded-lg p-4 border"
+        >
+          <div className="w-full lg:w-1/5 mb-2 lg:mb-0">
+            <p className="font-semibold">{app.jobTitle}</p>
+            <p className="text-sm text-gray-500">
+              {app.companyName} · {app.location}
+            </p>
+          </div>
+          <div className="w-1/6 text-sm text-gray-700">{app.position}</div>
+          <div className="w-1/6 text-sm text-gray-700">{app.salary}</div>
+          <div className="w-1/6">
+            <span
+              className={`text-xs px-2 py-1 rounded-full font-medium ${
+                statusStyles[app.status]
+              }`}
+            >
+              {app.status}
+            </span>
+          </div>
+          <div className="w-1/6 text-sm text-gray-500">
+            📅 {formatDate(app.createdAt)}
+          </div>
+          <div className="w-1/6 text-sm text-gray-500 hidden md:block">
+            Resume
+          </div>
+          <div className="w-1/6 text-sm text-gray-500 hidden md:block">
+            Cover Letter
+          </div>
+        </Link>
+      ))}
+    </>
+  );
+}
+
+export default Application;
