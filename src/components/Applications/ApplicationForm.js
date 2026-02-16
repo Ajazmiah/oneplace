@@ -100,6 +100,7 @@ function ApplicationForm({ application = null }, props) {
     formData.append("location", location);
     formData.append("salaryRange", salaryRange);
     formData.append("details", details);
+    formData.append("jobUrl", jobUrl);
 
     return formData;
   };
@@ -124,6 +125,7 @@ function ApplicationForm({ application = null }, props) {
     if (!application) {
       response = await createApplication(formData);
     } else {
+      // opens the modal to confirm edit 
       setOpen(true);
     }
 
@@ -140,6 +142,7 @@ function ApplicationForm({ application = null }, props) {
     setSalaryRange("");
     setDetails("");
     setStatus("");
+    setJobUrl("")
 
     localStorage.removeItem("application");
     application ? toast("Successfully edited") : toast("application added");
