@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import ApplicationForm from "@/Components/Applications/ApplicationForm";
+import ApplicationForm from "../../../../../../Components/Applications/ApplicationForm";
 
 function AddApplicationForm() {
   const [application, setApplication] = useState(() => {
