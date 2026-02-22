@@ -12,7 +12,7 @@ import {
   Building,
   LinkIcon,
 } from "lucide-react";
-import { Badge } from "@/Components/ui/badge";
+import { Badge } from "../ui/badge";
 import { ApplicationContextProvider, useMyApplicationContext } from "@/context";
 import withApplicationContext from "../ContextWrapper/ContextWrapper";
 import { useRouter } from "next/navigation";
