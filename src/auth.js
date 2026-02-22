@@ -18,9 +18,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     async signIn({ user, account, profile, email }) {
       try {
-        const existingUser = await getUserByEmail(user.email);
+        const res = await fetch(
+          `${process.env.NEXTAUTH_URL}/api/user?email=${encodeURIComponent(
+            user.email
+          )}`
+        );
 
-        if (!existingUser) {
+        if (!res.ok) {
           const authUser = {
             name: user.name,
             email: user.email,
