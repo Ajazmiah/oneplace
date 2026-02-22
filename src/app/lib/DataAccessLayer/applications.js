@@ -12,7 +12,9 @@ export const getApplications = async () => {
 
   const applications = await AddApplicationModel.find({
     userId: user._id,
-  }).populate({ path: "userId" });
+  })
+    .populate({ path: "userId" })
+    .sort({ createdAt: -1 });
 
   return applications;
 };
@@ -45,6 +47,7 @@ export const editApplication = async (id, formData) => {
     const salaryRange = formData.get("salaryRange");
     const resume = formData.get("resume");
     const coverLetter = formData.get("coverLetter");
+    const jobUrl = formData.get("jobUrl");
 
     console.log("RESS EM EEEEE", formData);
 
@@ -76,7 +79,7 @@ export const editApplication = async (id, formData) => {
     application.resume = resume ? resumeData : application.resume;
     application.coverLetter = coverLetter
       ? coverLetterData
-      :application?.coverLetter
+      : application?.coverLetter;
 
     await application.save();
 
