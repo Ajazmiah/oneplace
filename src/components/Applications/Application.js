@@ -10,6 +10,8 @@ function Application({ filteredApplications }) {
     rejected: "bg-red-100 text-red-800",
   };
 
+  console.log("FILE", filteredApplications);
+
   return (
     <>
       {filteredApplications.map((app, idx) => (
@@ -39,10 +41,10 @@ function Application({ filteredApplications }) {
             📅 {formatDate(app.createdAt)}
           </div>
           <div className="w-1/6 text-sm text-gray-500 hidden md:block">
-            Resume
+          {app?.resume ? "View Resume" : "No Resume"}
           </div>
           <div className="w-1/6 text-sm text-gray-500 hidden md:block">
-            Cover Letter
+          {app?.coverLetter ? "View Cover Letter" : "No Cover Letter"}
           </div>
         </Link>
       ))}

@@ -30,6 +30,7 @@ export default function ApplicationTable({ applications }) {
 
   const [applicationStatus, setApplicationStatus] = useState(status);
 
+
   //filter
   useEffect(() => {
     //checks if search query matches the searchFiled

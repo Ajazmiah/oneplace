@@ -10,16 +10,15 @@ async function Header() {
   const Allnavigation = [
     { name: "Home", href: "/" },
     { name: "Dashboard", href: "/dashboard/applications" },
-    { name: "Features", href: "#" },
+
     { name: "About", href: "/about" },
-    { name: "Company", href: "#" },
+
   ];
   const loggedInNavigation = [...Allnavigation];
   const loggedOutNavigation = [
     { name: "Home", href: "/" },
-    { name: "Features", href: "#" },
     { name: "About", href: "/about" },
-    { name: "Company", href: "#" },
+
   ];
 
   const navigation = session?.user ? loggedInNavigation : loggedOutNavigation;
