@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "../Components/header/Header";
 import Footer from "@/Components/footer/Footer";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/Components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
