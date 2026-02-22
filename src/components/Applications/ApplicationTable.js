@@ -30,27 +30,29 @@ export default function ApplicationTable({ applications }) {
 
   const [applicationStatus, setApplicationStatus] = useState(status);
 
-
   //filter
   useEffect(() => {
     //checks if search query matches the searchFiled
     const queryExists = (searchFiled) =>
       searchFiled?.toLowerCase().includes(filterQuery.toLowerCase());
+
     let filtered;
 
     if (filterByStatus.trim() !== "all") {
-      filtered = applications.filter((application) =>
-        application.status.includes(filterByStatus)
+      filtered = applications.filter(
+        (application) => application.status === filterByStatus
       );
+      console.log(filterByStatus);
+    } else {
+      filtered = applications.filter((application) => {
+        if (
+          queryExists(application.jobTitle) ||
+          queryExists(application.companyName)
+        ) {
+          return true;
+        }
+      });
     }
-    filtered = applications.filter((application) => {
-      if (
-        queryExists(application.jobTitle) ||
-        queryExists(application.companyName)
-      ) {
-        return true;
-      }
-    });
 
     setFilteredApplications(filtered);
   }, [filterQuery, filterByStatus]);
@@ -108,7 +110,10 @@ export default function ApplicationTable({ applications }) {
       {/* Application Table */}
 
       <div className="space-y-2">
-        <Application filteredApplications={filteredApplications} />
+        <Application
+          filteredApplications={filteredApplications}
+          query={filterQuery}
+        />
       </div>
     </>
   );
