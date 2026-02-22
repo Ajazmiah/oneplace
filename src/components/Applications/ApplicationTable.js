@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
 
@@ -13,11 +12,10 @@ import {
 } from "@/Components/ui/select";
 
 import { Search } from "lucide-react";
-import { formatDate } from "@/app/lib/utils/utils";
-import Link from "next/link";
+import StatusCard from "./StatusCard";
+import Application from "./Application";
 
-export default function ApplicationTable({ applications}) {
- 
+export default function ApplicationTable({ applications }) {
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
   const [filterByStatus, setFilterByStatus] = useState("all");
@@ -38,23 +36,27 @@ export default function ApplicationTable({ applications}) {
     const queryExists = (searchFiled) =>
       searchFiled?.toLowerCase().includes(filterQuery.toLowerCase());
 
-    let filtered = [...applications];
+    let filtered;
 
     if (filterByStatus.trim() !== "all") {
-      filtered = filtered.filter((application) =>
-        application.status.includes(filterByStatus)
+      filtered = applications.filter(
+        (application) => application.status === filterByStatus
       );
+      console.log(filterByStatus);
+    } else {
+      filtered = applications.filter((application) => {
+        if (
+          queryExists(application.jobTitle) ||
+          queryExists(application.companyName)
+        ) {
+          return true;
+        }
+      });
     }
-    filtered = filtered.filter((application) => {
-      if (queryExists(application.jobTitle)) {
-        return true;
-      } else if (queryExists(application.company)) {
-        return true;
-      }
-    });
 
     setFilteredApplications(filtered);
-  }, [filterQuery, filterByStatus, applications]);
+  }, [filterQuery, filterByStatus]);
+
   useEffect(() => {
     applications.forEach((application) => {
       setApplicationStatus((prev) => ({
@@ -64,14 +66,7 @@ export default function ApplicationTable({ applications}) {
     });
   }, [applications]);
 
-  const statusStyles = {
-    interviewing: "bg-yellow-100 text-yellow-800",
-    applied: "bg-blue-100 text-blue-800",
-    offer: "bg-green-100 text-green-800",
-    rejected: "bg-red-100 text-red-800",
-  };
-
-  const APPLICATIONS = (
+  return (
     <>
       <div>
         <p className="text-gray-500">
@@ -79,40 +74,12 @@ export default function ApplicationTable({ applications}) {
         </p>
       </div>
 
-      {/* Cards */}
+      {/* Cards [applications , interviewing, offered , rejected] */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-white">
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-gray-500">
-             Applications
-            </p>
-            <p className="text-2xl font-bold">
-              {`${applications.length}`}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <p className="text-sm text-gray-500">Interviewing</p>
-            <p className="text-2xl font-bold">
-              {applicationStatus.interviewing}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className=''>
-          <CardContent className="p-4">
-            <p className="text-sm">Offers Received</p>
-            <p className="text-2xl font-bold">{applicationStatus.offer}</p>
-          </CardContent>
-        </Card>
-        <Card >
-          <CardContent className="p-4">
-            <p className="text-sm">Rejections</p>
-            <p className="text-2xl font-bold">
-              {applicationStatus["rejected"]}
-            </p>
-          </CardContent>
-        </Card>
+        <StatusCard
+          applications={applications}
+          applicationStatus={applicationStatus}
+        />
       </div>
 
       {/* Filters */}
@@ -141,45 +108,13 @@ export default function ApplicationTable({ applications}) {
       </div>
 
       {/* Application Table */}
-  
+
       <div className="space-y-2">
-        {filteredApplications.map((app, idx) => (
-          <Link 
-            href={`applications/${app._id}`}
-            key={app._id}
-            className="flex flex-wrap lg:flex-nowrap justify-between items-center bg-white shadow-sm rounded-lg p-4 border"
-          >
-            <div className="w-full lg:w-1/5 mb-2 lg:mb-0">
-              <p className="font-semibold">{app.jobTitle}</p>
-              <p className="text-sm text-gray-500">
-                {app.companyName} · {app.location}
-              </p>
-            </div>
-            <div className="w-1/6 text-sm text-gray-700">{app.position}</div>
-            <div className="w-1/6 text-sm text-gray-700">{app.salary}</div>
-            <div className="w-1/6">
-              <span
-                className={`text-xs px-2 py-1 rounded-full font-medium ${
-                  statusStyles[app.status]
-                }`}
-              >
-                {app.status}
-              </span>
-            </div>
-            <div className="w-1/6 text-sm text-gray-500">📅 {formatDate(app.createdAt)}</div>
-            <div className="w-1/6 text-sm text-gray-500 hidden md:block">
-              Resume
-            </div>
-            <div className="w-1/6 text-sm text-gray-500 hidden md:block">
-              Cover Letter
-            </div>
-           
-          </Link>
-        ))}
+        <Application
+          filteredApplications={filteredApplications}
+          query={filterQuery}
+        />
       </div>
-      
     </>
   );
-
-  return <>{APPLICATIONS}</>;
 }
