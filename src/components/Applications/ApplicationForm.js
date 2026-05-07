@@ -2,7 +2,6 @@
 
 import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
-import { createApplication } from "@/app/lib/actions/addApplication/addApplicationAction";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -123,7 +122,11 @@ function ApplicationForm({ application = null }, props) {
     const formData = getFormData();
 
     if (!application) {
-      response = await createApplication(formData);
+      const res = await fetch("/api/application/add-application", {
+        method: "POST",
+        body: formData,
+      });
+      response = await res.json();
     } else {
       // opens the modal to confirm edit 
       setOpen(true);

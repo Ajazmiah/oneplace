@@ -47,7 +47,8 @@ export async function POST(request) {
     const description = formData.get("details");
     const location = formData.get("location");
     const salaryRange = formData.get("salaryRange");
-    
+    const jobUrl = formData.get("jobUrl");
+
     // File fields (will be File objects or null)
     const coverLetter = formData.get("coverLetter");
     const resume = formData.get("resume");
@@ -72,7 +73,7 @@ export async function POST(request) {
         data: await getBuffer(resume), // Convert File object to a Buffer
       };
     }
-    if (coverLetter  && typeof resume === "object" && coverLetter.size > 0) {
+    if (coverLetter && typeof coverLetter === "object" && coverLetter.size > 0) {
       coverLetterData = {
         filename: coverLetter.name,
         mimetype: coverLetter.type,
@@ -88,6 +89,7 @@ export async function POST(request) {
       description,
       location,
       salaryRange,
+      jobUrl,
       resume: resumeData,
       coverLetter: coverLetterData,
       userId: user._id,
