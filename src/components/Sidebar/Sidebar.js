@@ -11,12 +11,12 @@ import { useSelectedLayoutSegment } from "next/navigation";
 export default function Sidebar() {
   const pathname = usePathname();
 
-  const dashboardNav = ["applications", "add-application", "application-answers", "add-answers"];
+  const dashboardNav = ["applications", "add-application", "interview-answers", "add-interview-answer"];
   const dashboardNavIcon = {
     applications: <FileText className="h-5 w-4" />,
     ["add-application"]: <PlusCircle className="h-5 w-4" />,
-    ["application-answers"]: <ClipboardList className="h-5 w-4" />,
-    ["add-answers"] : <MessageSquareText className="h-5 w-4" />,
+    ["interview-answers"]: <ClipboardList className="h-5 w-4" />,
+    ["add-interview-answer"]: <MessageSquareText className="h-5 w-4" />,
   };
 
   return (

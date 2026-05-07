@@ -37,9 +37,9 @@ jobprep/
 │   │   │       │       └── edit/page.js     ← [CLIENT] reads localStorage → renders ApplicationForm
 │   │   │       ├── add-application/
 │   │   │       │   └── page.js              ← [CLIENT] empty ApplicationForm
-│   │   │       ├── add-application-answers/
+│   │   │       ├── add-interview-answer/
 │   │   │       │   └── page.js
-│   │   │       └── application-answers/
+│   │   │       └── interview-answers/
 │   │   │           └── page.js
 │   │   │
 │   │   ├── api/

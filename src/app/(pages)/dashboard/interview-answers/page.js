@@ -18,7 +18,7 @@ export default async function ApplicationAnswersPage() {
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-white py-16 text-center">
           <p className="text-gray-500 text-sm">No answers saved yet.</p>
           <a
-            href="/dashboard/add-answers"
+            href="/dashboard/add-interview-answer"
             className="mt-3 text-sm font-medium text-indigo-600 hover:underline"
           >
             Add your first question &rarr;
