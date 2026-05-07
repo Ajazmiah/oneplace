@@ -26,7 +26,7 @@ const questionAndAnswerSchema = new mongoose.Schema(
 
 // ✅ Avoid OverwriteModelError in dev (especially with Next.js)
 const AddApplication =
-  mongoose.models?.applicationAnswers ||
+  mongoose.models?.["application-questions-answers"] ||
   mongoose.model("application-questions-answers", questionAndAnswerSchema);
 
 export default AddApplication;
