@@ -1,11 +1,7 @@
 import React from "react";
 import { Spinner } from "@/Components/ui/spinner";
+import LoadingSpinner from "@/Components/Loading/LoadingSpinner";
 
 export default function Loading() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Spinner className='size-8'/>
-      <p className="text-sm block">loading..</p>
-    </div>
-  );
+  return <LoadingSpinner />
 }
