@@ -38,6 +38,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return false;
       }
     },
+
+    async jwt({ token, user, profile }) {
+      // On initial sign-in, persist the profile image into the token
+      if (profile) {
+        token.picture = profile.picture || profile.avatar_url || token.picture;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      // Forward the image from the JWT token to the session on every request
+      if (token.picture) {
+        session.user.image = token.picture;
+      }
+      return session;
+    },
   },
 
   trustHost: true,
