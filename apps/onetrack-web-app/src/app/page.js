@@ -3,7 +3,7 @@ import landingpageImage from "../../public/landingpageImage.svg";
 import Image from "next/image";
 import { getUserSession } from "./lib/DataAccessLayer/getSession";
 import Link from "next/link";
-import { auth } from "@/auth";
+import { auth } from "auth";
 
 export default async function Example() {
   const session = await auth();

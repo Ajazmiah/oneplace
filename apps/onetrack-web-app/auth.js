@@ -2,8 +2,8 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { signup } from "./app/lib/actions/authentication/signupAction";
-import { getUserByEmail } from "./app/lib/utils/databaseUtils";
+import { signup } from "./src/app/lib/actions/authentication/signupAction";
+import { getUserByEmail } from "./src/app/lib/utils/databaseUtils";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   pages: {
@@ -62,11 +62,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,
       clientSecret: process.env.AUTH_GITHUB_SECRET,
+
+      authorization: {
+        params: {
+          prompt: "consent",
+        },
+      },
     }),
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
       allowDangerousEmailAccountLinking: true,
+
+      authorization: {
+        params: {
+          prompt: "consent",
+        },
+       //"online" (default) → you only get an access token
+      // "offline" → you also get a refresh token
+      },
     }),
   ],
 });

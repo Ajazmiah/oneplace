@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /apps/onetrack-web-app/node_modules
+/apps/onetrack-web-app/.next
 /apps/onetrack-chrome-extension/node_modules
 /.pnp
 .pnp.*
