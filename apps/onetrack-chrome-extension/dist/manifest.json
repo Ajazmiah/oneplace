@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "OneTrack",
+  "version": "0.1.0",
+  "description": "Track your job applications directly from your browser.",
+  "action": {
+    "default_title": "OneTrack"
+  },
+  "permissions": ["storage", "activeTab", "tabs", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.linkedin.com/*",
+        "https://*.indeed.com/*",
+        "https://*.greenhouse.io/*",
+        "https://*.lever.co/*"
+      ],
+      "js": ["content-scripts/job-scraper.js"]
+    }
+  ]
+}
