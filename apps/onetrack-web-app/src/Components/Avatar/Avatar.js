@@ -10,7 +10,7 @@ const Avatar = forwardRef((props, ref) => {
       className="w-10 h-10 rounded-full overflow-hidden border border-gray-200"
     >
       <img
-        src={props.session?.user.image}
+        src={props.session?.user?.image}
         alt="User Avatar"
         className="w-full h-full object-cover"
       />

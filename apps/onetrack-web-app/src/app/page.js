@@ -45,7 +45,7 @@ export default async function Example() {
     authContent = (
       <div>
         <h1 className="text-5xl font-semibold">
-          Hey {session.user.name}, welcome back!
+          Hey {session?.user?.name}, welcome back!
         </h1>
         <p className="mt-2 text-gray-600">
           Ready to continue where you left off?

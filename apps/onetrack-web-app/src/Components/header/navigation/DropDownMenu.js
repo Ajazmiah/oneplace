@@ -12,7 +12,8 @@ import {
 import LoginButton from "@/Components/ui/LoginButton";
 
 export function Dropdown({ loggedIn, session }) {
-  const user_name = session.user.name;
+
+  const user_name = session?.user?.name;
   return (
     <div className="cursor-pointer">
       <DropdownMenu>
