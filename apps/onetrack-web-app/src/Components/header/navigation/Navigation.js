@@ -1,26 +1,23 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import LoginButton from "../../ui/LoginButton";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Dropdown } from "./DropDownMenu";
 
-
 function Navigation({ navigation, session }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const loggedIn = session?.user || null;
-
-  console.log("SESSION", session);
 
   return (
     <>
       <nav
-        className="flex items-center justify-between p-6 lg:px-8"
+        className="flex items-center justify-between py-4 px-6 lg:px-10"
         aria-label="Global"
       >
+        {/* Logo */}
         <div className="flex lg:flex-1">
-          <a href="/" className="-m-1.5 p-1.5">
+          <a href="/" className="flex items-center">
             <img
               src="/oneplace-logo-full.svg"
               alt="OnePlace"
@@ -28,88 +25,92 @@ function Navigation({ navigation, session }) {
             />
           </a>
         </div>
-        <div className="flex">
+
+        {/* Mobile hamburger */}
+        <div className="flex lg:hidden">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-600 hover:text-[#0bbcaa] transition-colors"
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon
-              className="size-6 cursor-pointer lg:hidden"
-              aria-hidden="true"
-            />
+            <Bars3Icon className="size-6 cursor-pointer" aria-hidden="true" />
           </button>
         </div>
-        <div className="hidden lg:flex lg:gap-x-12">
+
+        {/* Desktop nav links — centered */}
+        <div className="hidden lg:flex lg:gap-x-10">
           {navigation.map((item) => (
             <a
               key={item.name}
               href={item.href}
-              className="text-sm/6  text-white"
+              className="text-sm font-medium text-gray-600 hover:text-[#0bbcaa] transition-colors"
             >
               {item.name}
             </a>
           ))}
         </div>
 
-        {/* <LoginButton display="desktop" loggedIn={loggedIn} /> */}
-
-        <div className="lg:flex lg:flex-1 lg:justify-end">
+        {/* Desktop right: avatar or sign in */}
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {session ? (
             <Dropdown loggedIn={loggedIn} session={session} />
           ) : (
-            <LoginButton display="mobile" loggedIn={loggedIn} />
+            <LoginButton display="desktop" loggedIn={loggedIn} />
           )}
         </div>
       </nav>
 
+      {/* Thin teal accent line */}
+      <div className="h-px bg-gradient-to-r from-transparent via-[#0bbcaa]/30 to-transparent" />
+
+      {/* Mobile drawer */}
       <Dialog
         as="div"
         className="lg:hidden"
         open={mobileMenuOpen}
         onClose={setMobileMenuOpen}
       >
-        <div className="fixed inset-0 z-50" />
-        <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+        <div className="fixed inset-0 z-50 bg-black/10 backdrop-blur-sm" />
+        <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-5 sm:max-w-sm shadow-xl">
+          {/* Drawer header */}
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
+            <a href="/" onClick={() => setMobileMenuOpen(false)}>
               <img
-                className="h-8 w-auto"
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                alt=""
+                src="/oneplace-logo-full.svg"
+                alt="OnePlace"
+                className="h-10 w-auto"
               />
             </a>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 rounded-md p-2.5 text-gray-500 hover:text-[#0bbcaa] transition-colors"
             >
               <span className="sr-only">Close menu</span>
-              <XMarkIcon
-                className="size-6 cursor-pointer "
-                aria-hidden="true"
-              />
+              <XMarkIcon className="size-6 cursor-pointer" aria-hidden="true" />
             </button>
           </div>
-          <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
-              <div className="py-6">
-                <LoginButton display="mobile" loggedIn={loggedIn} />
-              </div>
+
+          {/* Drawer links */}
+          <div className="mt-8 flow-root">
+            <div className="space-y-1">
+              {navigation.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-colors"
+                >
+                  {item.name}
+                </a>
+              ))}
             </div>
+
+            {/* Divider */}
+            <div className="my-6 h-px bg-gray-100" />
+
+            <LoginButton display="mobile" loggedIn={loggedIn} />
           </div>
         </DialogPanel>
       </Dialog>
