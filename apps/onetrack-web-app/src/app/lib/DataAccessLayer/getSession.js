@@ -1,5 +1,5 @@
 "use server";
-import { auth } from "auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { connectDb } from "@/database/dbConnection";
 
