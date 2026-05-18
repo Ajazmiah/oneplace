@@ -101,25 +101,65 @@ export default async function Example() {
 
   if (session) {
     authContent = (
-      <div>
-        <h1 className="text-5xl font-semibold">
-          Hey {session?.user?.name}, welcome back!
+      <div className="flex flex-col items-start max-w-lg">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 mb-8 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
+          <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
+            Welcome back
+          </span>
+        </div>
+
+        {/* Greeting */}
+        <h1 className="font-bold tracking-tight text-gray-900 text-4xl sm:text-5xl md:text-6xl leading-[1.08]">
+          Hey,{" "}
+          <span
+            style={{
+              background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            {session?.user?.name?.split(" ")[0]}.
+          </span>
         </h1>
-        <p className="mt-2 text-gray-600">
-          Ready to continue where you left off?
+
+        {/* Subtext */}
+        <p className="mt-6 text-lg leading-relaxed text-gray-500 max-w-md">
+          Ready to pick up where you left off? Your applications are waiting.
         </p>
-        <div className="mt-[20px] flex gap-3">
+
+        {/* Action cards */}
+        <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full">
           <Link
             href="/dashboard/applications"
-            className="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-black"
+            className="group flex flex-col gap-1 flex-1 rounded-xl border border-gray-100 bg-white px-6 py-5 shadow-sm hover:border-[#0bbcaa]/40 hover:shadow-md transition-all"
           >
-            View Applications
+            <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
+              View
+            </span>
+            <span className="text-base font-semibold text-gray-900 group-hover:text-[#0bbcaa] transition-colors">
+              My Applications →
+            </span>
+            <span className="text-xs text-gray-400">
+              See all tracked roles
+            </span>
           </Link>
+
           <Link
             href="/dashboard/add-application"
-            className="rounded-md bg-black px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-main-light"
+            className="group flex flex-col gap-1 flex-1 rounded-xl border border-[#0bbcaa]/20 bg-[#0bbcaa]/5 px-6 py-5 shadow-sm hover:bg-[#0bbcaa]/10 hover:border-[#0bbcaa]/40 transition-all"
           >
-            Add Applications
+            <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
+              New
+            </span>
+            <span className="text-base font-semibold text-gray-900 group-hover:text-[#0bbcaa] transition-colors">
+              Add Application →
+            </span>
+            <span className="text-xs text-gray-400">
+              Log a new job application
+            </span>
           </Link>
         </div>
       </div>
