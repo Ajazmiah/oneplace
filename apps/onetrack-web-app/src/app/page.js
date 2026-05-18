@@ -11,32 +11,90 @@ export default async function Example() {
   
   let authContent = (
     <>
-      <div className="lg:w-[100%] flex flex-col items-center display flex">
-        <h1 className="font-semibold text-center tracking-tight text-balance text-gray-900 text-[3em] sm:text-[4em] md:text-[6em]">
-          Track your job applications
+      {/* Left: text content */}
+      <div className="flex flex-col items-start max-w-lg">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 mb-8 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
+          <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
+            Now in beta — join free
+          </span>
+        </div>
+
+        {/* Headline */}
+        <h1 className="font-bold tracking-tight text-gray-900 text-4xl sm:text-5xl md:text-6xl leading-[1.08]">
+          Track every{" "}
+          <span
+            style={{
+              background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            application.
+          </span>
+          <br />
+          Land your next role.
         </h1>
-        <p className="mt-8 text-lg font-medium text-pretty text-gray-500 ">
-          The Smart Way to Log and Track Job Applications
+
+        {/* Subtext */}
+        <p className="mt-6 text-lg leading-relaxed text-gray-500 max-w-md">
+          The smart way to log, track, and organize your entire job search —
+          all from one clean dashboard.
         </p>
 
-        <div className="mt-5 flex gap-3 items-center">
+        {/* Stats strip */}
+        <div className="mt-8 flex items-center gap-6">
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold text-gray-900 leading-none">500+</span>
+            <span className="text-xs text-gray-400 mt-1">apps tracked</span>
+          </div>
+          <div className="w-px h-10 bg-gray-200" />
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold text-gray-900 leading-none">3 min</span>
+            <span className="text-xs text-gray-400 mt-1">to get started</span>
+          </div>
+          <div className="w-px h-10 bg-gray-200" />
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold text-gray-900 leading-none">Free</span>
+            <span className="text-xs text-gray-400 mt-1">forever</span>
+          </div>
+        </div>
+
+        {/* CTAs */}
+        <div className="mt-10 flex gap-4 items-center">
           <a
             href={`${process.env.BASE_URL}/api/auth/signin`}
-            className="rounded-md bg-main px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-main-light"
+            className="rounded-lg bg-main px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-main-light transition-colors"
           >
-            Get started
+            Get started free →
           </a>
-          
           <a
             href="#services"
-            className="text-sm/6 hover:text-main font-semibold text-gray-900"
+            className="text-sm font-semibold text-gray-500 hover:text-[#0bbcaa] transition-colors"
           >
-            Learn more <span aria-hidden="true">→</span>
+            See how it works
           </a>
         </div>
       </div>
-      <div className="hidden lg:block w-[50%]">
-        <Image src={landingpageImage} alt="open working on laptop" />
+
+      {/* Right: image with soft teal glow */}
+      <div className="hidden lg:flex items-center justify-center w-[50%] relative">
+        <div
+          className="absolute w-96 h-96 rounded-full opacity-[0.12] pointer-events-none"
+          style={{
+            background: "radial-gradient(circle, #0bbcaa 0%, transparent 70%)",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        />
+        <Image
+          src={landingpageImage}
+          alt="open working on laptop"
+          className="relative z-10 drop-shadow-xl"
+        />
       </div>
     </>
   );
