@@ -1,5 +1,4 @@
 import Avatar from "@/Components/Avatar/Avatar";
-import { Button } from "@/Components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu";
 import LoginButton from "@/Components/ui/LoginButton";
+import Link from "next/link";
 
 export function Dropdown({ loggedIn, session }) {
 
@@ -25,8 +25,9 @@ export function Dropdown({ loggedIn, session }) {
           <DropdownMenuSeparator />
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-
+            <DropdownMenuItem asChild>
+              <Link href="/profile">Profile</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
