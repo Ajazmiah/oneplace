@@ -75,7 +75,7 @@ export default function ProfilePage({ name, email, image }) {
 
         {/* Profile header card */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8 mb-6">
-          <div className="flex items-start gap-6">
+          <div className="flex items-center gap-6">
             {/* Avatar */}
             <div className="relative flex-shrink-0">
               {image ? (
@@ -101,10 +101,6 @@ export default function ProfilePage({ name, email, image }) {
                 <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
                   {name}
                 </h1>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-                  <span className="text-xs font-semibold tracking-wide text-[#0bbcaa]">Active</span>
-                </div>
               </div>
               <p className="text-sm text-gray-400">{email}</p>
           
