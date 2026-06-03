@@ -31,7 +31,7 @@ function Navigation({ navigation, session }) {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-600 hover:text-[#0bbcaa] transition-colors"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-600 hover:text-brand transition-colors"
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon className="size-6 cursor-pointer" aria-hidden="true" />
@@ -44,7 +44,7 @@ function Navigation({ navigation, session }) {
             <a
               key={item.name}
               href={item.href}
-              className="text-sm font-medium text-gray-600 hover:text-[#0bbcaa] transition-colors"
+              className="nav-link"
             >
               {item.name}
             </a>
@@ -62,7 +62,7 @@ function Navigation({ navigation, session }) {
       </nav>
 
       {/* Thin teal accent line */}
-      <div className="h-px bg-gradient-to-r from-transparent via-[#0bbcaa]/30 to-transparent" />
+      <div className="divider-brand" />
 
       {/* Mobile drawer */}
       <Dialog
@@ -85,7 +85,7 @@ function Navigation({ navigation, session }) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="-m-2.5 rounded-md p-2.5 text-gray-500 hover:text-[#0bbcaa] transition-colors"
+              className="-m-2.5 rounded-md p-2.5 text-gray-500 hover:text-brand transition-colors"
             >
               <span className="sr-only">Close menu</span>
               <XMarkIcon className="size-6 cursor-pointer" aria-hidden="true" />
@@ -100,7 +100,7 @@ function Navigation({ navigation, session }) {
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center rounded-lg px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-colors"
+                  className="mobile-nav-link"
                 >
                   {item.name}
                 </a>

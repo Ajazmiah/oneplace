@@ -9,11 +9,20 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* color */
+  /* ── Brand ──────────────────────────────────────── */
+  --color-brand: #0bbcaa;
+  --color-brand-light: #0bbcaaab;
+
+  /* ── App chrome ─────────────────────────────────── */
+  --color-sidebar-bg: #0f172a;
+
+  /* ── Surfaces ───────────────────────────────────── */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f2f2f2;
+
+  /* ── Legacy aliases (keep --color-main working) ─── */
   --color-main: #0bbcaa;
   --color-main-light: #0bbcaaab;
-
-  /*Gray*/
   --color-gray: #f2f2f2;
   --color-gray-dark: #b7b7b7;
 
@@ -138,6 +147,58 @@ h2 {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* ── Navigation ──────────────────────────────────── */
+  .nav-link {
+    @apply text-sm font-medium text-gray-600 hover:text-brand transition-colors;
+  }
+  .mobile-nav-link {
+    @apply flex items-center rounded-lg px-3 py-2.5 text-sm font-medium
+           text-gray-700 hover:text-brand hover:bg-brand/5 transition-colors;
+  }
+  .divider-brand {
+    @apply h-px bg-gradient-to-r from-transparent via-brand/30 to-transparent;
+  }
+
+  /* ── Sidebar ─────────────────────────────────────── */
+  .sidebar-link {
+    @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px]
+           text-slate-400 hover:text-slate-200 hover:bg-white/5
+           transition-all duration-150;
+  }
+  .sidebar-link-active {
+    @apply bg-brand/15 text-brand font-medium;
+  }
+  .sidebar-icon {
+    @apply h-[15px] w-[15px] flex-shrink-0 text-slate-500;
+  }
+  .sidebar-icon-active {
+    @apply text-brand;
+  }
+
+  /* ── Cards ───────────────────────────────────────── */
+  .card {
+    @apply bg-surface rounded-xl border border-gray-100 shadow-sm;
+  }
+
+  /* ── Status badges ───────────────────────────────── */
+  .badge {
+    @apply text-xs px-2 py-1 rounded-full font-medium;
+  }
+  .badge-applied {
+    @apply bg-blue-100 text-blue-800;
+  }
+  .badge-interviewing {
+    @apply bg-yellow-100 text-yellow-800;
+  }
+  .badge-offer {
+    @apply bg-green-100 text-green-800;
+  }
+  .badge-rejected {
+    @apply bg-red-100 text-red-800;
   }
 }
 

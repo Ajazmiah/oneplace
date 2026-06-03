@@ -4,20 +4,13 @@ import { formatDate } from "@/app/lib/utils/utils";
 import { Search } from "lucide-react";
 
 function Application({ filteredApplications,query }) {
-  const statusStyles = {
-    interviewing: "bg-yellow-100 text-yellow-800",
-    applied: "bg-blue-100 text-blue-800",
-    offer: "bg-green-100 text-green-800",
-    rejected: "bg-red-100 text-red-800",
-  };
-
   return (
     <>
       {filteredApplications.map((app) => (
         <Link
           href={`applications/${app._id}`}
           key={app._id}
-          className="flex flex-wrap lg:flex-nowrap justify-between items-center bg-white shadow-sm rounded-lg p-4 border"
+          className="flex flex-wrap lg:flex-nowrap justify-between items-center bg-surface shadow-sm rounded-lg p-4 border border-gray-100"
         >
           <div className="w-full lg:w-1/5 mb-2 lg:mb-0">
             <p className="font-semibold">{app.jobTitle.split("").map(t => <p style={{ color: `${query.includes(t)? 'red': ''}`, display: 'inline'}}>{t}</p>)}</p>
@@ -29,9 +22,7 @@ function Application({ filteredApplications,query }) {
           <div className="w-1/6 text-sm text-gray-700">{app.salary}</div>
           <div className="w-1/6">
             <span
-              className={`text-xs px-2 py-1 rounded-full font-medium ${
-                statusStyles[app.status]
-              }`}
+              className={`badge badge-${app.status}`}
             >
               {app.status}
             </span>

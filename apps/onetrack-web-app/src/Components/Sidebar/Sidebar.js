@@ -24,7 +24,7 @@ export default function Sidebar() {
         aria-label="Open menu"
         className={cn(
           "fixed left-0 top-1/2 -translate-y-1/2 z-40 lg:hidden",
-          "bg-[#0bbcaa] text-white rounded-r-xl px-1.5 py-4 shadow-lg",
+          "bg-brand text-white rounded-r-xl px-1.5 py-4 shadow-lg",
           "flex flex-col items-center gap-1.5 transition-transform duration-300",
           mobileOpen ? "-translate-x-full" : "translate-x-0"
         )}
@@ -50,7 +50,7 @@ export default function Sidebar() {
       {/* Sidebar panel */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-56 flex-shrink-0 bg-[#0f172a] flex flex-col",
+          "fixed inset-y-0 left-0 z-50 w-56 flex-shrink-0 bg-sidebar-bg flex flex-col",
           "transform transition-transform duration-300 ease-in-out",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
           "lg:static lg:translate-x-0 lg:z-auto"
@@ -59,7 +59,7 @@ export default function Sidebar() {
         {/* Header */}
         <div className="px-5 py-5 border-b border-white/[0.07] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md bg-[#0bbcaa] flex items-center justify-center flex-shrink-0">
+            <div className="w-7 h-7 rounded-md bg-brand flex items-center justify-center flex-shrink-0">
               <span className="text-white font-bold text-xs">R</span>
             </div>
             <span className="text-white font-semibold text-sm tracking-tight">Resumind</span>
@@ -86,16 +86,14 @@ export default function Sidebar() {
                 href={href}
                 onClick={() => setMobileOpen(false)}
                 className={cn(
-                  "flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-all duration-150",
-                  isActive
-                    ? "bg-[#0bbcaa]/15 text-[#0bbcaa] font-medium"
-                    : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.05]"
+                  "sidebar-link",
+                  isActive && "sidebar-link-active"
                 )}
               >
                 <Icon
                   className={cn(
-                    "h-[15px] w-[15px] flex-shrink-0",
-                    isActive ? "text-[#0bbcaa]" : "text-slate-500"
+                    "sidebar-icon",
+                    isActive && "sidebar-icon-active"
                   )}
                 />
                 {label}
