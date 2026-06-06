@@ -1,7 +1,6 @@
 import React from "react";
 import { auth } from "../../auth";
 
-
 import Navigation from "./navigation/Navigation";
 
 async function Header() {
@@ -14,18 +13,30 @@ async function Header() {
     { name: "About", href: "/about" },
 
   ];
+
+
+  const userNavigationItems = [
+    {
+      name: "profile",
+      href: "/profile",
+    },
+    {
+      name: "dashboard",
+      href: "/dashboard/applications",
+    }
+  ];
   const loggedInNavigation = [...Allnavigation];
   const loggedOutNavigation = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
-
   ];
+
 
   const navigation = session?.user ? loggedInNavigation : loggedOutNavigation;
 
   return (
     <header className="sticky inset-x-0 top-0 z-50 transition-colors duration-300 bg-white border-b border-gray-100 shadow-sm">
-      <Navigation navigation={navigation} session={session} />
+      <Navigation navigation={navigation} session={session} userNavigations={userNavigationItems} />
     </header>
   );
 }

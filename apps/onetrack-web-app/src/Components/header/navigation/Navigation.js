@@ -4,10 +4,15 @@ import LoginButton from "../../ui/LoginButton";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Dropdown } from "./DropDownMenu";
+import Link from "next/link";
+import Logout from "@/Components/ui/logout";
 
-function Navigation({ navigation, session }) {
+function Navigation({ navigation, session, userNavigations }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const loggedIn = session?.user || null;
+
+  const itemClass =
+    "cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-600 gap-3 focus:bg-[#0bbcaa]/5 focus:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 hover:text-[#0bbcaa] transition-colors";
 
   return (
     <>
@@ -41,11 +46,7 @@ function Navigation({ navigation, session }) {
         {/* Desktop nav links — centered */}
         <div className="hidden lg:flex lg:gap-x-10">
           {navigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className="nav-link"
-            >
+            <a key={item.name} href={item.href} className="nav-link">
               {item.name}
             </a>
           ))}
@@ -109,8 +110,38 @@ function Navigation({ navigation, session }) {
 
             {/* Divider */}
             <div className="my-6 h-px bg-gray-100" />
-
-            <LoginButton display="mobile" loggedIn={loggedIn} />
+            {userNavigations.map((navigation) => {
+              return (
+                <div
+                  className={itemClass}
+                  key={navigation.name}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Link
+                    href={navigation?.href}
+                    className="flex items-center gap-3"
+                  >
+                    <svg
+                      className="w-4 h-4 flex-shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.75}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                      />
+                    </svg>
+                    {navigation.name}
+                  </Link>
+                </div>
+              );
+            })}
+            <div className="flex items-center gap-3 w-full">
+              <Logout />
+            </div>
           </div>
         </DialogPanel>
       </Dialog>
