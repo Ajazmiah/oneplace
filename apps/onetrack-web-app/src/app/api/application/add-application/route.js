@@ -6,6 +6,7 @@ import addApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "../../../lib/utils/databaseUtils";
 import { getUserSession } from "../../../lib/DataAccessLayer/getSession";
 import { getBuffer } from "../../../lib/utils/utils";
+import defaultResume from '@/database/models/defaultResume';
 
 /**
  * Handles POST requests to create a new application.
@@ -94,6 +95,11 @@ export async function POST(request) {
       coverLetter: coverLetterData,
       userId: user._id,
     });
+
+    await defaultResume.create({
+      resume: resumeData,
+    })
+
 
     // 7. Revalidate Cache
     revalidatePath("/dashboard/applications");
