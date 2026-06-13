@@ -9,6 +9,11 @@ const defaultResumeSchema = new mongoose.Schema(
       // userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
       // jobId: { type: Schema.Types.ObjectId, ref: "Job", required: true }
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId, // ✅ Correct type for ObjectId
+        ref: "users", // ✅ Make sure this matches your user model name (see note below)
+        required: true,
+      },
   },
   {
     timestamps: true,

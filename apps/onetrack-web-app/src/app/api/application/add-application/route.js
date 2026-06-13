@@ -98,6 +98,7 @@ export async function POST(request) {
 
     await defaultResume.create({
       resume: resumeData,
+      userId: user._id,
     })
 
 

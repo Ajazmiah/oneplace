@@ -17,7 +17,7 @@ import { editApplication } from "@/app/lib/DataAccessLayer/applications";
 import AlertDialogBox from "../AlertDialog/AlertDialog";
 
 function ApplicationForm({ application = null }) {
-  const [resume, setResume] = useState(null);
+  const [resume, setResume] = useState(application?.resume || null);
   const [coverLetter, setCoverLetter] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -52,6 +52,8 @@ function ApplicationForm({ application = null }) {
     if (inputName === "resume") setResume(file);
     else setCoverLetter(file);
   }
+
+  console.log("APPLICATION===", application)
 
   const getFormData = () => {
     const formData = new FormData();
@@ -267,7 +269,7 @@ function ApplicationForm({ application = null }) {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { key: "resume", label: "Resume", file: resume, clear: () => setResume(null) },
+                { key: "resume", label: "Resume", file: resume?.filename, clear: () => setResume(null) },
                 { key: "coverLetter", label: "Cover Letter", file: coverLetter, clear: () => setCoverLetter(null) },
               ].map(({ key, label, file, clear }) => (
                 <label
@@ -283,7 +285,7 @@ function ApplicationForm({ application = null }) {
                   />
                   <div>
                     <p className="text-sm font-medium text-gray-700">
-                      {file ? file.name : `Upload ${label}`}
+                      {file ? file : `Upload ${label}`}
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5">
                       PDF, DOC, DOCX
