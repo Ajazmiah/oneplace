@@ -1,5 +1,6 @@
 "use server";
 import AddApplicationModel from "@/database/models/addApplicationModel";
+import defaultResumeModel from "@/database/models/defaultResume";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
 import { notFound } from "next/navigation";
@@ -48,13 +49,17 @@ export const editApplication = async (id, formData) => {
     const resume = formData.get("resume");
     const coverLetter = formData.get("coverLetter");
     const jobUrl = formData.get("jobUrl");
-
-    console.log("RESS EM EEEEE", formData);
+    const useDefaultResume = formData.get("useDefaultResume");
 
     let resumeData = null;
     let coverLetterData = null;
 
-    if (resume) {
+    if (useDefaultResume === "true") {
+      const session = await getUserSession();
+      const user = await getUserByEmail(session.user.email);
+      const saved = await defaultResumeModel.findOne({ userId: user._id });
+      if (saved?.resume) resumeData = saved.resume;
+    } else if (resume && resume instanceof File && resume.size > 0) {
       resumeData = {
         filename: resume.name,
         mimetype: resume.type,
@@ -73,9 +78,9 @@ export const editApplication = async (id, formData) => {
     application.companyName = companyName;
     application.status = status;
     application.description = description;
-    application.description = description;
     application.location = location;
     application.salaryRange = salaryRange;
+    application.jobUrl = jobUrl;
     application.resume = resume ? resumeData : application.resume;
     application.coverLetter = coverLetter
       ? coverLetterData
