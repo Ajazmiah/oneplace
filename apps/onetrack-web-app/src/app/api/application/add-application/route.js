@@ -53,6 +53,7 @@ export async function POST(request) {
     // File fields (will be File objects or null)
     const coverLetter = formData.get("coverLetter");
     const resume = formData.get("resume");
+    const useDefaultResume = formData.get("useDefaultResume");
 
     // 4. Basic Validation
     if (!jobTitle || !companyName) {
@@ -66,12 +67,14 @@ export async function POST(request) {
     let resumeData = null;
     let coverLetterData = null;
 
-    // Check if the file fields are non-null and an actual File object (not an empty string)
-    if (resume && typeof resume === "object" && resume.size > 0) {
+    if (useDefaultResume === "true") {
+      const saved = await defaultResume.findOne({ userId: user._id });
+      if (saved?.resume) resumeData = saved.resume;
+    } else if (resume && typeof resume === "object" && resume.size > 0) {
       resumeData = {
         filename: resume.name,
         mimetype: resume.type,
-        data: await getBuffer(resume), // Convert File object to a Buffer
+        data: await getBuffer(resume),
       };
     }
     if (coverLetter && typeof coverLetter === "object" && coverLetter.size > 0) {
@@ -96,10 +99,12 @@ export async function POST(request) {
       userId: user._id,
     });
 
-    await defaultResume.create({
-      resume: resumeData,
-      userId: user._id,
-    })
+    if (resumeData && useDefaultResume !== "true") {
+      await defaultResume.create({
+        resume: resumeData,
+        userId: user._id,
+      });
+    }
 
 
     // 7. Revalidate Cache
