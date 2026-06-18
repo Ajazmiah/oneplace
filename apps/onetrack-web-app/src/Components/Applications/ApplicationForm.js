@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/Components/ui/input";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
@@ -11,15 +11,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
-import { FileText, X } from "lucide-react";
+import { FileText, X, ChevronDown, Upload } from "lucide-react";
 import { editApplication } from "@/app/lib/DataAccessLayer/applications";
 import AlertDialogBox from "../AlertDialog/AlertDialog";
 
 function ApplicationForm({ application = null }) {
   const [resume, setResume] = useState(application?.resume || null);
+  const [resumeMode, setResumeMode] = useState(application?.resume ? "upload" : null);
   const [coverLetter, setCoverLetter] = useState(null);
   const [open, setOpen] = useState(false);
+  const resumeInputRef = useRef(null);
 
   const [jobTitle, setJobTitle] = useState(application?.jobTitle || "");
   const [companyName, setCompanyName] = useState(
@@ -49,15 +57,23 @@ function ApplicationForm({ application = null }) {
 
     if (!allowedTypes.includes(type)) return;
 
-    if (inputName === "resume") setResume(file);
-    else setCoverLetter(file);
+    if (inputName === "resume") {
+      setResume(file);
+      setResumeMode("upload");
+    } else {
+      setCoverLetter(file);
+    }
   }
 
   console.log("APPLICATION===", application)
 
   const getFormData = () => {
     const formData = new FormData();
-    if (resume !== null) formData.append("resume", resume);
+    if (resumeMode === "default") {
+      formData.append("useDefaultResume", "true");
+    } else if (resume instanceof File) {
+      formData.append("resume", resume);
+    }
     if (coverLetter !== null) formData.append("coverLetter", coverLetter);
     formData.append("jobTitle", jobTitle);
     formData.append("status", status);
@@ -102,6 +118,7 @@ function ApplicationForm({ application = null }) {
     }
 
     setResume(null);
+    setResumeMode(null);
     setCoverLetter(null);
     setJobTitle("");
     setCompanyName("");
@@ -268,47 +285,111 @@ function ApplicationForm({ application = null }) {
               Documents
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { key: "resume", label: "Resume", file: resume?.filename, clear: () => setResume(null) },
-                { key: "coverLetter", label: "Cover Letter", file: coverLetter, clear: () => setCoverLetter(null) },
-              ].map(({ key, label, file, clear }) => (
-                <label
-                  key={key}
-                  className={`relative flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors ${
-                    file
-                      ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
-                      : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
-                  }`}
-                >
-                  <FileText
-                    className={`w-6 h-6 ${file ? "text-[#0bbcaa]" : "text-gray-400"}`}
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">
-                      {file ? file : `Upload ${label}`}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      PDF, DOC, DOCX
-                    </p>
-                  </div>
-                  {file && (
-                    <button
-                      type="button"
-                      onClick={(e) => { e.preventDefault(); clear(); }}
-                      className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
+
+              {/* Resume — dropdown: use default or upload new */}
+              <div className="relative">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div
+                      className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors select-none ${
+                        resume || resumeMode === "default"
+                          ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
+                          : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
+                      }`}
                     >
-                      <X className="w-3 h-3" />
-                    </button>
-                  )}
-                  <input
-                    name={key}
-                    type="file"
-                    accept=".pdf,.doc,.docx"
-                    className="hidden"
-                    onChange={handleFileUpload}
-                  />
-                </label>
-              ))}
+                      <FileText
+                        className={`w-6 h-6 ${resume || resumeMode === "default" ? "text-[#0bbcaa]" : "text-gray-400"}`}
+                      />
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
+                          {resumeMode === "default"
+                            ? "Using default resume"
+                            : resume
+                            ? (resume.name || resume.filename)
+                            : "Resume"}
+                          <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+                        </p>
+                        <p className="text-xs text-gray-400 mt-0.5">
+                          {resumeMode === "default"
+                            ? "Your saved default"
+                            : "PDF, DOC, DOCX"}
+                        </p>
+                      </div>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="center" className="w-52">
+                    <DropdownMenuItem
+                      className="cursor-pointer gap-2"
+                      onClick={() => { setResumeMode("default"); setResume(null); }}
+                    >
+                      <FileText className="w-4 h-4 text-[#0bbcaa]" />
+                      Use default resume
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="cursor-pointer gap-2"
+                      onClick={() => resumeInputRef.current?.click()}
+                    >
+                      <Upload className="w-4 h-4 text-gray-500" />
+                      Upload new
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {(resume || resumeMode === "default") && (
+                  <button
+                    type="button"
+                    onClick={() => { setResume(null); setResumeMode(null); }}
+                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+
+                <input
+                  ref={resumeInputRef}
+                  name="resume"
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+              </div>
+
+              {/* Cover Letter — plain upload */}
+              <label
+                className={`relative flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors ${
+                  coverLetter
+                    ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
+                    : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
+                }`}
+              >
+                <FileText
+                  className={`w-6 h-6 ${coverLetter ? "text-[#0bbcaa]" : "text-gray-400"}`}
+                />
+                <div>
+                  <p className="text-sm font-medium text-gray-700">
+                    {coverLetter ? coverLetter.name : "Upload Cover Letter"}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">PDF, DOC, DOCX</p>
+                </div>
+                {coverLetter && (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); setCoverLetter(null); }}
+                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+                <input
+                  name="coverLetter"
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+              </label>
+
             </div>
           </div>
 
