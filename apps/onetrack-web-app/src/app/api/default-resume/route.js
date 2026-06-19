@@ -1,9 +1,10 @@
 import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import defaultResumeModel from "@/database/models/defaultResume";
+import { NextResponse } from "next/server";
 export async function GET() {
   const session = await getUserSession();
-  const params = await context.params;
+
 
   if (!session) return new Response("Unauthorized", { status: 401 });
 
@@ -12,8 +13,10 @@ export async function GET() {
 
   const resumeData = await defaultResumeModel.findOne({ userId: user._id });
 
+  console.log("DEFAULT_RES", resumeData)
+
   return NextResponse.json(
-    { success: true, data: resumeData },
+    { success: true, resumeData },
     { status: 201 } // Created
   );
 
