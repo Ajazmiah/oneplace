@@ -19,6 +19,7 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText, X, ChevronDown, Upload } from "lucide-react";
+import defaultResume from "@/database/models/defaultResume";
 
 function ApplicationForm() {
   const [resume, setResume] = useState(null);
@@ -47,26 +48,28 @@ function ApplicationForm() {
 
     if (e.target.name === "resume") {
       setResume(file);
-      setResumeMode("upload");
+      //setResumeMode("upload");
+      console.log("RESUME", file);
     } else {
       setCoverLetter(file);
     }
   }
 
-  const getFaultResume = async () => {
+  const getDfaultResume = async () => {
     const res = await fetch("/api/default-resume");
     const savedDefaultResume = await res.json();
-    const { filename } = savedDefaultResume?.resumeData.resume;
-    setResume(savedDefaultResume.resumeData);
+    const resumeData = savedDefaultResume?.resumeData.resume;
+    console.log("DAAA", resumeData);
+    setResumeMode(resumeData);
   };
 
   useEffect(() => {
-    getFaultResume();
+    getDfaultResume();
   }, []);
 
   const getFormData = () => {
     const formData = new FormData();
-    if (resumeMode === "default") {
+    if (resumeMode) {
       formData.append("useDefaultResume", "true");
     } else if (resume instanceof File) {
       formData.append("resume", resume);
@@ -262,42 +265,49 @@ function ApplicationForm() {
                   <DropdownMenuTrigger asChild>
                     <div
                       className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors select-none ${
-                        resume || resumeMode === "default"
+                        resume || resumeMode
                           ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
                           : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
                       }`}
                     >
                       <FileText
-                        className={`w-6 h-6 ${resume || resumeMode === "default" ? "text-[#0bbcaa]" : "text-gray-400"}`}
+                        className={`w-6 h-6 ${resume || resumeMode ? "text-[#0bbcaa]" : "text-gray-400"}`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
-                          {resumeMode === "default"
-                            ? "Using default resume"
-                            : resume
-                              ? resume.name
-                              : "Resume"}
+                          {resumeMode ? resumeMode.filename : resume?.name}
                           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
-                          {resumeMode === "default"
-                            ? "Your saved default"
-                            : "PDF, DOC, DOCX"}
+                          {resumeMode ? "Last used" : "PDF, DOC, DOCX"}
                         </p>
                       </div>
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="center" className="w-52">
-                    <DropdownMenuItem
-                      className="cursor-pointer gap-2"
-                      onClick={() => {
-                        setResumeMode("default");
-                        setResume(null);
-                      }}
-                    >
-                      <FileText className="w-4 h-4 text-[#0bbcaa]" />
-                      Default Resume \
-                    </DropdownMenuItem>
+                    {!resumeMode?.filename ? (
+                      <>
+                        <DropdownMenuItem
+                          className="cursor-pointer gap-2"
+                          onClick={() => {
+                            setResumeMode("default");
+                            setResume(null);
+                          }}
+                        >
+                          <FileText className="w-4 h-4 text-[#0bbcaa]" />
+                          {resumeMode?.filename}
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                          className="cursor-pointer gap-2"
+                          onClick={() => {
+                            setResumeMode("default");
+                            setResume(null);
+                          }}
+                        ></DropdownMenuItem>
+                      </>
+                    ) : null}
+
                     <DropdownMenuItem
                       className="cursor-pointer gap-2"
                       onClick={() => resumeInputRef.current?.click()}
