@@ -275,36 +275,28 @@ function ApplicationForm() {
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
-                          {resumeMode ? resumeMode.filename : resume?.name}
+                          {resume?.name || resumeMode?.filename }
                           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
-                          {resumeMode ? "Last used" : "PDF, DOC, DOCX"}
+                          {!resume ? "Last used" : "PDF, DOC, DOCX"}
                         </p>
                       </div>
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="center" className="w-52">
-                    {!resumeMode?.filename ? (
+                    {resume ? (
                       <>
                         <DropdownMenuItem
                           className="cursor-pointer gap-2"
                           onClick={() => {
-                            setResumeMode("default");
+                    
                             setResume(null);
                           }}
                         >
                           <FileText className="w-4 h-4 text-[#0bbcaa]" />
                           {resumeMode?.filename}
                         </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          className="cursor-pointer gap-2"
-                          onClick={() => {
-                            setResumeMode("default");
-                            setResume(null);
-                          }}
-                        ></DropdownMenuItem>
                       </>
                     ) : null}
 
@@ -318,12 +310,11 @@ function ApplicationForm() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {(resume || resumeMode === "default") && (
+                {(resume) && (
                   <button
                     type="button"
                     onClick={() => {
                       setResume(null);
-                      setResumeMode(null);
                     }}
                     className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
