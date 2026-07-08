@@ -48,8 +48,6 @@ function ApplicationForm() {
 
     if (e.target.name === "resume") {
       setResume(file);
-      //setResumeMode("upload");
-      console.log("RESUME", file);
     } else {
       setCoverLetter(file);
     }
@@ -69,7 +67,7 @@ function ApplicationForm() {
 
   const getFormData = () => {
     const formData = new FormData();
-    if (resumeMode) {
+    if (!resume) {
       formData.append("useDefaultResume", "true");
     } else if (resume instanceof File) {
       formData.append("resume", resume);

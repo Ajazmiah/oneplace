@@ -181,56 +181,6 @@ export default function ProfilePage({ name, email, image }) {
             </div>
           </div>
         </div>
-
-        {/* Resumes card */}
-        <div className="mt-6 bg-white rounded-2xl border border-gray-100 shadow-xl p-6">
-          <div className="flex items-center justify-between mb-5">
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400">
-              Uploaded Resumes
-            </p>
-            <span className="text-xs font-medium text-gray-400">
-              {MOCK_RESUMES.length} file{MOCK_RESUMES.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-
-          <div className="space-y-2.5">
-            {MOCK_RESUMES.map((resume) => (
-              <div
-                key={resume.id}
-                className="flex items-center gap-4 px-4 py-3.5 rounded-xl bg-gray-50 border border-gray-100 hover:border-[#0bbcaa]/30 hover:bg-[#0bbcaa]/5 transition-all duration-200 group"
-              >
-                <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center shadow-sm group-hover:border-[#0bbcaa]/30 transition-colors">
-                  <svg style={{ width: "18px", height: "18px" }} className="text-[#0bbcaa]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                  </svg>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">{resume.name}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">{resume.size} · Uploaded {resume.uploaded}</p>
-                </div>
-
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <button className="p-2 rounded-lg text-gray-400 hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/10 transition-all duration-200" title="View">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  </button>
-                  <button className="p-2 rounded-lg text-gray-400 hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/10 transition-all duration-200" title="Download">
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <button className="mt-3 w-full py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-400 hover:border-[#0bbcaa] hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-all duration-200">
-            + Upload new resume
-          </button>
-        </div>
       </div>
     </main>
   );
