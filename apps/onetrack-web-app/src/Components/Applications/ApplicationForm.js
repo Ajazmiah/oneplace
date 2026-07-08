@@ -19,11 +19,9 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText, X, ChevronDown, Upload } from "lucide-react";
-import defaultResume from "@/database/models/defaultResume";
-
 function ApplicationForm() {
   const [resume, setResume] = useState(null);
-  const [resumeMode, setResumeMode] = useState(null);
+  const [defaultResume, setDefaultResume] = useState(null);
   const [coverLetter, setCoverLetter] = useState(null);
   const resumeInputRef = useRef(null);
 
@@ -58,7 +56,7 @@ function ApplicationForm() {
     const savedDefaultResume = await res.json();
     const resumeData = savedDefaultResume?.resumeData.resume;
     console.log("DAAA", resumeData);
-    setResumeMode(resumeData);
+    setDefaultResume(resumeData);
   };
 
   useEffect(() => {
@@ -263,17 +261,17 @@ function ApplicationForm() {
                   <DropdownMenuTrigger asChild>
                     <div
                       className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors select-none ${
-                        resume || resumeMode
+                        resume || defaultResume
                           ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
                           : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
                       }`}
                     >
                       <FileText
-                        className={`w-6 h-6 ${resume || resumeMode ? "text-[#0bbcaa]" : "text-gray-400"}`}
+                        className={`w-6 h-6 ${resume || defaultResume ? "text-[#0bbcaa]" : "text-gray-400"}`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
-                          {resume?.name || resumeMode?.filename }
+                          {resume?.name || defaultResume?.filename }
                           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
@@ -293,7 +291,7 @@ function ApplicationForm() {
                           }}
                         >
                           <FileText className="w-4 h-4 text-[#0bbcaa]" />
-                          {resumeMode?.filename}
+                          {defaultResume?.filename}
                         </DropdownMenuItem>
                       </>
                     ) : null}
