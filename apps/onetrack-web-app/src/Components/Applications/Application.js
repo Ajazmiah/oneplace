@@ -4,6 +4,7 @@ import { formatDate } from "@/app/lib/utils/utils";
 import { Search } from "lucide-react";
 
 function Application({ filteredApplications,query }) {
+
   return (
     <>
       {filteredApplications.map((app) => (

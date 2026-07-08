@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 
-import { Search } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import StatusCard from "./StatusCard";
 import Application from "./Application";
 
@@ -29,6 +29,9 @@ export default function ApplicationTable({ applications }) {
   };
 
   const [applicationStatus, setApplicationStatus] = useState(status);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PAGE_SIZE = 7;
 
   //filter
   useEffect(() => {
@@ -65,6 +68,12 @@ export default function ApplicationTable({ applications }) {
       }));
     });
   }, [applications]);
+
+  const totalPages = Math.ceil(filteredApplications.length / PAGE_SIZE);
+  const paginated = filteredApplications.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
 
   return (
     <>
@@ -108,13 +117,44 @@ export default function ApplicationTable({ applications }) {
       </div>
 
       {/* Application Table */}
-
       <div className="space-y-2">
-        <Application
-          filteredApplications={filteredApplications}
-          query={filterQuery}
-        />
+        <Application filteredApplications={paginated} query={filterQuery} />
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-1 pt-2">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 text-gray-500 hover:border-[#0bbcaa] hover:text-[#0bbcaa] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+                page === currentPage
+                  ? "bg-[#0bbcaa] text-white"
+                  : "border border-gray-200 text-gray-600 hover:border-[#0bbcaa] hover:text-[#0bbcaa]"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 text-gray-500 hover:border-[#0bbcaa] hover:text-[#0bbcaa] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </>
   );
 }
