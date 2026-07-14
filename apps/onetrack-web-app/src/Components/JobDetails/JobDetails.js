@@ -17,6 +17,7 @@ import { ApplicationContextProvider, useMyApplicationContext } from "@/context";
 import withApplicationContext from "../ContextWrapper/ContextWrapper";
 import { useRouter } from "next/navigation";
 import { deleteApplication } from "@/app/lib/DataAccessLayer/applications";
+import { openDocument } from "@/app/lib/utils/utils";
 import { toast } from "sonner";
 import AlertDialogBox from "../AlertDialog/AlertDialog";
 import { useState } from "react";
@@ -51,21 +52,6 @@ function JobDetails({ job }) {
     setOpen(true);
   };
 
-  const handleShowFile = async (file) => {
-    const byteCharacters = atob(file.data); // file.data is base64 string
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-
-    // Make a Blob from bytes
-    const blob = new Blob([byteArray], { type: file.mimetype });
-
-    // Create URL and open
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-  };
 
   return (
     <div className="p-6 lg:p-8 bg-slate-50 min-h-screen">
@@ -191,17 +177,10 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    // onClick={() => handleShowFile(job.resume)}
+                    onClick={() => openDocument(job.resume)}
                   >
                     <FileText className="w-4 h-4 mr-2" />
-                    <a
-                      href={`/api/application/${job._id}/resume`}
-                      className="w-full justify-start border-slate-200 text-left"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Resume
-                    </a>
+                    View Resume
                   </Button>
                 ) : (
                   <p className="text-sm text-slate-500">No resume uploaded.</p>
@@ -210,17 +189,10 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    // onClick={() => handleShowFile(job.resume)}
+                    onClick={() => openDocument(job.coverLetter)}
                   >
                     <Mail className="w-4 h-4 mr-2" />
-                    <a
-                      href={`/api/application/${job._id}/resume`}
-                      className="w-full justify-start border-slate-200 text-left"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Cover Letter
-                    </a>
+                    View Cover Letter
                   </Button>
                 ) : (
                   <p className="text-sm text-slate-500">

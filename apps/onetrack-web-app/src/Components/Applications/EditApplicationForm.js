@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/Components/ui/input";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
@@ -19,19 +19,23 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText, X, ChevronDown, Upload } from "lucide-react";
-function ApplicationForm() {
-  const [resume, setResume] = useState(null);
-  const [defaultResume, setDefaultResume] = useState(null);
+import { editApplication } from "@/app/lib/DataAccessLayer/applications";
+import AlertDialogBox from "../AlertDialog/AlertDialog";
+
+function EditApplicationForm({ application }) {
+  const [resume, setResume] = useState(application.resume || null);
+  const [resumeMode, setResumeMode] = useState(application.resume ? "upload" : null);
   const [coverLetter, setCoverLetter] = useState(null);
+  const [open, setOpen] = useState(false);
   const resumeInputRef = useRef(null);
 
-  const [jobTitle, setJobTitle] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [location, setLocation] = useState("");
-  const [salaryRange, setSalaryRange] = useState("");
-  const [details, setDetails] = useState("");
-  const [status, setStatus] = useState("applied");
-  const [jobUrl, setJobUrl] = useState("");
+  const [jobTitle, setJobTitle] = useState(application.jobTitle || "");
+  const [companyName, setCompanyName] = useState(application.companyName || "");
+  const [location, setLocation] = useState(application.location || "");
+  const [salaryRange, setSalaryRange] = useState(application.salaryRange || "");
+  const [details, setDetails] = useState(application.description || "");
+  const [status, setStatus] = useState(application.status || "applied");
+  const [jobUrl, setJobUrl] = useState(application.jobUrl || "");
 
   const router = useRouter();
 
@@ -46,26 +50,15 @@ function ApplicationForm() {
 
     if (e.target.name === "resume") {
       setResume(file);
+      setResumeMode("upload");
     } else {
       setCoverLetter(file);
     }
   }
 
-  const getDfaultResume = async () => {
-    const res = await fetch("/api/default-resume");
-    const savedDefaultResume = await res.json();
-    const resumeData = savedDefaultResume?.resumeData.resume;
-    console.log("DAAA", resumeData);
-    setDefaultResume(resumeData);
-  };
-
-  useEffect(() => {
-    getDfaultResume();
-  }, []);
-
   const getFormData = () => {
     const formData = new FormData();
-    if (!resume) {
+    if (resumeMode === "default") {
       formData.append("useDefaultResume", "true");
     } else if (resume instanceof File) {
       formData.append("resume", resume);
@@ -81,39 +74,41 @@ function ApplicationForm() {
     return formData;
   };
 
+  const handleConfirmed = async () => {
+    const formData = getFormData();
+    setOpen(false);
+    const response = await editApplication(application._id, formData);
+    toast(response.message);
+    router.back();
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (!jobTitle || !companyName) {
       return alert("Job title and company are required");
     }
-
-    const formData = getFormData();
-    const res = await fetch("/api/application/add-application", {
-      method: "POST",
-      body: formData,
-    });
-    const response = await res.json();
-
-    if (!response?.success) {
-      toast.error(response.message);
-      return;
-    }
-    toast("Application added");
-    router.push("/dashboard/applications");
+    setOpen(true);
   }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
+      <AlertDialogBox
+        open={open}
+        onCancel={() => setOpen(false)}
+        onConfirm={handleConfirmed}
+        title="Are you sure you want to edit?"
+      />
+
       {/* Page header */}
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
           <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
           <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
-            New application
+            Edit application
           </span>
         </div>
         <h1 className="font-bold tracking-tight text-gray-900 text-3xl sm:text-4xl leading-[1.08]">
-          Log a new{" "}
+          Update this{" "}
           <span
             style={{
               background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
@@ -126,13 +121,14 @@ function ApplicationForm() {
           </span>
         </h1>
         <p className="mt-2 text-sm text-gray-500">
-          Fill in the details below to track this job application.
+          Update the details below and save your changes.
         </p>
       </div>
 
       {/* Form card */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
+
           {/* Section: Role details */}
           <div>
             <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
@@ -168,9 +164,7 @@ function ApplicationForm() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-gray-600">
-                  Location
-                </label>
+                <label className="text-xs font-medium text-gray-600">Location</label>
                 <Input
                   name="location"
                   placeholder="e.g. London, UK / Remote"
@@ -181,9 +175,7 @@ function ApplicationForm() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-gray-600">
-                  Job URL
-                </label>
+                <label className="text-xs font-medium text-gray-600">Job URL</label>
                 <Input
                   name="URL"
                   placeholder="https://..."
@@ -194,9 +186,7 @@ function ApplicationForm() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-gray-600">
-                  Salary Range
-                </label>
+                <label className="text-xs font-medium text-gray-600">Salary Range</label>
                 <Input
                   name="salaryRange"
                   placeholder="e.g. £60,000 – £80,000"
@@ -207,9 +197,7 @@ function ApplicationForm() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-medium text-gray-600">
-                  Status
-                </label>
+                <label className="text-xs font-medium text-gray-600">Status</label>
                 <Select
                   name="status"
                   onValueChange={(value) => setStatus(value)}
@@ -255,47 +243,44 @@ function ApplicationForm() {
               Documents
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
               {/* Resume — dropdown: use default or upload new */}
               <div className="relative">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <div
                       className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors select-none ${
-                        resume || defaultResume
+                        resume || resumeMode === "default"
                           ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
                           : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
                       }`}
                     >
                       <FileText
-                        className={`w-6 h-6 ${resume || defaultResume ? "text-[#0bbcaa]" : "text-gray-400"}`}
+                        className={`w-6 h-6 ${resume || resumeMode === "default" ? "text-[#0bbcaa]" : "text-gray-400"}`}
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
-                          {resume?.name || defaultResume?.filename }
+                          {resumeMode === "default"
+                            ? "Using default resume"
+                            : resume
+                            ? resume.name || resume.filename
+                            : "Resume"}
                           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
-                          {!resume ? "Last used" : "PDF, DOC, DOCX"}
+                          {resumeMode === "default" ? "Your saved default" : "PDF, DOC, DOCX"}
                         </p>
                       </div>
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="center" className="w-52">
-                    {resume ? (
-                      <>
-                        <DropdownMenuItem
-                          className="cursor-pointer gap-2"
-                          onClick={() => {
-                    
-                            setResume(null);
-                          }}
-                        >
-                          <FileText className="w-4 h-4 text-[#0bbcaa]" />
-                          {defaultResume?.filename}
-                        </DropdownMenuItem>
-                      </>
-                    ) : null}
-
+                    <DropdownMenuItem
+                      className="cursor-pointer gap-2"
+                      onClick={() => { setResumeMode("default"); setResume(null); }}
+                    >
+                      <FileText className="w-4 h-4 text-[#0bbcaa]" />
+                      Use default resume
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2"
                       onClick={() => resumeInputRef.current?.click()}
@@ -306,12 +291,10 @@ function ApplicationForm() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {(resume) && (
+                {(resume || resumeMode === "default") && (
                   <button
                     type="button"
-                    onClick={() => {
-                      setResume(null);
-                    }}
+                    onClick={() => { setResume(null); setResumeMode(null); }}
                     className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
                     <X className="w-3 h-3" />
@@ -348,10 +331,7 @@ function ApplicationForm() {
                 {coverLetter && (
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCoverLetter(null);
-                    }}
+                    onClick={(e) => { e.preventDefault(); setCoverLetter(null); }}
                     className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
                     <X className="w-3 h-3" />
@@ -365,6 +345,7 @@ function ApplicationForm() {
                   onChange={handleFileUpload}
                 />
               </label>
+
             </div>
           </div>
 
@@ -374,13 +355,14 @@ function ApplicationForm() {
               type="submit"
               className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors"
             >
-              Save Application →
+              Save Changes →
             </button>
           </div>
+
         </form>
       </div>
     </div>
   );
 }
 
-export default ApplicationForm;
+export default EditApplicationForm;

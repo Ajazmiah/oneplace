@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import ApplicationForm from "../../../../../../Components/Applications/ApplicationForm";
+import EditApplicationForm from "../../../../../../Components/Applications/EditApplicationForm";
 
 function AddApplicationForm() {
-  const [application, setApplication] = useState(() => {
+  const [application] = useState(() => {
     const stored = localStorage?.getItem("application");
     return stored ? JSON.parse(stored) : null;
   });
 
-  return <ApplicationForm application={application} />;
+  if (!application) return null;
+
+  return <EditApplicationForm application={application} />;
 }
 export default AddApplicationForm;

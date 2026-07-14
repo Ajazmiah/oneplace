@@ -14,12 +14,13 @@ import {
 import { Search } from "lucide-react";
 import StatusCard from "./StatusCard";
 import Application from "./Application";
+import Pagination from "../Pagination/Pagination";
+import usePagination from "@/hook/usePagination";
 
 export default function ApplicationTable({ applications }) {
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
   const [filterByStatus, setFilterByStatus] = useState("all");
-  console.log("v", filterQuery);
 
   const status = {
     rejected: 0,
@@ -28,11 +29,19 @@ export default function ApplicationTable({ applications }) {
     applied: 0,
   };
 
+  const {
+    paginated,
+    currentPage,
+    totalPages,
+    setCurrentPage,
+    nextPage,
+    prevPage,
+  } = usePagination(filteredApplications, 7);
+
   const [applicationStatus, setApplicationStatus] = useState(status);
 
-  //filter
+  // filter
   useEffect(() => {
-    //checks if search query matches the searchFiled
     const queryExists = (searchFiled) =>
       searchFiled?.toLowerCase().includes(filterQuery.toLowerCase());
 
@@ -42,7 +51,6 @@ export default function ApplicationTable({ applications }) {
       filtered = applications.filter(
         (application) => application.status === filterByStatus
       );
-      console.log(filterByStatus);
     } else {
       filtered = applications.filter((application) => {
         if (
@@ -92,6 +100,7 @@ export default function ApplicationTable({ applications }) {
             onChange={(e) => setFilterQuery(e.target.value)}
           />
         </div>
+
         <Select onValueChange={(value) => setFilterByStatus(value)}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="All" />
@@ -104,17 +113,23 @@ export default function ApplicationTable({ applications }) {
             <SelectItem value="rejected">Rejected</SelectItem>
           </SelectContent>
         </Select>
+
         <Button variant="outline">Export CSV</Button>
       </div>
 
       {/* Application Table */}
-
       <div className="space-y-2">
-        <Application
-          filteredApplications={filteredApplications}
-          query={filterQuery}
-        />
+        <Application filteredApplications={paginated} query={filterQuery} />
       </div>
+
+      {/* Pagination */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+        nextPage={nextPage}
+        prevPage={prevPage}
+      />
     </>
   );
 }
