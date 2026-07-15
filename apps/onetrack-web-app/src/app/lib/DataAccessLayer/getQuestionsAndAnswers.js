@@ -10,7 +10,7 @@ export const getQuestionsAndAnswers = async () => {
 
   const questions = await QuestionAndAnswerModel.find({
     userId: user._id,
-  })
+  }).lean()
     .populate({ path: "userId" })
     .sort({ createdAt: -1 });
 
