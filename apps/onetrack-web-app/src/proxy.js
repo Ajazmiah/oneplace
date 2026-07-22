@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 const protectedRoutes = ["/dashboard", "/settings", "/profile"];
 
-export async function middleware(request) {
+export async function proxy(request) {
   const session = await auth();
 
   const { pathname } = request.nextUrl;
