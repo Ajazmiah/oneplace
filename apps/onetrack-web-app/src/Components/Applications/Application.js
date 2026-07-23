@@ -14,7 +14,7 @@ function Application({ filteredApplications,query }) {
           className="flex flex-wrap lg:flex-nowrap justify-between items-center bg-surface shadow-sm rounded-lg p-4 border border-gray-100"
         >
           <div className="w-full lg:w-1/5 mb-2 lg:mb-0">
-            <p className="font-semibold">{app.jobTitle.split("").map(t => <p style={{ color: `${query.includes(t)? 'red': ''}`, display: 'inline'}}>{t}</p>)}</p>
+            <p className="font-semibold">{app.jobTitle.split("").map(t => <p key={t} style={{ color: `${query.includes(t)? 'red': ''}`, display: 'inline'}}>{t}</p>)}</p>
             <p className="text-sm text-gray-500">
               {app.companyName} · {app.location}
             </p>
