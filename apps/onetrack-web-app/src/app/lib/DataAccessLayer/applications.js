@@ -4,20 +4,29 @@ import defaultResumeModel from "@/database/models/defaultResume";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
 import { notFound } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { getBuffer } from "../utils/utils";
 
 export const getApplications = async () => {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
+  const userId = user._id.toString();
 
-  const applications = await AddApplicationModel.find({
-    userId: user._id,
-  })
-    .populate({ path: "userId" })
-    .sort({ createdAt: -1 });
+  const getCachedApplications = unstable_cache(
+    async (uid) => {
+      const applications = await AddApplicationModel.find({ userId: uid })
+        .select("-resume.data -coverLetter.data")
+        .populate({ path: "userId" })
+        .sort({ createdAt: -1 })
+        .lean();
 
-  return applications;
+      return JSON.parse(JSON.stringify(applications));
+    },
+    ["applications", userId],
+    { tags: [`applications-${userId}`] }
+  );
+
+  return getCachedApplications(userId);
 };
 
 export const getSingleApplication = async (id) => {
