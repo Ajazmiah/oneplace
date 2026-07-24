@@ -21,6 +21,7 @@ import { Textarea } from "@/Components/ui/textarea";
 import { FileText, X, ChevronDown, Upload } from "lucide-react";
 import { editApplication } from "@/app/lib/actions/applications/applicationActions";
 import AlertDialogBox from "../AlertDialog/AlertDialog";
+import ApplicationFormHeader from "./ApplicationFormHeader";
 
 function EditApplicationForm({ application }) {
   const [resume, setResume] = useState(application.resume || null);
@@ -115,30 +116,7 @@ function EditApplicationForm({ application }) {
       />
 
       {/* Page header */}
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-          <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
-            Edit application
-          </span>
-        </div>
-        <h1 className="font-bold tracking-tight text-gray-900 text-3xl sm:text-4xl leading-[1.08]">
-          Update this{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            role.
-          </span>
-        </h1>
-        <p className="mt-2 text-sm text-gray-500">
-          Update the details below and save your changes.
-        </p>
-      </div>
+      <ApplicationFormHeader header={'Edit application'} jobTitle={jobTitle}/>
 
       {/* Form card */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">

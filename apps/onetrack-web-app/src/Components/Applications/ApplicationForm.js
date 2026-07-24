@@ -19,6 +19,7 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText, X, ChevronDown, Upload } from "lucide-react";
+import ApplicationFormHeader from "./ApplicationFormHeader";
 function ApplicationForm() {
   const [resume, setResume] = useState(null);
   const [defaultResume, setDefaultResume] = useState(null);
@@ -116,30 +117,7 @@ function ApplicationForm() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       {/* Page header */}
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-          <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
-            New application
-          </span>
-        </div>
-        <h1 className="font-bold tracking-tight text-gray-900 text-3xl sm:text-4xl leading-[1.08]">
-          Log a new{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            role.
-          </span>
-        </h1>
-        <p className="mt-2 text-sm text-gray-500">
-          Fill in the details below to track this job application.
-        </p>
-      </div>
+      <ApplicationFormHeader header={'add application'}/>
 
       {/* Form card */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
