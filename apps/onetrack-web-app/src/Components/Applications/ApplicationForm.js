@@ -19,6 +19,7 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText, X, ChevronDown, Upload } from "lucide-react";
+import ApplicationFormHeader from "./ApplicationFormHeader";
 function ApplicationForm() {
   const [resume, setResume] = useState(null);
   const [defaultResume, setDefaultResume] = useState(null);
@@ -32,6 +33,8 @@ function ApplicationForm() {
   const [details, setDetails] = useState("");
   const [status, setStatus] = useState("applied");
   const [jobUrl, setJobUrl] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
 
@@ -83,52 +86,38 @@ function ApplicationForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
     if (!jobTitle || !companyName) {
-      return alert("Job title and company are required");
-    }
-
-    const formData = getFormData();
-    const res = await fetch("/api/application/add-application", {
-      method: "POST",
-      body: formData,
-    });
-    const response = await res.json();
-
-    if (!response?.success) {
-      toast.error(response.message);
+      setError("Job title and company are required");
       return;
     }
-    toast("Application added");
-    router.push("/dashboard/applications");
+
+    setIsSubmitting(true);
+    try {
+      const formData = getFormData();
+      const res = await fetch("/api/application/add-application", {
+        method: "POST",
+        body: formData,
+      });
+      const response = await res.json();
+
+      if (!response?.success) {
+        setError(response.message || "Something went wrong");
+        return;
+      }
+      toast("Application added");
+      router.push("/dashboard/applications");
+    } catch (err) {
+      setError("Network error — please try again");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       {/* Page header */}
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-          <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
-            New application
-          </span>
-        </div>
-        <h1 className="font-bold tracking-tight text-gray-900 text-3xl sm:text-4xl leading-[1.08]">
-          Log a new{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            role.
-          </span>
-        </h1>
-        <p className="mt-2 text-sm text-gray-500">
-          Fill in the details below to track this job application.
-        </p>
-      </div>
+      <ApplicationFormHeader header={'add application'}/>
 
       {/* Form card */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
@@ -369,12 +358,14 @@ function ApplicationForm() {
           </div>
 
           {/* Submit */}
-          <div className="flex justify-end pt-2">
+          <div className="flex items-center justify-end gap-3 pt-2">
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <button
               type="submit"
-              className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors"
+              disabled={isSubmitting}
+              className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Save Application →
+              {isSubmitting ? "Saving..." : "Save Application →"}
             </button>
           </div>
         </form>

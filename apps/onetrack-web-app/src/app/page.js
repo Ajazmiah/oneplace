@@ -1,7 +1,6 @@
 import Services from "@/Components/Services/Services";
 import landingpageImage from "../../public/landingpageImage.svg";
 import Image from "next/image";
-import { getUserSession } from "./lib/DataAccessLayer/getSession";
 import Link from "next/link";
 import { auth } from "@/auth";
 
@@ -11,7 +10,6 @@ export default async function Example() {
   
   let authContent = (
     <>
-      {/* Left: text content */}
       <div className="flex flex-col items-start max-w-lg">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 mb-8 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
@@ -38,13 +36,13 @@ export default async function Example() {
           Land your next role.
         </h1>
 
-        {/* Subtext */}
+
         <p className="mt-6 text-lg leading-relaxed text-gray-500 max-w-md">
           The smart way to log, track, and organize your entire job search —
           all from one clean dashboard.
         </p>
 
-        {/* Stats strip */}
+
         <div className="mt-8 flex items-center gap-6">
           <div className="flex flex-col">
             <span className="text-2xl font-bold text-gray-900 leading-none">500+</span>
@@ -79,7 +77,7 @@ export default async function Example() {
         </div>
       </div>
 
-      {/* Right: image with soft teal glow */}
+  
       <div className="hidden lg:flex items-center justify-center w-[50%] relative">
         <div
           className="absolute w-96 h-96 rounded-full opacity-[0.12] pointer-events-none"
