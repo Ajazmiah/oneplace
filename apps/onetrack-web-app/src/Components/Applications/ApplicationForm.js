@@ -32,6 +32,8 @@ function ApplicationForm() {
   const [details, setDetails] = useState("");
   const [status, setStatus] = useState("applied");
   const [jobUrl, setJobUrl] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
 
@@ -83,23 +85,32 @@ function ApplicationForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
     if (!jobTitle || !companyName) {
-      return alert("Job title and company are required");
-    }
-
-    const formData = getFormData();
-    const res = await fetch("/api/application/add-application", {
-      method: "POST",
-      body: formData,
-    });
-    const response = await res.json();
-
-    if (!response?.success) {
-      toast.error(response.message);
+      setError("Job title and company are required");
       return;
     }
-    toast("Application added");
-    router.push("/dashboard/applications");
+
+    setIsSubmitting(true);
+    try {
+      const formData = getFormData();
+      const res = await fetch("/api/application/add-application", {
+        method: "POST",
+        body: formData,
+      });
+      const response = await res.json();
+
+      if (!response?.success) {
+        setError(response.message || "Something went wrong");
+        return;
+      }
+      toast("Application added");
+      router.push("/dashboard/applications");
+    } catch (err) {
+      setError("Network error — please try again");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -369,12 +380,14 @@ function ApplicationForm() {
           </div>
 
           {/* Submit */}
-          <div className="flex justify-end pt-2">
+          <div className="flex items-center justify-end gap-3 pt-2">
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <button
               type="submit"
-              className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors"
+              disabled={isSubmitting}
+              className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Save Application →
+              {isSubmitting ? "Saving..." : "Save Application →"}
             </button>
           </div>
         </form>

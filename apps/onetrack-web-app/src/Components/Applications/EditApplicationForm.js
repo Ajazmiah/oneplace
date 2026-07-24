@@ -36,6 +36,8 @@ function EditApplicationForm({ application }) {
   const [details, setDetails] = useState(application.description || "");
   const [status, setStatus] = useState(application.status || "applied");
   const [jobUrl, setJobUrl] = useState(application.jobUrl || "");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
 
@@ -75,17 +77,30 @@ function EditApplicationForm({ application }) {
   };
 
   const handleConfirmed = async () => {
-    const formData = getFormData();
     setOpen(false);
-    const response = await editApplication(application._id, formData);
-    toast(response.message);
-    router.back();
+    setIsSubmitting(true);
+    try {
+      const formData = getFormData();
+      const response = await editApplication(application._id, formData);
+      if (!response?.success) {
+        setError(response?.message || "Something went wrong");
+        return;
+      }
+      toast(response.message);
+      router.back();
+    } catch (err) {
+      setError("Network error — please try again");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
     if (!jobTitle || !companyName) {
-      return alert("Job title and company are required");
+      setError("Job title and company are required");
+      return;
     }
     setOpen(true);
   }
@@ -350,12 +365,14 @@ function EditApplicationForm({ application }) {
           </div>
 
           {/* Submit */}
-          <div className="flex justify-end pt-2">
+          <div className="flex items-center justify-end gap-3 pt-2">
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <button
               type="submit"
-              className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors"
+              disabled={isSubmitting}
+              className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Save Changes →
+              {isSubmitting ? "Saving..." : "Save Changes →"}
             </button>
           </div>
 
