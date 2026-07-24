@@ -16,7 +16,7 @@ import { Badge } from "../ui/badge";
 import { ApplicationContextProvider, useMyApplicationContext } from "@/context";
 import withApplicationContext from "../ContextWrapper/ContextWrapper";
 import { useRouter } from "next/navigation";
-import { deleteApplication } from "@/app/lib/DataAccessLayer/applications";
+import { deleteApplication } from "@/app/lib/actions/applications/applicationActions";
 import { openDocument } from "@/app/lib/utils/utils";
 import { toast } from "sonner";
 import AlertDialogBox from "../AlertDialog/AlertDialog";

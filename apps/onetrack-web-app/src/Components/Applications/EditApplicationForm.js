@@ -19,7 +19,7 @@ import {
 } from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText, X, ChevronDown, Upload } from "lucide-react";
-import { editApplication } from "@/app/lib/DataAccessLayer/applications";
+import { editApplication } from "@/app/lib/actions/applications/applicationActions";
 import AlertDialogBox from "../AlertDialog/AlertDialog";
 
 function EditApplicationForm({ application }) {
