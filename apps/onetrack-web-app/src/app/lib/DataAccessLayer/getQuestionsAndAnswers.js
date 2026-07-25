@@ -10,11 +10,15 @@ export const getQuestionsAndAnswers = async () => {
 
   const questions = await QuestionAndAnswerModel.find({
     userId: user._id,
-  }).lean()
-    .populate({ path: "userId" })
+  })
+    .lean()
     .sort({ createdAt: -1 });
 
-  return questions;
+  return questions.map((q) => ({
+    _id: q._id.toString(),
+    question: q.question,
+    answer: q.answer,
+  }));
 };
 
 // accepts a single { question, answer } or an array of them

@@ -58,12 +58,6 @@ export default function Sidebar() {
       >
         {/* Header */}
         <div className="px-5 py-5 border-b border-white/[0.07] flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md bg-brand flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-xs">R</span>
-            </div>
-            <span className="text-white font-semibold text-sm tracking-tight">Resumind</span>
-          </div>
           <button
             onClick={() => setMobileOpen(false)}
             aria-label="Close menu"
@@ -76,7 +70,7 @@ export default function Sidebar() {
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5">
           <p className="px-3 pb-2 text-[10px] font-semibold text-slate-600 uppercase tracking-widest">
-            Workspace
+            dashboard menu
           </p>
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href || pathname.startsWith(href + "/");
