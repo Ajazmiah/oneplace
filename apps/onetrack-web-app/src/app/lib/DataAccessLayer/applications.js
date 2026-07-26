@@ -3,43 +3,60 @@ import AddApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
 import { notFound } from "next/navigation";
-import { unstable_cache } from "next/cache";
+import { cacheTag, cacheLife } from "next/cache";
+
+async function getCachedApplications(userId) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`applications-${userId}`);
+
+  const applications = await AddApplicationModel.find({ userId })
+    .select("-resume.data -coverLetter.data")
+    .populate({ path: "userId" })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return JSON.parse(JSON.stringify(applications));
+}
+
+async function getCachedApplication(id, userId) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`application-${id}`, `applications-${userId}`);
+
+  const application = await AddApplicationModel.findOne({
+    _id: id,
+    userId,
+  })
+    .select("-resume.data -coverLetter.data")
+    .lean();
+
+  return JSON.parse(JSON.stringify(application));
+}
 
 export const getApplications = async () => {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
   const userId = user._id.toString();
 
-  const getCachedApplications = unstable_cache(
-    async (uid) => {
-      const applications = await AddApplicationModel.find({ userId: uid })
-        .select("-resume.data -coverLetter.data")
-        .populate({ path: "userId" })
-        .sort({ createdAt: -1 })
-        .lean();
-
-      return JSON.parse(JSON.stringify(applications));
-    },
-    ["applications", userId],
-    { tags: [`applications-${userId}`] }
-  );
-
   return getCachedApplications(userId);
 };
 
 export const getSingleApplication = async (id) => {
   try {
-    await getUserSession();
+    const session = await getUserSession();
+    const user = await getUserByEmail(session.user.email);
+    const userId = user._id.toString();
 
-    const application = await AddApplicationModel.findById({ _id: id });
+    const application = await getCachedApplication(id, userId);
 
     if (!application) {
       notFound();
     }
 
-    return application;
+    return application
   } catch (error) {
     console.error("Error fetching application:", error.message);
-    throw error; // rethrow so the caller can handle it
+    throw error;
   }
 };

@@ -3,7 +3,7 @@ import AddApplicationModel from "@/database/models/addApplicationModel";
 import defaultResumeModel from "@/database/models/defaultResume";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
-import { revalidatePath } from "next/cache";
+import { revalidateTag,revalidatePath } from "next/cache";
 import { getBuffer } from "@/app/lib/utils/utils";
 
 export const editApplication = async (id, formData) => {
@@ -56,8 +56,7 @@ export const editApplication = async (id, formData) => {
       : application?.coverLetter;
 
     await application.save();
-
-    revalidatePath("/dashboard/applications");
+    revalidateTag(`application-${id}`);
     return {
       success: true,
       message: "Successfully edited",
