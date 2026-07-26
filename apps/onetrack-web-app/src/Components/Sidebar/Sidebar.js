@@ -50,7 +50,8 @@ export default function Sidebar() {
       {/* Sidebar panel */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-56 flex-shrink-0 bg-sidebar-bg flex flex-col",
+          "fixed inset-y-0 left-0 z-50 w-56 flex-shrink-0 flex flex-col",
+          "border-r border-brand",
           "transform transition-transform duration-300 ease-in-out",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
           "lg:static lg:translate-x-0 lg:z-auto"
