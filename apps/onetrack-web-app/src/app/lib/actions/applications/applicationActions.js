@@ -72,10 +72,24 @@ export const editApplication = async (id, formData) => {
 
 export const deleteApplication = async (id) => {
   try {
-    await AddApplicationModel.findByIdAndDelete({
+    const session = await getUserSession();
+    const user = await getUserByEmail(session.user.email);
+    const userId = user._id.toString();
+
+    const deleted = await AddApplicationModel.findOneAndDelete({
       _id: id,
+      userId,
     });
-    revalidatePath("/dashboard/applications");
+
+    if (!deleted) {
+      return {
+        success: false,
+        message: "application not found",
+      };
+    }
+
+    revalidateTag(`applications-${userId}`);
+
     return {
       success: true,
       message: "application deleted successfully",
