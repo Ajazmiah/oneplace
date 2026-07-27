@@ -22,10 +22,11 @@ export const editApplication = async (id, formData) => {
 
     let resumeData = null;
     let coverLetterData = null;
+    const session = await getUserSession();
+    const user = await getUserByEmail(session.user.email);
+    const userId = user._id.toString();
 
     if (useDefaultResume === "true") {
-      const session = await getUserSession();
-      const user = await getUserByEmail(session.user.email);
       const saved = await defaultResumeModel.findOne({ userId: user._id });
       if (saved?.resume) resumeData = saved.resume;
     } else if (resume && resume instanceof File && resume.size > 0) {
@@ -56,7 +57,7 @@ export const editApplication = async (id, formData) => {
       : application?.coverLetter;
 
     await application.save();
-    revalidateTag(`application-${id}`);
+    revalidateTag(`applications-${userId}`);
     return {
       success: true,
       message: "Successfully edited",
