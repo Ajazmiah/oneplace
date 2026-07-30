@@ -10,11 +10,11 @@ import {
 import Answer from "@/Components/QuestionAnswers/Answer";
 import usePagination from "@/hook/usePagination";
 import Pagination from "../Pagination/Pagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function QuestionAnswersView({ questions }) {
-
-  const [filteredQuestions, setFilteredQuestions] = useState(questions)
+  const [filteredQuestions, setFilteredQuestions] = useState(questions);
+  const [filterQuery, setFilterQuery] = useState("");
 
   const {
     paginated,
@@ -23,12 +23,27 @@ export default function QuestionAnswersView({ questions }) {
     setCurrentPage,
     nextPage,
     prevPage,
-  } = usePagination(questions, 5);
+  } = usePagination(filteredQuestions, 5);
 
+  // filter
+  useEffect(() => {
+    const queryExists = (searchField) =>
+      searchField?.toLowerCase().includes(filterQuery.toLowerCase());
 
-  
+    let filtered;
 
+    if (filterQuery === "" || filterQuery === "all") {
+      filtered = questions;
+    } else {
+      filtered = questions.filter(({ question }) => {
+        if (queryExists(question)) {
+          return true;
+        }
+      });
+    }
 
+    setFilteredQuestions(filtered);
+  }, [filterQuery]);
 
   return (
     <div className="space-y-6">
@@ -42,21 +57,21 @@ export default function QuestionAnswersView({ questions }) {
       </div>
 
       {questions.length !== 0 && (
-        <Select onValueChange={(value) => setFilteredQuestions(value)}>
+        <Select onValueChange={(value) => setFilterQuery(value)}>
           <SelectTrigger className="w-full max-w-sm rounded-xl border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm focus:border-indigo-400 focus:ring-indigo-100">
             <SelectValue placeholder="Choose a question" />
           </SelectTrigger>
           <SelectContent>
-          <SelectItem value="all">All</SelectItem>
+            <SelectItem value="all">All</SelectItem>
             {questions.map((q) => (
               <>
-              <SelectItem
-                key={q._id}
-                value={q.question}
-                className="focus:bg-indigo-100 focus:text-indigo-700"
-              >
-                {q.question}
-              </SelectItem>
+                <SelectItem
+                  key={q._id}
+                  value={q.question}
+                  className="focus:bg-indigo-100 focus:text-indigo-700"
+                >
+                  {q.question}
+                </SelectItem>
               </>
             ))}
           </SelectContent>
@@ -74,7 +89,7 @@ export default function QuestionAnswersView({ questions }) {
           </a>
         </div>
       ) : (
-        <Answer questions={paginated}/>
+        <Answer questions={paginated} />
       )}
 
       {/* Pagination */}
