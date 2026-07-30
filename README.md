@@ -1,6 +1,6 @@
 # OneTrack
 
-OneTrack is a job application tracker. It lets you log every job you apply to — role, company, status, resume, cover letter, job description, salary range — and follow each one through the hiring pipeline from a single dashboard. A companion Chrome extension detects when you're on a job posting (LinkedIn, Indeed, Greenhouse, Lever) and lets you save it to OneTrack in one click, pre-filled from the page.
+OnePlace is a job application tracker. It lets you log every job you apply to — role, company, status, resume, cover letter, job description, salary range — and follow each one through the hiring pipeline from a single dashboard. A companion Chrome extension detects when you're on a job posting (LinkedIn, Indeed, Greenhouse, Lever) and lets you save it to OneTrack in one click, pre-filled from the page.
 
 This is a [Turborepo](https://turborepo.dev) monorepo containing the web app, the browser extension, and shared packages.
 
