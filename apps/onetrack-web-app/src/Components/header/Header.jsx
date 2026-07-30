@@ -11,9 +11,7 @@ async function Header() {
     { name: "Dashboard", href: "/dashboard/applications" },
 
     { name: "About", href: "/about" },
-
   ];
-
 
   const userNavigationItems = [
     {
@@ -23,20 +21,27 @@ async function Header() {
     {
       name: "dashboard",
       href: "/dashboard/applications",
-    }
+    },
   ];
-  const loggedInNavigation = [...Allnavigation];
+  const loggedInNavigation = [
+    { name: "Dashboard", href: "/dashboard/applications" },
+
+    { name: "About", href: "/about" },
+  ];
   const loggedOutNavigation = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
   ];
 
-
   const navigation = session?.user ? loggedInNavigation : loggedOutNavigation;
 
   return (
     <header className="sticky inset-x-0 top-0 z-50 transition-colors duration-300 bg-white border-b border-gray-100 shadow-sm">
-      <Navigation navigation={navigation} session={session} userNavigations={userNavigationItems} />
+      <Navigation
+        navigation={navigation}
+        session={session}
+        userNavigations={userNavigationItems}
+      />
     </header>
   );
 }

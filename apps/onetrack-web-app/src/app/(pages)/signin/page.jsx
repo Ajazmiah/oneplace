@@ -70,7 +70,7 @@ export default function AuthPage() {
           <div className="mt-10 space-y-4">
             {[
               { icon: "◈", label: "Track every application in one dashboard" },
-              { icon: "◎", label: "Monitor interview stages and follow-ups" },
+              { icon: "◎", label: "Save frequently asked interview questions" },
               { icon: "◉", label: "Attach resumes and cover letters" },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-3">
@@ -80,23 +80,6 @@ export default function AuthPage() {
                 <span className="text-sm text-gray-600">{item.label}</span>
               </div>
             ))}
-          </div>
-
-          {/* Stat strip */}
-          <div className="mt-12 flex items-center gap-6">
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold text-gray-900 leading-none">
-                500+
-              </span>
-              <span className="text-xs text-gray-400 mt-1">apps tracked</span>
-            </div>
-            <div className="w-px h-10 bg-gray-200" />
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold text-gray-900 leading-none">
-                Free
-              </span>
-              <span className="text-xs text-gray-400 mt-1">forever</span>
-            </div>
           </div>
         </div>
       </div>

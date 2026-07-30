@@ -117,7 +117,7 @@ function Footer() {
         {/* Bottom row */}
         <div className="mt-10 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-400">
-            &copy; {new Date().getFullYear()} OnePlace. All rights reserved.
+            &copy; 2026 OnePlace. All rights reserved.
           </p>
           <div className="flex gap-5 text-xs text-gray-400">
             {[

@@ -106,6 +106,14 @@ function ApplicationForm() {
         return;
       }
       toast("Application added");
+      setJobTitle("");
+      setCompanyName("");
+      setLocation("");
+      setSalaryRange("");
+      setDetails("");
+      setStatus("");
+      setJobUrl("");
+      setError("");
       router.push("/dashboard/applications");
     } catch (err) {
       setError("Network error — please try again");
@@ -117,7 +125,7 @@ function ApplicationForm() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       {/* Page header */}
-      <ApplicationFormHeader header={'add application'}/>
+      <ApplicationFormHeader header={"add application"} />
 
       {/* Form card */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
@@ -260,7 +268,7 @@ function ApplicationForm() {
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
-                          {resume?.name || defaultResume?.filename }
+                          {resume?.name || defaultResume?.filename}
                           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
@@ -275,7 +283,6 @@ function ApplicationForm() {
                         <DropdownMenuItem
                           className="cursor-pointer gap-2"
                           onClick={() => {
-                    
                             setResume(null);
                           }}
                         >
@@ -295,7 +302,7 @@ function ApplicationForm() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {(resume) && (
+                {resume && (
                   <button
                     type="button"
                     onClick={() => {

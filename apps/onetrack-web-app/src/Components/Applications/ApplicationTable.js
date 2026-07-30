@@ -22,13 +22,6 @@ export default function ApplicationTable({ applications }) {
   const [filterQuery, setFilterQuery] = useState("");
   const [filterByStatus, setFilterByStatus] = useState("all");
 
-  const status = {
-    rejected: 0,
-    interviewing: 0,
-    offer: 0,
-    applied: 0,
-  };
-
   const {
     paginated,
     currentPage,
@@ -38,7 +31,13 @@ export default function ApplicationTable({ applications }) {
     prevPage,
   } = usePagination(filteredApplications, 7);
 
-  const [applicationStatus, setApplicationStatus] = useState(status);
+  const applicationStatus = applications.reduce(
+    (counts, application) => {
+      counts[application.status] = (counts[application.status] || 0) + 1;
+      return counts;
+    },
+    { applied: 0,rejected: 0, interviewing: 0, offer: 0 }
+  );
 
   // filter
   useEffect(() => {
@@ -64,15 +63,6 @@ export default function ApplicationTable({ applications }) {
 
     setFilteredApplications(filtered);
   }, [filterQuery, filterByStatus]);
-
-  useEffect(() => {
-    applications.forEach((application) => {
-      setApplicationStatus((prev) => ({
-        ...prev,
-        [application.status]: prev[application.status] + 1,
-      }));
-    });
-  }, [applications]);
 
   return (
     <>

@@ -33,10 +33,6 @@ export const getBuffer = async (file) => {
   return Buffer.from(await file.arrayBuffer());
 };
 
-export const openDocument = (file) => {
-  const bytes = file.data?.data ?? Object.values(file.data);
-  const blob = new Blob([new Uint8Array(bytes)], { type: file.mimetype });
-  const url = URL.createObjectURL(blob);
+export const openDocument = (url) => {
   window.open(url, "_blank");
-  URL.revokeObjectURL(url);
 };

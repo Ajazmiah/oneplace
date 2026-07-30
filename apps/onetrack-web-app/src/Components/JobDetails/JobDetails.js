@@ -13,7 +13,6 @@ import {
   LinkIcon,
 } from "lucide-react";
 import { Badge } from "../ui/badge";
-import { ApplicationContextProvider, useMyApplicationContext } from "@/context";
 import withApplicationContext from "../ContextWrapper/ContextWrapper";
 import { useRouter } from "next/navigation";
 import { deleteApplication } from "@/app/lib/actions/applications/applicationActions";
@@ -177,7 +176,9 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => openDocument(job.resume)}
+                    onClick={() =>
+                      openDocument(`/api/application/${job._id}/resume`)
+                    }
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     View Resume
@@ -189,7 +190,9 @@ function JobDetails({ job }) {
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"
-                    onClick={() => openDocument(job.coverLetter)}
+                    onClick={() =>
+                      openDocument(`/api/application/${job._id}/coverletter`)
+                    }
                   >
                     <Mail className="w-4 h-4 mr-2" />
                     View Cover Letter

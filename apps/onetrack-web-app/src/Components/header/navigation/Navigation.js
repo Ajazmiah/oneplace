@@ -22,13 +22,13 @@ function Navigation({ navigation, session, userNavigations }) {
       >
         {/* Logo */}
         <div className="flex lg:flex-1">
-          <a href="/" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <img
               src="/oneplace-logo-full.svg"
               alt="OnePlace"
               className="h-10 w-auto"
             />
-          </a>
+          </Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -46,9 +46,9 @@ function Navigation({ navigation, session, userNavigations }) {
         {/* Desktop nav links — centered */}
         <div className="hidden lg:flex lg:gap-x-10">
           {navigation.map((item) => (
-            <a key={item.name} href={item.href} className="nav-link">
+            <Link key={item.name} href={item.href} className="nav-link">
               {item.name}
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -76,13 +76,13 @@ function Navigation({ navigation, session, userNavigations }) {
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-5 sm:max-w-sm shadow-xl">
           {/* Drawer header */}
           <div className="flex items-center justify-between">
-            <a href="/" onClick={() => setMobileMenuOpen(false)}>
+            <Link href="/" onClick={() => setMobileMenuOpen(false)}>
               <img
                 src="/oneplace-logo-full.svg"
                 alt="OnePlace"
                 className="h-10 w-auto"
               />
-            </a>
+            </Link>
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
@@ -97,14 +97,14 @@ function Navigation({ navigation, session, userNavigations }) {
           <div className="mt-8 flow-root">
             <div className="space-y-1">
               {navigation.map((item) => (
-                <a
+                <Link
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className="mobile-nav-link"
                 >
                   {item.name}
-                </a>
+                </Link>
               ))}
             </div>
 

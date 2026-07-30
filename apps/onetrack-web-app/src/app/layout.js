@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "../Components/header/Header";
+import HeaderSkeleton from "../Components/header/HeaderSkeleton";
 import Footer from "@/Components/footer/Footer";
 import { Toaster } from "@/Components/ui/sonner";
 
@@ -26,7 +28,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
+        <Suspense fallback={<HeaderSkeleton />}>
+          <Header />
+        </Suspense>
         {children}
 
         <Footer />

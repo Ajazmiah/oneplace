@@ -3,7 +3,7 @@ import AddApplicationModel from "@/database/models/addApplicationModel";
 import defaultResumeModel from "@/database/models/defaultResume";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
-import { revalidatePath } from "next/cache";
+import { revalidateTag,revalidatePath } from "next/cache";
 import { getBuffer } from "@/app/lib/utils/utils";
 
 export const editApplication = async (id, formData) => {
@@ -22,10 +22,11 @@ export const editApplication = async (id, formData) => {
 
     let resumeData = null;
     let coverLetterData = null;
+    const session = await getUserSession();
+    const user = await getUserByEmail(session.user.email);
+    const userId = user._id.toString();
 
     if (useDefaultResume === "true") {
-      const session = await getUserSession();
-      const user = await getUserByEmail(session.user.email);
       const saved = await defaultResumeModel.findOne({ userId: user._id });
       if (saved?.resume) resumeData = saved.resume;
     } else if (resume && resume instanceof File && resume.size > 0) {
@@ -56,8 +57,7 @@ export const editApplication = async (id, formData) => {
       : application?.coverLetter;
 
     await application.save();
-
-    revalidatePath("/dashboard/applications");
+    revalidateTag(`applications-${userId}`);
     return {
       success: true,
       message: "Successfully edited",
@@ -73,10 +73,24 @@ export const editApplication = async (id, formData) => {
 
 export const deleteApplication = async (id) => {
   try {
-    await AddApplicationModel.findByIdAndDelete({
+    const session = await getUserSession();
+    const user = await getUserByEmail(session.user.email);
+    const userId = user._id.toString();
+
+    const deleted = await AddApplicationModel.findOneAndDelete({
       _id: id,
+      userId,
     });
-    revalidatePath("/dashboard/applications");
+
+    if (!deleted) {
+      return {
+        success: false,
+        message: "application not found",
+      };
+    }
+
+    revalidateTag(`applications-${userId}`);
+
     return {
       success: true,
       message: "application deleted successfully",
