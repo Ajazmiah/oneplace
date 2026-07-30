@@ -166,14 +166,14 @@ h2 {
   /* ── Sidebar ─────────────────────────────────────── */
   .sidebar-link {
     @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px]
-           text-slate-400 hover:text-brand hover:bg-brand/10
+           text-slate-800 hover:text-brand hover:bg-brand/10
            transition-all duration-150;
   }
   .sidebar-link-active {
     @apply bg-brand/15 text-brand font-medium;
   }
   .sidebar-icon {
-    @apply h-[15px] w-[15px] flex-shrink-0 text-slate-500;
+    @apply h-[15px] w-[15px] flex-shrink-0 text-slate-600;
   }
   .sidebar-icon-active {
     @apply text-brand;
