@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Resumind – Track Job Applications Effortlessly",
+  title: "OnePlace – Track Job Applications Effortlessly",
   description:
     "Easily track your job applications, save resumes, cover letters, and important details—all in one place to stay organized and interview-ready.",
 };

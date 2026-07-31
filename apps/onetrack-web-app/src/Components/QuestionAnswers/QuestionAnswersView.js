@@ -64,7 +64,6 @@ export default function QuestionAnswersView({ questions }) {
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
             {questions.map((q) => (
-              <>
                 <SelectItem
                   key={q._id}
                   value={q.question}
@@ -72,7 +71,7 @@ export default function QuestionAnswersView({ questions }) {
                 >
                   {q.question}
                 </SelectItem>
-              </>
+         
             ))}
           </SelectContent>
         </Select>
