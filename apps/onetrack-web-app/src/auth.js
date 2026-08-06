@@ -6,6 +6,16 @@ import { signup } from "./app/lib/actions/authentication/signupAction";
 import { getUserByEmail } from "./app/lib/utils/databaseUtils";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  debug: true,
+  logger: {
+    error(error) {
+      console.error("AUTH_ERROR", error.name, error.message, error);
+    },
+    warn(code) {
+      console.warn("AUTH_WARN", code);
+    },
+  },
+
   pages: {
     signIn: "/signin",
   },
@@ -18,6 +28,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     async signIn({ user, account, profile, email }) {
       try {
+        if (!process.env.NEXTAUTH_URL) {
+          console.error("AUTH_LOGIN_ERROR: NEXTAUTH_URL env var is not set");
+        }
+
         const res = await fetch(
           `${process.env.NEXTAUTH_URL}/api/user?email=${encodeURIComponent(
             user.email
@@ -34,7 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         return true;
       } catch (e) {
-        console.log("AUTH_LOGIN_ERROR", e);
+        console.error("AUTH_LOGIN_ERROR", e.name, e.message, e.stack);
         return false;
       }
     },
