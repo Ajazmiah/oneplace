@@ -183,7 +183,11 @@ export default function AuthPage() {
                   return (
                     <button
                       key={provider.name}
-                      onClick={() => signIn(provider.id)}
+                      onClick={() =>
+                        signIn(provider.id, {
+                          callbackUrl: "/dashboard/applications",
+                        })
+                      }
                       className="flex justify-center items-center gap-2.5 w-full py-3 px-4 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-gray-300 text-sm font-medium text-gray-700 cursor-pointer transition-colors"
                     >
                       {providerIcons[provider.name]}

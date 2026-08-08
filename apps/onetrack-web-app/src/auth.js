@@ -21,11 +21,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Redirect to dashboard after login
-      return "/dashboard/applications";
-    },
-
     async signIn({ user, account, profile, email }) {
       try {
         if (!process.env.NEXTAUTH_URL) {
