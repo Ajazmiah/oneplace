@@ -30,6 +30,15 @@ function Navigation({ navigation, session}) {
             />
           </Link>
         </div>
+
+        <div className="hidden lg:flex lg:items-center lg:gap-1">
+          {navigation.map((item) => (
+            <Link key={item.name} href={item.href} className={itemClass}>
+              {item.name}
+            </Link>
+          ))}
+        </div>
+
         {/* Desktop right: avatar or sign in */}
         <div className="lg:flex lg:flex-1 lg:justify-end ">
           {session ? (
