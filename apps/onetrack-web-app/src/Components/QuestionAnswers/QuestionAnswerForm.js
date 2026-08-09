@@ -57,7 +57,7 @@ export default function QuestionAnswerForm() {
           className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4"
         >
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 text-sm font-semibold flex-shrink-0">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand/10 text-brand text-sm font-semibold flex-shrink-0">
               {index + 1}
             </span>
             {entries.length > 1 && (
@@ -81,7 +81,7 @@ export default function QuestionAnswerForm() {
               value={entry.question}
               onChange={(e) => updateField(index, "question", e.target.value)}
               placeholder="e.g. Tell me about yourself."
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent"
               required
             />
           </div>
@@ -95,7 +95,7 @@ export default function QuestionAnswerForm() {
               onChange={(e) => updateField(index, "answer", e.target.value)}
               placeholder="Write your polished answer here..."
               rows={4}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-y"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent resize-y"
               required
             />
           </div>
@@ -106,7 +106,7 @@ export default function QuestionAnswerForm() {
         <button
           type="button"
           onClick={addEntry}
-          className="flex items-center justify-center gap-2 rounded-lg border border-indigo-300 bg-indigo-50 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition-colors"
+          className="flex items-center justify-center gap-2 rounded-lg border border-brand/30 bg-brand/5 px-4 py-2 text-sm font-medium text-brand hover:bg-brand/10 transition-colors"
         >
           <Plus size={15} />
           Add another question
@@ -115,7 +115,7 @@ export default function QuestionAnswerForm() {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed transition-colors sm:ml-auto"
+          className="flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors sm:ml-auto"
         >
           {loading ? (
             <>
