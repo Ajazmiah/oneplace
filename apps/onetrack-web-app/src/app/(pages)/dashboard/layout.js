@@ -1,11 +1,10 @@
-
 import "../../globals.css";
 import Sidebar from "@/Components/Sidebar/Sidebar";
 
-
 export const metadata = {
   title: "Resumind | Dashboard",
-  description: "Dashboard with all the applications and form to add application",
+  description:
+    "Dashboard with all the applications and form to add application",
 };
 
 export default function RootLayout({ children }) {
