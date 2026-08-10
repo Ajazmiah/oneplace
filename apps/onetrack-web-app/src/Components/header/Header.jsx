@@ -14,14 +14,9 @@ async function Header() {
   ];
 
   const userNavigationItems = [
-    {
-      name: "profile",
-      href: "/profile",
-    },
-    {
-      name: "dashboard",
-      href: "/setting",
-    },
+    { name: "Profile", href: "/profile" },
+    { name: "Dashboard", href: "/dashboard/applications" },
+    { name: "Settings", href: "/settings" },
   ];
   // const loggedInNavigation = [
   //   { name: "Dashboard", href: "/dashboard/applications" },
