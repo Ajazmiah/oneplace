@@ -1,4 +1,6 @@
 import Link from "next/link";
+// TEMPORARY: remove this import (and the <WorkInProgressNotice /> below) once billing is live.
+import WorkInProgressNotice from "./WorkInProgressNotice";
 
 export const metadata = {
   title: "Pricing – OnePlace",
@@ -147,6 +149,9 @@ const faqJsonLd = {
 export default function PricingPage() {
   return (
     <div className="relative overflow-hidden">
+      {/* TEMPORARY: work-in-progress popup for pricing/payments — remove when billing is live */}
+      <WorkInProgressNotice />
+
       {/* Structured data for SEO */}
       <script
         type="application/ld+json"
