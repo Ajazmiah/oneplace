@@ -183,15 +183,33 @@ export default function SignupPage() {
               </p>
             </div>
 
-            {/* Error message */}
-            {error && (
-              <div className="mb-4 px-3 py-2.5 rounded-lg bg-red-50 border border-red-100">
-                <p className="text-xs text-red-500 font-medium">{error}</p>
-              </div>
-            )}
+            {/* TEMP: email/password sign-up disabled until credentials auth is implemented.
+                Sign-up currently happens via Google/GitHub on the sign-in page.
+                To restore, remove this block and the `false && (` wrapper below. */}
+            <div className="space-y-3">
+              <p className="text-sm text-gray-500 text-center">
+                Create your account instantly with Google or GitHub.
+              </p>
+              <Link
+                href="/signin"
+                className="block w-full bg-[#0bbcaa] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#09a898] transition-colors text-center"
+              >
+                Continue to sign up
+              </Link>
+            </div>
 
-            {/* Signup form */}
-            <form onSubmit={handleSubmit} className="space-y-3">
+            {/* TEMP: email/password sign-up disabled — see note above. */}
+            {false && (
+              <>
+                {/* Error message */}
+                {error && (
+                  <div className="mb-4 px-3 py-2.5 rounded-lg bg-red-50 border border-red-100">
+                    <p className="text-xs text-red-500 font-medium">{error}</p>
+                  </div>
+                )}
+
+                {/* Signup form */}
+                <form onSubmit={handleSubmit} className="space-y-3">
               <input
                 name="name"
                 type="text"
@@ -235,7 +253,9 @@ export default function SignupPage() {
               >
                 {loading ? "Creating account…" : "Create Account"}
               </button>
-            </form>
+                </form>
+              </>
+            )}
 
             {/* Footer link */}
             <p className="text-xs text-gray-400 mt-6 text-center">

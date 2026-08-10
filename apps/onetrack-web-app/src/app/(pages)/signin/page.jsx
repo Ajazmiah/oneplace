@@ -3,7 +3,6 @@ import { getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import Link from "next/link";
 
 export default function AuthPage() {
   const [providers, setProviders] = useState(null);
@@ -110,7 +109,7 @@ export default function AuthPage() {
               </span>
             </div>
             <h1 className="font-bold tracking-tight text-gray-900 text-3xl leading-[1.08]">
-              Welcome{" "}
+              Welcome to{" "}
               <span
                 style={{
                   background:
@@ -120,7 +119,7 @@ export default function AuthPage() {
                   backgroundClip: "text",
                 }}
               >
-                back.
+                OnePlace.
               </span>
             </h1>
           </div>
@@ -133,49 +132,55 @@ export default function AuthPage() {
                 Sign in
               </p>
               <h3 className="font-bold text-gray-900 text-2xl tracking-tight">
-                Welcome back
+                Welcome
               </h3>
-              <p className="text-sm text-gray-500 mt-1">
-                Continue your job search journey
-              </p>
             </div>
 
-            {/* Credentials form */}
-            <form
-              method="post"
-              action="/api/auth/callback/credentials"
-              className="space-y-3"
-            >
-              <input
-                name="username"
-                type="text"
-                placeholder="Username"
-                className="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0bbcaa]/40 focus:border-[#0bbcaa] transition-colors"
-              />
-              <input
-                name="password"
-                type="password"
-                placeholder="Password"
-                className="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0bbcaa]/40 focus:border-[#0bbcaa] transition-colors"
-              />
-              <button
-                type="submit"
-                className="w-full bg-main text-white py-3 rounded-lg text-sm font-semibold hover:bg-main-light transition-colors"
-              >
-                Sign in
-              </button>
-            </form>
+            {/* TEMP: email/password sign-in disabled until credentials auth is implemented.
+                To restore, remove the `false && (` wrapper (and its closing `)`) below. */}
+            {false && (
+              <>
+                {/* Credentials form */}
+                <form
+                  method="post"
+                  action="/api/auth/callback/credentials"
+                  className="space-y-3"
+                >
+                  <input
+                    name="username"
+                    type="text"
+                    placeholder="Username"
+                    className="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0bbcaa]/40 focus:border-[#0bbcaa] transition-colors"
+                  />
+                  <input
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                    className="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0bbcaa]/40 focus:border-[#0bbcaa] transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    className="w-full bg-main text-white py-3 rounded-lg text-sm font-semibold hover:bg-main-light transition-colors"
+                  >
+                    Sign in
+                  </button>
+                </form>
 
-            {/* Divider */}
-            <div className="my-5 flex items-center gap-3">
-              <div className="flex-1 h-px bg-gray-100" />
-              <span className="text-xs text-gray-400 font-medium tracking-wide">
-                or continue with
-              </span>
-              <div className="flex-1 h-px bg-gray-100" />
-            </div>
+                {/* Divider */}
+                <div className="my-5 flex items-center gap-3">
+                  <div className="flex-1 h-px bg-gray-100" />
+                  <span className="text-xs text-gray-400 font-medium tracking-wide">
+                    or continue with
+                  </span>
+                  <div className="flex-1 h-px bg-gray-100" />
+                </div>
+              </>
+            )}
 
             {/* OAuth providers */}
+            <p className="text-sm text-gray-500 mb-4 text-center">
+              Continue with Google or GitHub to sign in or create an account.
+            </p>
             <div className="space-y-2.5">
               {providers &&
                 Object.values(providers).map((provider) => {
@@ -197,16 +202,6 @@ export default function AuthPage() {
                 })}
             </div>
 
-            {/* Footer link */}
-            <p className="text-xs text-gray-400 mt-6 text-center">
-              No account?{" "}
-              <Link
-                href="/signup"
-                className="text-[#0bbcaa] font-semibold hover:text-[#085041] transition-colors"
-              >
-                Sign up free →
-              </Link>
-            </p>
           </div>
         </div>
       </div>
