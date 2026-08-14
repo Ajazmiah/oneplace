@@ -52,7 +52,6 @@ export default function Sidebar() {
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-56 flex-shrink-0 flex flex-col",
           "bg-white lg:bg-transparent",
-          "border-r border-brand",
           "transform transition-transform duration-300 ease-in-out",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
           "lg:static lg:translate-x-0 lg:z-auto"
