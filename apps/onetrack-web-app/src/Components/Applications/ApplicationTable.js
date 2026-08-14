@@ -67,9 +67,12 @@ export default function ApplicationTable({ applications }) {
   return (
     <>
       <div>
-        <p className="text-gray-500">
-          Track and manage your job application journey
-        </p>
+        <div className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/5 px-3.5 py-1.5">
+          <span className="size-1.5 animate-pulse rounded-full bg-brand" />
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand">
+            Track and manage your job application journey
+          </span>
+        </div>
       </div>
 
       {/* Cards [applications , interviewing, offered , rejected] */}
