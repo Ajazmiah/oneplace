@@ -11,6 +11,8 @@ import {
   Edit,
   Building,
   LinkIcon,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Badge } from "../ui/badge";
 import withApplicationContext from "../ContextWrapper/ContextWrapper";
@@ -28,12 +30,12 @@ const statusColors = {
   rejected: "bg-red-100 text-red-800 border-red-200",
   withdrawn: "bg-gray-100 text-gray-800 border-gray-200",
 };
-console.log("hi");
 
 function JobDetails({ job }) {
   console.log("JOBBB INSIDE DETAILS ", job);
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
 
   const handleEdit = (id) => {
     localStorage.setItem("application", JSON.stringify(job));
@@ -51,6 +53,7 @@ function JobDetails({ job }) {
     setOpen(true);
   };
 
+  const showDescriptionClasses = !showDescription ? 'hidden' : ''
 
   return (
     <div className="p-6 lg:p-8 bg-slate-50 min-h-screen">
@@ -83,7 +86,7 @@ function JobDetails({ job }) {
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h1 className="text-2xl font-bold text-slate-900">
+                    <h1 className="text-lg md:text-2xl font-bold text-slate-900">
                       {job.jobTitle}
                     </h1>
                     <div className="flex items-center gap-2 text-slate-600 mt-2">
@@ -107,8 +110,20 @@ function JobDetails({ job }) {
                 <CardTitle>Job Description & Notes</CardTitle>
               </CardHeader>
               <CardContent>
+                <button
+                  onClick={() => setShowDescription((prev) => !prev)}
+                  aria-expanded={showDescription}
+                  className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-[#0bbcaa]/30 bg-[#0bbcaa]/10 px-3 py-1.5 text-xs font-semibold text-[#0a998b] transition-colors hover:bg-[#0bbcaa]/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0bbcaa]/40"
+                >
+                  {showDescription ? "Hide Description" : "Show Description"}
+                  {showDescription ? (
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  ) : (
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  )}
+                </button>
                 {job.description ? (
-                  <div className="prose prose-slate max-w-none text-slate-700">
+                  <div className={`${showDescriptionClasses} prose prose-slate max-w-none text-slate-700`}>
                     <p>
                       {job.description.split("\n").map((line, i) => (
                         <span key={i}>
