@@ -34,6 +34,23 @@ const socialFields = [
 
 export default function SettingsPage() {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [socialLinks, setSocialLinks] = useState(
+    socialFields.map(({ name }) => ({ socialLabel: name, url: "" }))
+  );
+
+  const handleChange = (name, value) => {
+    setSocialLinks((prev) =>
+      prev.map((link) =>
+        link.socialLabel === name ? { ...link, url: value } : link
+      )
+    );
+  };
+
+  const handleSave = () => {
+    // only the links the user actually filled in
+    const filled = socialLinks.filter((link) => link.url.trim() !== "");
+    console.log(filled);
+  };
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
@@ -66,14 +83,20 @@ export default function SettingsPage() {
               <Input
                 name={name}
                 placeholder={placeholder}
+                onChange={(e) => handleChange(name, e.target.value)}
                 className="focus-visible:ring-[#0bbcaa]/40 focus-visible:border-[#0bbcaa]"
+                value={
+                  socialLinks.find((link) => link.socialLabel === name)?.url ?? ""
+                }
               />
             </div>
           ))}
         </div>
 
+
         <div className="flex items-center justify-end pt-6">
           <button
+          onClick={handleSave}
             type="button"
             className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors"
           >

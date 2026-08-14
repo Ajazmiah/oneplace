@@ -18,7 +18,13 @@ const userSchema = mongoose.Schema(
       type: String,
       trim: true,
     },
-    // ... other fields
+    // optional social/profile links — user can add these later or leave blank
+    socialLinks: {
+      linkedin: { type: String, trim: true },
+      github: { type: String, trim: true },
+      portfolio: { type: String, trim: true },
+      website: { type: String, trim: true },
+    },
   },
   {
     timestamps: true,
