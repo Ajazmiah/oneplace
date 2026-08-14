@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <main className="flex-1 p-8 space-y-6  max-w-[1460px] mx-auto">
+        <main className="flex-1 p-3 md:p-8 space-y-6  max-w-[1460px] mx-auto">
           <Suspense fallback={<HeaderSkeleton />}>
             <Header />
           </Suspense>
