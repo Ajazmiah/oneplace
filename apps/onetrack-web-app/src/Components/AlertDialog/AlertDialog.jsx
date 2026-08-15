@@ -16,6 +16,7 @@ export default function AlertDialogBox({
   onConfirm,
   title,
   description = "",
+  children,
 }) {
   return (
     <AlertDialog open={open}>
@@ -24,6 +25,7 @@ export default function AlertDialogBox({
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
+        {children}
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>Continue</AlertDialogAction>
