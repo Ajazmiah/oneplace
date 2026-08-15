@@ -1,9 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { Input } from "@/Components/ui/input";
-import { Github, Linkedin, Globe, Twitter, Trash2, AlertTriangle } from "lucide-react";
+import {
+  Github,
+  Linkedin,
+  Globe,
+  Twitter,
+  Trash2,
+  AlertTriangle,
+} from "lucide-react";
 import AlertDialogBox from "@/Components/AlertDialog/AlertDialog";
+import { saveSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 
 const socialFields = [
   {
@@ -46,10 +55,15 @@ export default function SettingsPage() {
     );
   };
 
-  const handleSave = () => {
-    // only the links the user actually filled in
+  const handleSave = async () => {
     const filled = socialLinks.filter((link) => link.url.trim() !== "");
-    console.log(filled);
+    const res = await saveSocialLinks(filled);
+
+    if (res.success) {
+      toast.success(res.message);
+    } else {
+      toast.error(res.message);
+    }
   };
 
   return (
@@ -62,7 +76,9 @@ export default function SettingsPage() {
             Settings
           </span>
         </div>
-        <h1 className="mt-4 text-2xl font-bold text-slate-900">Account settings</h1>
+        <h1 className="mt-4 text-2xl font-bold text-slate-900">
+          Account settings
+        </h1>
         <p className="mt-1 text-sm text-gray-500">
           Manage your connected profiles and account preferences.
         </p>
@@ -86,17 +102,17 @@ export default function SettingsPage() {
                 onChange={(e) => handleChange(name, e.target.value)}
                 className="focus-visible:ring-[#0bbcaa]/40 focus-visible:border-[#0bbcaa]"
                 value={
-                  socialLinks.find((link) => link.socialLabel === name)?.url ?? ""
+                  socialLinks.find((link) => link.socialLabel === name)?.url ??
+                  ""
                 }
               />
             </div>
           ))}
         </div>
 
-
         <div className="flex items-center justify-end pt-6">
           <button
-          onClick={handleSave}
+            onClick={handleSave}
             type="button"
             className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors"
           >
