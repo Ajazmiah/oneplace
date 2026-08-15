@@ -10,11 +10,12 @@ import {
   Twitter,
   Trash2,
   AlertTriangle,
+  Link as LinkIcon,
 } from "lucide-react";
 import AlertDialogBox from "@/Components/AlertDialog/AlertDialog";
 import { saveSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 
-const socialFields = [
+const initialSocialFields = [
   {
     name: "github",
     label: "GitHub",
@@ -42,7 +43,11 @@ const socialFields = [
 ];
 
 export default function SettingsPage() {
+  const [socialFields, setSocialFields] = useState(initialSocialFields);
+
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [moreLinkName, setMoreLinkName] = useState('')
+  const [open, setOpen] = useState(false);
   const [socialLinks, setSocialLinks] = useState(
     socialFields.map(({ name }) => ({ socialLabel: name, url: "" }))
   );
@@ -66,9 +71,34 @@ export default function SettingsPage() {
     }
   };
 
+  const handleAddMoreLink = () => {
+    setSocialFields((prev) => [
+      ...prev,
+      { name:moreLinkName, label: moreLinkName, icon: LinkIcon, placeholder: "enter URL" },
+    ]);
+    setSocialLinks((prev) => [...prev, { socialLabel: moreLinkName, url: "" }]);
+    setOpen(false)
+    setMoreLinkName('')
+  };
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       {/* Page header */}
+      <AlertDialogBox
+        open={open}
+        onCancel={() => {
+          setOpen(false)
+          setMoreLinkName('')
+        }}
+        onConfirm={handleAddMoreLink}
+        title="Add name for the link"
+      >
+        <Input
+          placeholder="URL..."
+          value={moreLinkName}
+          onChange={(e) => setMoreLinkName(e.target.value)}
+        />
+      </AlertDialogBox>
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/5 px-3.5 py-1.5">
           <span className="size-1.5 animate-pulse rounded-full bg-brand" />
@@ -108,6 +138,13 @@ export default function SettingsPage() {
               />
             </div>
           ))}
+
+          <div
+            onClick={() => setOpen(true)}
+            className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-400 hover:border-[#0bbcaa] hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-all duration-200"
+          >
+            + Add another link
+          </div>
         </div>
 
         <div className="flex items-center justify-end pt-6">
