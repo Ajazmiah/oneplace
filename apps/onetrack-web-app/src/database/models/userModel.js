@@ -18,7 +18,14 @@ const userSchema = mongoose.Schema(
       type: String,
       trim: true,
     },
-    // ... other fields
+    // optional social/profile links — user can add these later or leave blank
+    socialLinks: [
+      {
+        _id: false,
+        socialLabel: { type: String, trim: true, required: true },
+        url: { type: String, trim: true, required: true },
+      },
+    ],
   },
   {
     timestamps: true,

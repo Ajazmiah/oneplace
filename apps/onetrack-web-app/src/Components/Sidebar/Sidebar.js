@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { PlusCircle, FileText, MessageSquareText, ClipboardList, Menu, X } from "lucide-react";
+import { PlusCircle, FileText, MessageSquareText, ClipboardList, Settings, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/dashboard/add-application", label: "New Application", icon: PlusCircle },
   { href: "/dashboard/interview-answers", label: "Interview Prep", icon: ClipboardList },
   { href: "/dashboard/add-interview-answer", label: "Add Answer", icon: MessageSquareText },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export default function Sidebar() {

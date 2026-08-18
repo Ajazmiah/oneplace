@@ -32,7 +32,6 @@ const statusColors = {
 };
 
 function JobDetails({ job }) {
-  console.log("JOBBB INSIDE DETAILS ", job);
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
