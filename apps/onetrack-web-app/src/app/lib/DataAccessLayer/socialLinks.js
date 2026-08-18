@@ -14,14 +14,28 @@ export const saveSocialLinks = async (socialLinks) => {
   try {
     const session = await getUserSession();
     const user = await getUserByEmail(session.user.email);
+    const savedSocialLinks = JSON.parse(JSON.stringify(user?.socialLinks ?? []));
 
     if (!user) {
       return { success: false, message: "User not found" };
     }
 
-    // only the socialLinks field is touched — fullname/email/password
-    // stay exactly as they were on this same doc
-    user.socialLinks = socialLinks;
+    const updated = [...savedSocialLinks];
+
+    socialLinks.forEach(link => {
+      const index = updated.findIndex(
+        savedLink => savedLink.socialLabel === link.socialLabel
+      );
+
+      if (index !== -1) {
+        updated[index] = link;
+      } else {
+        updated.push(link);
+      }
+    });
+
+    user.socialLinks = updated;
+
     await user.save();
 
     revalidatePath("/dashboard/settings");
