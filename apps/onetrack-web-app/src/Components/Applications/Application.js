@@ -11,7 +11,7 @@ function Application({ filteredApplications,query }) {
         <Link
           href={`applications/${app._id}`}
           key={app._id}
-          className="block lg:flex lg:flex-nowrap lg:justify-between lg:items-center bg-surface shadow-sm rounded-lg p-4 border border-gray-100"
+          className="block lg:flex lg:flex-nowrap lg:justify-between lg:items-center bg-surface shadow-sm rounded-lg p-4 border border-gray-100 transition-colors hover:bg-brand/10"
         >
           <div className="w-full lg:w-1/5 mb-2 lg:mb-0">
             <p className="font-semibold">{app.jobTitle.split("").map((t, i) => <span key={i} style={{ color: query.includes(t) ? 'red' : '' }}>{t}</span>)}</p>

@@ -22,8 +22,22 @@ const MOCK_RESUMES = [
   },
 ];
 
-export default function ProfilePage({ name, email, image, socialLinks }) {
+export default function ProfilePage({
+  name,
+  email,
+  image,
+  socialLinks,
+  applications = [],
+}) {
   const initials = name?.[0]?.toUpperCase() ?? "?";
+
+  const applicationStatus = applications.reduce(
+    (counts, application) => {
+      counts[application.status] = (counts[application.status] || 0) + 1;
+      return counts;
+    },
+    { applied: 0, rejected: 0, interviewing: 0, offer: 0 }
+  );
 
   return (
     <main className="min-h-screen bg-white relative overflow-hidden">
@@ -140,11 +154,16 @@ export default function ProfilePage({ name, email, image, socialLinks }) {
               {/* LinkedIn */}
               {socialLinks.map((social) => {
                 return (
-                  <div key={social.url} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                  <div
+                    key={social.url}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100"
+                  >
                     <div className="flex-1 min-w-0">
-                      <p className="text-md text-gray-400 mb-0.5">{social.socialLabel}</p>
+                      <p className="text-md text-gray-400 mb-0.5">
+                        {social.socialLabel}
+                      </p>
                       <p className="text-sm font-medium text-gray-700 truncate">
-                       {social.url}
+                        {social.url}
                       </p>
                     </div>
                     <CopyButton value={social.url} />
@@ -168,10 +187,9 @@ export default function ProfilePage({ name, email, image, socialLinks }) {
             </p>
             <div className="grid grid-cols-2 gap-4 flex-1">
               {[
-                { label: "Applications", value: "24" },
-                { label: "Interviews", value: "6" },
-                { label: "Offers", value: "1" },
-                { label: "Resumes", value: `${MOCK_RESUMES.length}` },
+                { label: "Applications", value: applications.length },
+                { label: "Interviews", value: applicationStatus.interviewing },
+                { label: "Offers", value: applicationStatus.offer },
               ].map((stat) => (
                 <div
                   key={stat.label}
