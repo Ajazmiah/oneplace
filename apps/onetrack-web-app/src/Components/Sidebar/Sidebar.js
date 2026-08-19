@@ -9,7 +9,7 @@ const navItems = [
   { href: "/dashboard/applications", label: "Applications", icon: FileText },
   { href: "/dashboard/add-application", label: "New Application", icon: PlusCircle },
   { href: "/dashboard/interview-answers", label: "Interview Prep", icon: ClipboardList },
-  { href: "/dashboard/add-interview-answer", label: "Add Answer", icon: MessageSquareText },
+  { href: "/dashboard/add-interview-answer", label: "New Question", icon: MessageSquareText },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 

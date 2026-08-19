@@ -51,6 +51,13 @@ export default function QuestionAnswerForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">New Question</h1>
+        <p className="text-gray-500 mt-1">
+          Save your answer to a common interview or application question.
+        </p>
+      </div>
+
       {entries.map((entry, index) => (
         <div
           key={index}

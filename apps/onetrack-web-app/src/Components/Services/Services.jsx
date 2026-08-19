@@ -23,14 +23,12 @@ function Services() {
           </div>
 
           <div className="mt-10 max-w[720px] h-[500px]">
-            <iframe
-              className="border-[7px] border-[#43c59e] h-full rounded-[10px] w-full mt-[10em]"
-              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-              title="Embedded Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
+            <div className="border-[7px] border-[#43c59e] h-full rounded-[10px] w-full mt-[10em] flex flex-col items-center justify-center gap-3 bg-white">
+              <span className="text-2xl font-bold text-main">
+                How it works video
+              </span>
+              <span className="text-gray-dark">Coming soon</span>
+            </div>
           </div>
         </div>
       </div>

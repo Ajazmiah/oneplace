@@ -163,10 +163,10 @@ export default function FeaturesPage() {
                 key={feature.name}
                 className="flex flex-col rounded-3xl bg-white/60 p-8 ring-1 ring-gray-200 transition-shadow hover:shadow-md"
               >
-                <div className="flex size-12 items-center justify-center rounded-2xl bg-brand/10">
+                <div className="flex mb-3 size-12 items-center justify-center rounded-2xl bg-brand/10">
                   <FeatureIcon name={feature.icon} />
                 </div>
-                <h2 className="mt-5 text-lg font-semibold text-gray-900">
+                <h2 className="mt-8 text-lg font-semibold text-gray-900">
                   {feature.name}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-gray-500">
