@@ -55,6 +55,7 @@ export default function SettingsPage() {
     socialFields.map(({ name }) => ({ socialLabel: name, url: "" }))
   );
   const [editingFields, setEditingFields] = useState(new Set());
+  const [draftValues, setDraftValues] = useState({});
 
   useEffect(() => {
     const fetchSocialLinks = async () => {
@@ -93,12 +94,8 @@ export default function SettingsPage() {
     fetchSocialLinks();
   }, []);
 
-  const handleChange = (name, value) => {
-    setSocialLinks((prev) =>
-      prev.map((link) =>
-        link.socialLabel === name ? { ...link, url: value } : link
-      )
-    );
+  const handleDraftChange = (name, value) => {
+    setDraftValues((prev) => ({ ...prev, [name]: value }));
   };
 
   const toggleEditField = (name) => {
@@ -130,10 +127,19 @@ export default function SettingsPage() {
   };
 
   const confirmDeleteLinkAction = () => {
-    handleChange(linkPendingDelete, "");
+    setSocialLinks((prev) =>
+      prev.map((link) =>
+        link.socialLabel === linkPendingDelete ? { ...link, url: "" } : link
+      )
+    );
     setEditingFields((prev) => {
       const next = new Set(prev);
       next.delete(linkPendingDelete);
+      return next;
+    });
+    setDraftValues((prev) => {
+      const next = { ...prev };
+      delete next[linkPendingDelete];
       return next;
     });
     setConfirmDeleteLink(false);
@@ -202,18 +208,19 @@ export default function SettingsPage() {
         </p>
         <div className="grid grid-cols-1 gap-4">
           {socialFields.map(({ name, label, icon: Icon, placeholder }) => {
-            const inputFilled = socialLinks.find((link) => link.socialLabel === name)?.url ?? ""
-            const isEditing = editingFields.has(name);
+            const savedValue = socialLinks.find((link) => link.socialLabel === name)?.url ?? ""
+            const isEditing = editingFields.has(name) || savedValue === "";
+            const draftValue = draftValues[name] ?? savedValue;
             return (
               <div key={name} className="flex flex-col gap-1">
                 <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600">
                   <Icon className="h-3.5 w-3.5 text-gray-400" />
                   {label}
                 </label>
-                {inputFilled && !isEditing ? (
+                {!isEditing ? (
                   <div className="flex items-center gap-2 rounded-md border border-gray-200 px-3 py-2">
                     <p className="flex-1 truncate rounded-md bg-brand/10 px-2 py-1 text-sm text-gray-700">
-                      {inputFilled}
+                      {savedValue}
                     </p>
                     <button
                       type="button"
@@ -236,9 +243,9 @@ export default function SettingsPage() {
                   <Input
                     name={name}
                     placeholder={placeholder}
-                    onChange={(e) => handleChange(name, e.target.value)}
+                    onChange={(e) => handleDraftChange(name, e.target.value)}
                     className="focus-visible:ring-[#0bbcaa]/40 focus-visible:border-[#0bbcaa]"
-                    value={inputFilled}
+                    value={draftValue}
                   />
                 )}
               </div>
