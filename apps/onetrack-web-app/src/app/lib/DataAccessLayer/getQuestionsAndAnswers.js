@@ -34,5 +34,46 @@ export const addQuestionAndAnswer = async (entries) => {
 
   await QuestionAndAnswerModel.insertMany(docs);
 
-  revalidatePath("/dashboard/application-answers");
+  revalidatePath("/dashboard/interview-answers");
+};
+
+export const editQuestionAndAnswer = async (id, { question, answer }) => {
+  const session = await getUserSession();
+  const user = await getUserByEmail(session.user.email);
+
+  const updated = await QuestionAndAnswerModel.findOneAndUpdate(
+    { _id: id, userId: user._id },
+    { question, answer },
+    { new: true }
+  ).lean();
+
+  if (!updated) {
+    throw new Error("Question not found.");
+  }
+
+  revalidatePath("/dashboard/interview-answers");
+
+  return {
+    _id: updated._id.toString(),
+    question: updated.question,
+    answer: updated.answer,
+  };
+};
+
+export const deleteQuestionAndAnswer = async (id) => {
+  const session = await getUserSession();
+  const user = await getUserByEmail(session.user.email);
+
+  const deleted = await QuestionAndAnswerModel.findOneAndDelete({
+    _id: id,
+    userId: user._id,
+  }).lean();
+
+  if (!deleted) {
+    throw new Error("Question not found.");
+  }
+
+  revalidatePath("/dashboard/interview-answers");
+
+  return { _id: deleted._id.toString() };
 };
