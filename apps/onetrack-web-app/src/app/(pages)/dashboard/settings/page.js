@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Input } from "@/Components/ui/input";
 import {
@@ -13,7 +13,7 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 import AlertDialogBox from "@/Components/AlertDialog/AlertDialog";
-import { saveSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
+import { getSocialLinks, saveSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 
 const initialSocialFields = [
   {
@@ -51,6 +51,43 @@ export default function SettingsPage() {
   const [socialLinks, setSocialLinks] = useState(
     socialFields.map(({ name }) => ({ socialLabel: name, url: "" }))
   );
+
+  useEffect(() => {
+    const fetchSocialLinks = async () => {
+      const links = await getSocialLinks();
+      if (!links || links.length === 0) return;
+
+      setSocialFields((prevFields) => {
+        const existingNames = new Set(prevFields.map((field) => field.name));
+        const extraFields = links
+          .filter((link) => !existingNames.has(link.socialLabel))
+          .map((link) => ({
+            name: link.socialLabel,
+            label: link.socialLabel,
+            icon: LinkIcon,
+            placeholder: "enter URL",
+          }));
+        return [...prevFields, ...extraFields];
+      });
+
+      setSocialLinks((prevLinks) => {
+        const merged = [...prevLinks];
+        links.forEach((link) => {
+          const index = merged.findIndex(
+            (existing) => existing.socialLabel === link.socialLabel
+          );
+          if (index !== -1) {
+            merged[index] = link;
+          } else {
+            merged.push(link);
+          }
+        });
+        return merged;
+      });
+    };
+
+    fetchSocialLinks();
+  }, []);
 
   const handleChange = (name, value) => {
     setSocialLinks((prev) =>
