@@ -1,27 +1,6 @@
 import Link from "next/link";
 import CopyButton from "@/Components/CopyButton/CopyButton";
 
-const MOCK_RESUMES = [
-  {
-    id: 1,
-    name: "Ajaz_Miah_Resume_2025.pdf",
-    size: "142 KB",
-    uploaded: "May 12, 2025",
-  },
-  {
-    id: 2,
-    name: "Ajaz_Miah_SWE_Resume.pdf",
-    size: "98 KB",
-    uploaded: "Apr 3, 2025",
-  },
-  {
-    id: 3,
-    name: "Ajaz_Miah_Frontend_Engineer.pdf",
-    size: "115 KB",
-    uploaded: "Mar 18, 2025",
-  },
-];
-
 export default function ProfilePage({
   name,
   email,
