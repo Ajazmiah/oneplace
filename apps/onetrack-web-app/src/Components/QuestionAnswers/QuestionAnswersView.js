@@ -13,6 +13,7 @@ import Pagination from "../Pagination/Pagination";
 import { useEffect, useState } from "react";
 
 export default function QuestionAnswersView({ questions }) {
+  const [allQuestions, setAllQuestions] = useState(questions);
   const [filteredQuestions, setFilteredQuestions] = useState(questions);
   const [filterQuery, setFilterQuery] = useState("");
 
@@ -33,9 +34,9 @@ export default function QuestionAnswersView({ questions }) {
     let filtered;
 
     if (filterQuery === "" || filterQuery === "all") {
-      filtered = questions;
+      filtered = allQuestions;
     } else {
-      filtered = questions.filter(({ question }) => {
+      filtered = allQuestions.filter(({ question }) => {
         if (queryExists(question)) {
           return true;
         }
@@ -43,7 +44,17 @@ export default function QuestionAnswersView({ questions }) {
     }
 
     setFilteredQuestions(filtered);
-  }, [filterQuery]);
+  }, [filterQuery, allQuestions]);
+
+  const handleUpdated = (updated) => {
+    setAllQuestions((prev) =>
+      prev.map((q) => (q._id === updated._id ? { ...q, ...updated } : q))
+    );
+  };
+
+  const handleDeleted = (id) => {
+    setAllQuestions((prev) => prev.filter((q) => q._id !== id));
+  };
 
   return (
     <div className="space-y-6">
@@ -56,14 +67,14 @@ export default function QuestionAnswersView({ questions }) {
         </p>
       </div>
 
-      {questions.length !== 0 && (
+      {allQuestions.length !== 0 && (
         <Select onValueChange={(value) => setFilterQuery(value)}>
           <SelectTrigger className="w-full max-w-sm rounded-xl border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm focus:border-indigo-400 focus:ring-indigo-100">
             <SelectValue placeholder="Choose a question" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            {questions.map((q) => (
+            {allQuestions.map((q) => (
                 <SelectItem
                   key={q._id}
                   value={q.question}
@@ -88,7 +99,11 @@ export default function QuestionAnswersView({ questions }) {
           </a>
         </div>
       ) : (
-        <Answer questions={paginated} />
+        <Answer
+          questions={paginated}
+          onUpdated={handleUpdated}
+          onDeleted={handleDeleted}
+        />
       )}
 
       {/* Pagination */}
