@@ -47,6 +47,8 @@ export default function SettingsPage() {
   const [socialFields, setSocialFields] = useState(initialSocialFields);
 
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmDeleteLink, setConfirmDeleteLink] = useState(false)
+  const [linkPendingDelete, setLinkPendingDelete] = useState(null)
   const [moreLinkName, setMoreLinkName] = useState('')
   const [open, setOpen] = useState(false);
   const [socialLinks, setSocialLinks] = useState(
@@ -122,6 +124,27 @@ export default function SettingsPage() {
     }
   };
 
+  const handleDeleteLink = (name) => {
+    setLinkPendingDelete(name);
+    setConfirmDeleteLink(true);
+  };
+
+  const confirmDeleteLinkAction = () => {
+    handleChange(linkPendingDelete, "");
+    setEditingFields((prev) => {
+      const next = new Set(prev);
+      next.delete(linkPendingDelete);
+      return next;
+    });
+    setConfirmDeleteLink(false);
+    setLinkPendingDelete(null);
+  };
+
+  const cancelDeleteLink = () => {
+    setConfirmDeleteLink(false);
+    setLinkPendingDelete(null);
+  };
+
   const handleAddMoreLink = () => {
     setSocialFields((prev) => [
       ...prev,
@@ -150,6 +173,13 @@ export default function SettingsPage() {
           onChange={(e) => setMoreLinkName(e.target.value)}
         />
       </AlertDialogBox>
+      <AlertDialogBox
+        open={confirmDeleteLink}
+        onCancel={cancelDeleteLink}
+        onConfirm={confirmDeleteLinkAction}
+        title="Are you sure you want to delete this link?"
+        description="This action cannot be undone. You'll need to re-add the link if you change your mind."
+      />
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/5 px-3.5 py-1.5">
           <span className="size-1.5 animate-pulse rounded-full bg-brand" />
@@ -192,6 +222,14 @@ export default function SettingsPage() {
                       className="text-gray-400 hover:text-brand transition-colors"
                     >
                       <Pencil className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteLink(name)}
+                      aria-label={`Delete ${label}`}
+                      className="text-gray-400 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
                 ) : (
