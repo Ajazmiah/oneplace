@@ -19,7 +19,14 @@
         "https://*.linkedin.com/*",
         "https://*.indeed.com/*",
         "https://*.greenhouse.io/*",
-        "https://*.lever.co/*"
+        "https://*.lever.co/*",
+        "https://*.glassdoor.com/*",
+        "https://*.ziprecruiter.com/*",
+        "https://*.monster.com/*",
+        "https://*.wellfound.com/*",
+        "https://*.dice.com/*",
+        "https://*.simplyhired.com/*",
+        "https://*.smartrecruiters.com/*"
       ],
       "js": ["content-scripts/job-scraper.js"]
     }
