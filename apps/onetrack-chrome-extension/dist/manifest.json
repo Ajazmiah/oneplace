@@ -6,7 +6,7 @@
   "action": {
     "default_title": "OneTrack"
   },
-  "permissions": ["storage", "activeTab", "tabs", "scripting", "sidePanel"],
+  "permissions": ["storage", "activeTab", "tabs", "sidePanel"],
   "background": {
     "service_worker": "background.js"
   },
