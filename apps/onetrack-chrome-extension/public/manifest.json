@@ -6,9 +6,12 @@
   "action": {
     "default_title": "OneTrack"
   },
-  "permissions": ["storage", "activeTab", "tabs", "scripting"],
+  "permissions": ["storage", "activeTab", "tabs", "scripting", "sidePanel"],
   "background": {
     "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/index.html"
   },
   "content_scripts": [
     {

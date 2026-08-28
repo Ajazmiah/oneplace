@@ -20,20 +20,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }, 600);
 });
 
-// Open on any page when the user clicks the extension icon.
-// Programmatically inject the content script first (no-op if already injected).
-chrome.action.onClicked.addListener(async (tab) => {
-  if (!tab.id) return;
-
-  try {
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ["content-scripts/job-scraper.js"],
-    });
-  } catch {
-    // chrome://, edge://, or other restricted pages — silently bail
-    return;
-  }
-
-  chrome.tabs.sendMessage(tab.id, { type: "SHOW_FORM" });
-});
+// Open the side panel when the user clicks the extension icon.
+chrome.sidePanel
+  .setPanelBehavior({ openPanelOnActionClick: true })
+  .catch((error) => console.error(error));
