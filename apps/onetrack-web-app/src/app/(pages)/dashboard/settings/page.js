@@ -9,6 +9,7 @@ import {
   Globe,
   Twitter,
   Trash2,
+  Pencil,
   AlertTriangle,
   Link as LinkIcon,
 } from "lucide-react";
@@ -51,6 +52,7 @@ export default function SettingsPage() {
   const [socialLinks, setSocialLinks] = useState(
     socialFields.map(({ name }) => ({ socialLabel: name, url: "" }))
   );
+  const [editingFields, setEditingFields] = useState(new Set());
 
   useEffect(() => {
     const fetchSocialLinks = async () => {
@@ -95,6 +97,18 @@ export default function SettingsPage() {
         link.socialLabel === name ? { ...link, url: value } : link
       )
     );
+  };
+
+  const toggleEditField = (name) => {
+    setEditingFields((prev) => {
+      const next = new Set(prev);
+      if (next.has(name)) {
+        next.delete(name);
+      } else {
+        next.add(name);
+      }
+      return next;
+    });
   };
 
   const handleSave = async () => {
@@ -157,24 +171,41 @@ export default function SettingsPage() {
           Social profiles
         </p>
         <div className="grid grid-cols-1 gap-4">
-          {socialFields.map(({ name, label, icon: Icon, placeholder }) => (
-            <div key={name} className="flex flex-col gap-1">
-              <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600">
-                <Icon className="h-3.5 w-3.5 text-gray-400" />
-                {label}
-              </label>
-              <Input
-                name={name}
-                placeholder={placeholder}
-                onChange={(e) => handleChange(name, e.target.value)}
-                className="focus-visible:ring-[#0bbcaa]/40 focus-visible:border-[#0bbcaa]"
-                value={
-                  socialLinks.find((link) => link.socialLabel === name)?.url ??
-                  ""
-                }
-              />
-            </div>
-          ))}
+          {socialFields.map(({ name, label, icon: Icon, placeholder }) => {
+            const inputFilled = socialLinks.find((link) => link.socialLabel === name)?.url ?? ""
+            const isEditing = editingFields.has(name);
+            return (
+              <div key={name} className="flex flex-col gap-1">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-gray-600">
+                  <Icon className="h-3.5 w-3.5 text-gray-400" />
+                  {label}
+                </label>
+                {inputFilled && !isEditing ? (
+                  <div className="flex items-center gap-2 rounded-md border border-gray-200 px-3 py-2">
+                    <p className="flex-1 truncate rounded-md bg-brand/10 px-2 py-1 text-sm text-gray-700">
+                      {inputFilled}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => toggleEditField(name)}
+                      aria-label={`Edit ${label}`}
+                      className="text-gray-400 hover:text-brand transition-colors"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <Input
+                    name={name}
+                    placeholder={placeholder}
+                    onChange={(e) => handleChange(name, e.target.value)}
+                    className="focus-visible:ring-[#0bbcaa]/40 focus-visible:border-[#0bbcaa]"
+                    value={inputFilled}
+                  />
+                )}
+              </div>
+            )
+          })}
 
           <div
             onClick={() => setOpen(true)}
