@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import AlertDialogBox from "@/Components/AlertDialog/AlertDialog";
 import { getSocialLinks, saveSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
+import { deleteAccount } from "@/app/lib/DataAccessLayer/account";
 
 const initialSocialFields = [
   {
@@ -47,6 +48,7 @@ export default function SettingsPage() {
   const [socialFields, setSocialFields] = useState(initialSocialFields);
 
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
   const [confirmDeleteLink, setConfirmDeleteLink] = useState(false)
   const [linkPendingDelete, setLinkPendingDelete] = useState(null)
   const [moreLinkName, setMoreLinkName] = useState('')
@@ -149,6 +151,20 @@ export default function SettingsPage() {
   const cancelDeleteLink = () => {
     setConfirmDeleteLink(false);
     setLinkPendingDelete(null);
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeletingAccount(true);
+    localStorage.clear();
+
+    const res = await deleteAccount();
+
+    // deleteAccount redirects on success, so this only runs on failure
+    if (res && !res.success) {
+      toast.error(res.message);
+    }
+    setDeletingAccount(false);
+    setConfirmDelete(false);
   };
 
   const handleAddMoreLink = () => {
@@ -288,19 +304,20 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={() => setConfirmDelete(true)}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100"
+            disabled={deletingAccount}
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100 disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <Trash2 className="h-4 w-4" />
-            Delete account
+            {deletingAccount ? "Deleting..." : "Delete account"}
           </button>
         </div>
       </div>
 
-      {/* Delete confirmation dialog (UI only) */}
+      {/* Delete confirmation dialog */}
       <AlertDialogBox
         open={confirmDelete}
         onCancel={() => setConfirmDelete(false)}
-        onConfirm={() => setConfirmDelete(false)}
+        onConfirm={handleDeleteAccount}
         title="Are you sure you want to delete your account?"
         description="This action cannot be undone. This will permanently delete your account and remove all your data."
       />
