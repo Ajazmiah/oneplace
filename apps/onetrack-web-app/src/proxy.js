@@ -4,8 +4,9 @@ import { NextResponse } from "next/server";
 
 export async function proxy(request) {
   const session = await auth();
+  const { pathname } = request.nextUrl;
 
-  if (request.nextUrl.pathname === "/") {
+  if (pathname === "/" || pathname === "/signin" || pathname === "/signup") {
     if (session) {
       return NextResponse.redirect(
         new URL("/dashboard/applications", request.url)
@@ -22,5 +23,12 @@ export async function proxy(request) {
 }
 
 export const config = {
-  matcher: ["/", "/dashboard/:path*", "/settings/:path*", "/profile/:path*"],
+  matcher: [
+    "/",
+    "/signin",
+    "/signup",
+    "/dashboard/:path*",
+    "/settings/:path*",
+    "/profile/:path*",
+  ],
 };
