@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import Popup from "./Popup.jsx";
+import SidePanel from "./SidePanel.tsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Popup />
+    <SidePanel />
   </StrictMode>
 );

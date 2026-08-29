@@ -1,9 +1,20 @@
+"use client";
+
 import { logout } from "@/app/lib/actions/authentication/authenticationAction";
 import React from "react";
 
+const EXTENSION_ID = process.env.NEXT_PUBLIC_EXTENSION_ID;
+
 function Logout() {
+  const handleLogout = () => {
+    if (EXTENSION_ID && typeof chrome !== "undefined" && chrome.runtime?.sendMessage) {
+      chrome.runtime.sendMessage(EXTENSION_ID, { type: "AUTH_STATE", user: null });
+    }
+    logout();
+  };
+
   return (
-    <div className="flex w-full p-[12px] items-center cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-500 gap-3 focus:bg-red-50 focus:text-red-500 hover:bg-red-50 hover:text-red-500 transition-colors" onClick={logout}>
+    <div className="flex w-full p-[12px] items-center cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-500 gap-3 focus:bg-red-50 focus:text-red-500 hover:bg-red-50 hover:text-red-500 transition-colors" onClick={handleLogout}>
       <svg
         className="w-4 h-4 flex-shrink-0"
         fill="none"
