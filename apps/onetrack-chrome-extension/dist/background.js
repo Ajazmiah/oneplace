@@ -40,3 +40,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.sidePanel
   .setPanelBehavior({ openPanelOnActionClick: true })
   .catch((error) => console.error(error));
+
+// Cache the web app's session state so the side panel can read it.
+chrome.runtime.onMessageExternal.addListener((message, sender) => {
+  if (sender.origin !== "http://localhost:3000") return; // defense in depth beyond the manifest check
+  if (message.type !== "AUTH_STATE") return;
+  chrome.storage.local.set({ authUser: message.user });
+});
