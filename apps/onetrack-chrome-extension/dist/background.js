@@ -41,5 +41,8 @@ chrome.sidePanel
 chrome.runtime.onMessageExternal.addListener((message, sender) => {
   if (sender.origin !== "http://localhost:3000") return; // defense in depth beyond the manifest check
   if (message.type !== "AUTH_STATE") return;
-  chrome.storage.local.set({ authUser: message.user });
+  chrome.storage.local.set({
+    authUser: message.user,
+    socialLinks: message.user ? (message.socialLinks ?? []) : [],
+  });
 });

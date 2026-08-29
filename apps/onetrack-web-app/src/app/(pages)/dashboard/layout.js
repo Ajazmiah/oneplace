@@ -2,6 +2,7 @@ import "../../globals.css";
 import Sidebar from "@/Components/Sidebar/Sidebar";
 import ExtensionAuthSync from "@/Components/ExtensionAuthSync/ExtensionAuthSync";
 import { auth } from "@/auth";
+import { getSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 
 export const metadata = {
   title: "Resumind | Dashboard",
@@ -18,6 +19,7 @@ export default async function RootLayout({ children }) {
         image: session.user.image,
       }
     : null;
+  const socialLinks = user ? await getSocialLinks() : [];
 
   return (
     <div className="flex min-h-screen">
@@ -29,7 +31,7 @@ export default async function RootLayout({ children }) {
         {children}
       </div>
 
-      <ExtensionAuthSync user={user} />
+      <ExtensionAuthSync user={user} socialLinks={socialLinks} />
     </div>
   );
 }
