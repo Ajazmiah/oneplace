@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import SocialLinks, { type SocialLink } from "./components/SocialLinks";
-import QuestionsAndAnswers, { type QuestionAndAnswer } from "./components/QuestionsAndAnswers";
+import QuestionAnswersView from "./components/QuestionAnswersView";
+import type { QAItem } from "@repo/ui/QuestionAnswersView";
 
 const LOGIN_URL = "http://localhost:3000/signin";
 const DASHBOARD_URL = "http://localhost:3000/dashboard/applications";
@@ -146,12 +147,12 @@ function HomeTab({
   questionsAndAnswers,
 }: {
   socialLinks: SocialLink[];
-  questionsAndAnswers: QuestionAndAnswer[];
+  questionsAndAnswers: QAItem[];
 }) {
   return (
     <div style={s.tabContent}>
       <SocialLinks links={socialLinks} />
-      <QuestionsAndAnswers items={questionsAndAnswers} />
+      <QuestionAnswersView questions={questionsAndAnswers} />
     </div>
   );
 }
@@ -362,7 +363,7 @@ function SidePanel() {
   // undefined = still reading storage, null = read but no user, object = logged in
   const [authUser, setAuthUser] = useState<AuthUser | undefined>(undefined);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
-  const [questionsAndAnswers, setQuestionsAndAnswers] = useState<QuestionAndAnswer[]>([]);
+  const [questionsAndAnswers, setQuestionsAndAnswers] = useState<QAItem[]>([]);
   const [tab, setTab] = useState<Tab>("home");
 
   useEffect(() => {

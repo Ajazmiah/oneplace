@@ -6,6 +6,14 @@ export default defineConfig({
   plugins: [react()],
   root: "src",
   publicDir: resolve(__dirname, "public"),
+  resolve: {
+    alias: {
+      // Point straight at the shared package's source so Vite processes its
+      // TSX/CSS-modules like local files, instead of treating a workspace-
+      // linked node_modules package as an opaque pre-bundled dependency.
+      "@repo/ui": resolve(__dirname, "../../packages/ui/src"),
+    },
+  },
   build: {
     outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,
