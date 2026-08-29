@@ -3,6 +3,7 @@ import Sidebar from "@/Components/Sidebar/Sidebar";
 import ExtensionAuthSync from "@/Components/ExtensionAuthSync/ExtensionAuthSync";
 import { auth } from "@/auth";
 import { getSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
+import { getQuestionsAndAnswers } from "@/app/lib/DataAccessLayer/getQuestionsAndAnswers";
 
 export const metadata = {
   title: "Resumind | Dashboard",
@@ -20,6 +21,7 @@ export default async function RootLayout({ children }) {
       }
     : null;
   const socialLinks = user ? await getSocialLinks() : [];
+  const questionsAndAnswers = user ? await getQuestionsAndAnswers() : [];
 
   return (
     <div className="flex min-h-screen">
@@ -31,7 +33,11 @@ export default async function RootLayout({ children }) {
         {children}
       </div>
 
-      <ExtensionAuthSync user={user} socialLinks={socialLinks} />
+      <ExtensionAuthSync
+        user={user}
+        socialLinks={socialLinks}
+        questionsAndAnswers={questionsAndAnswers}
+      />
     </div>
   );
 }

@@ -44,5 +44,6 @@ chrome.runtime.onMessageExternal.addListener((message, sender) => {
   chrome.storage.local.set({
     authUser: message.user,
     socialLinks: message.user ? (message.socialLinks ?? []) : [],
+    questionsAndAnswers: message.user ? (message.questionsAndAnswers ?? []) : [],
   });
 });

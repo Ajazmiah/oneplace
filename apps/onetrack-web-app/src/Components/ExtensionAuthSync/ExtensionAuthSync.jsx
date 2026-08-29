@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const EXTENSION_ID = process.env.NEXT_PUBLIC_EXTENSION_ID;
 
-export default function ExtensionAuthSync({ user, socialLinks }) {
+export default function ExtensionAuthSync({ user, socialLinks, questionsAndAnswers }) {
   useEffect(() => {
     if (!EXTENSION_ID) return;
     if (typeof chrome === "undefined" || !chrome.runtime?.sendMessage) return; // extension not installed
@@ -13,8 +13,9 @@ export default function ExtensionAuthSync({ user, socialLinks }) {
       type: "AUTH_STATE",
       user,
       socialLinks,
+      questionsAndAnswers,
     });
-  }, [user, socialLinks]);
+  }, [user, socialLinks, questionsAndAnswers]);
 
   return null;
 }
