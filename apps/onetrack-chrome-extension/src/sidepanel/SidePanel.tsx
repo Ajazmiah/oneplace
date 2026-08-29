@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import SocialLinks, { type SocialLink } from "./components/SocialLinks";
+import QuestionsAndAnswers, { type QuestionAndAnswer } from "./components/QuestionsAndAnswers";
 
 const LOGIN_URL = "http://localhost:3000/signin";
 const DASHBOARD_URL = "http://localhost:3000/dashboard/applications";
@@ -10,11 +12,6 @@ type AuthUser = {
   image?: string;
 } | null;
 
-type SocialLink = {
-  socialLabel: string;
-  url: string;
-};
-
 type ScrapedJob = {
   jobTitle: string;
   companyName: string;
@@ -22,6 +19,8 @@ type ScrapedJob = {
   jobUrl: string;
   details: string;
 };
+
+type Tab = "home" | "form";
 
 const s: Record<string, React.CSSProperties> = {
   wrap: {
@@ -67,45 +66,39 @@ const s: Record<string, React.CSSProperties> = {
     borderRadius: 8,
     cursor: "pointer",
   },
-  linksWrap: { width: "100%", display: "flex", flexDirection: "column", gap: 8 },
-  linkRow: {
+  tabBar: {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 8,
-    padding: "8px 12px",
-    border: "1px solid #eee",
+    width: "100%",
+    background: "#f3f3f3",
     borderRadius: 8,
+    padding: 3,
+    gap: 2,
+  },
+  tabButton: {
+    flex: 1,
+    padding: "7px 0",
     fontSize: 13,
-  },
-  linkLabel: {
-    color: "#111",
-    fontWeight: 500,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-  copyButton: {
-    padding: "4px 10px",
-    fontSize: 12,
-    fontWeight: 500,
-    color: "#0bbcaa",
+    fontWeight: 600,
+    color: "#666",
     background: "transparent",
-    border: "1px solid #0bbcaa",
+    border: "none",
     borderRadius: 6,
     cursor: "pointer",
-    flexShrink: 0,
   },
-  divider: { width: "100%", height: 1, background: "#eee", margin: "4px 0" },
+  tabButtonActive: {
+    flex: 1,
+    padding: "7px 0",
+    fontSize: 13,
+    fontWeight: 600,
+    color: "#111",
+    background: "#fff",
+    border: "none",
+    borderRadius: 6,
+    cursor: "pointer",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.08)",
+  },
+  tabContent: { width: "100%", display: "flex", flexDirection: "column", gap: 16 },
   formWrap: { width: "100%", display: "flex", flexDirection: "column", gap: 12 },
-  formTitle: {
-    margin: 0,
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: 0.4,
-    textTransform: "uppercase",
-    color: "#888",
-  },
   field: { display: "flex", flexDirection: "column", gap: 4 },
   label: { fontSize: 12, fontWeight: 500, color: "#555" },
   input: {
@@ -148,32 +141,17 @@ const s: Record<string, React.CSSProperties> = {
   hintText: { margin: 0, fontSize: 12, color: "#888" },
 };
 
-function SocialLinks({ links }: { links: SocialLink[] }) {
-  const [copiedLabel, setCopiedLabel] = useState<string | null>(null);
-
-  if (links.length === 0) return null;
-
-  const copy = (link: SocialLink) => {
-    navigator.clipboard.writeText(link.url).then(() => {
-      setCopiedLabel(link.socialLabel);
-      setTimeout(() => {
-        setCopiedLabel((current) => (current === link.socialLabel ? null : current));
-      }, 1500);
-    });
-  };
-
+function HomeTab({
+  socialLinks,
+  questionsAndAnswers,
+}: {
+  socialLinks: SocialLink[];
+  questionsAndAnswers: QuestionAndAnswer[];
+}) {
   return (
-    <div style={s.linksWrap}>
-      {links.map((link) => (
-        <div key={link.socialLabel} style={s.linkRow}>
-          <span style={s.linkLabel} title={link.url}>
-            {link.url}
-          </span>
-          <button style={s.copyButton} onClick={() => copy(link)}>
-            {copiedLabel === link.socialLabel ? "Copied!" : "Copy"}
-          </button>
-        </div>
-      ))}
+    <div style={s.tabContent}>
+      <SocialLinks links={socialLinks} />
+      <QuestionsAndAnswers items={questionsAndAnswers} />
     </div>
   );
 }
@@ -274,8 +252,6 @@ function AddApplicationForm() {
 
   return (
     <div style={s.formWrap}>
-      <p style={s.formTitle}>Add Application</p>
-
       <button type="button" style={s.secondaryButton} onClick={autofillFromPage} disabled={isAutofilling}>
         {isAutofilling ? "Reading page..." : "Fill from page"}
       </button>
@@ -386,11 +362,14 @@ function SidePanel() {
   // undefined = still reading storage, null = read but no user, object = logged in
   const [authUser, setAuthUser] = useState<AuthUser | undefined>(undefined);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
+  const [questionsAndAnswers, setQuestionsAndAnswers] = useState<QuestionAndAnswer[]>([]);
+  const [tab, setTab] = useState<Tab>("home");
 
   useEffect(() => {
-    chrome.storage.local.get(["authUser", "socialLinks"], (result) => {
+    chrome.storage.local.get(["authUser", "socialLinks", "questionsAndAnswers"], (result) => {
       setAuthUser(result.authUser ?? null);
       setSocialLinks(result.socialLinks ?? []);
+      setQuestionsAndAnswers(result.questionsAndAnswers ?? []);
     });
 
     const onChange = (
@@ -400,6 +379,9 @@ function SidePanel() {
       if (area !== "local") return;
       if (changes.authUser) setAuthUser(changes.authUser.newValue ?? null);
       if (changes.socialLinks) setSocialLinks(changes.socialLinks.newValue ?? []);
+      if (changes.questionsAndAnswers) {
+        setQuestionsAndAnswers(changes.questionsAndAnswers.newValue ?? []);
+      }
     };
     chrome.storage.onChanged.addListener(onChange);
     return () => chrome.storage.onChanged.removeListener(onChange);
@@ -430,11 +412,26 @@ function SidePanel() {
             Open Dashboard
           </button>
 
-          <SocialLinks links={socialLinks} />
+          <div style={s.tabBar}>
+            <button
+              style={tab === "home" ? s.tabButtonActive : s.tabButton}
+              onClick={() => setTab("home")}
+            >
+              Home
+            </button>
+            <button
+              style={tab === "form" ? s.tabButtonActive : s.tabButton}
+              onClick={() => setTab("form")}
+            >
+              Save Application
+            </button>
+          </div>
 
-          <div style={s.divider} />
-
-          <AddApplicationForm />
+          {tab === "home" ? (
+            <HomeTab socialLinks={socialLinks} questionsAndAnswers={questionsAndAnswers} />
+          ) : (
+            <AddApplicationForm />
+          )}
         </>
       ) : (
         <button onClick={login} style={s.button}>
