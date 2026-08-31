@@ -1,39 +1,35 @@
 // lib/mongodb.js
 import mongoose from "mongoose";
 
-// Store the connection state globally (helps in development with hot reloads)
+// Cache the connection promise globally (helps in development with hot reloads,
+// and lets concurrent callers await the same in-flight connect instead of
+// racing a disconnect/reconnect against each other)
 const globalWithMongoose = global;
+let cached = globalWithMongoose._mongoose;
 
-// Use existing connection if already connected
-let isConnected = globalWithMongoose._mongooseConnection || false;
+if (!cached) {
+  cached = globalWithMongoose._mongoose = { conn: null, promise: null };
+}
 
 export const connectDb = async () => {
-  if (isConnected) return;
-
-  // Check if there's an existing connection from Mongoose
-  if (mongoose.connections.length > 0) {
-    const connection = mongoose.connections[0];
-
-    // If connected, reuse it
-    if (connection.readyState === 1) {
-      isConnected = true;
-      return;
-    }
-
-    // Disconnect stale connection
-    await mongoose.disconnect();
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return cached.conn;
   }
 
-  try {
-    const db = await mongoose.connect(process.env.MONGO_URI);
-
-    // Mark as connected
-    isConnected = true;
-    globalWithMongoose._mongooseConnection = true;
-
-    console.log("✅ MongoDB connected:", db.connection.host);
-  } catch (error) {
-    console.error("❌ MongoDB connection error:", error.message);
-    process.exit(1); // Exit the app if unable to connect
+  if (!cached.promise) {
+    cached.promise = mongoose
+      .connect(process.env.MONGO_URI)
+      .then((m) => {
+        console.log("✅ MongoDB connected:", m.connection.host);
+        return m;
+      })
+      .catch((error) => {
+        cached.promise = null;
+        console.error("❌ MongoDB connection error:", error.message);
+        throw error;
+      });
   }
+
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
