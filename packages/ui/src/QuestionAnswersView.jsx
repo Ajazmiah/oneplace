@@ -3,26 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import styles from "./QuestionAnswersView.module.css";
 
-export type QAItem = {
-  _id: string;
-  question: string;
-  answer: string;
-};
-
-export type QuestionAnswersViewProps = {
-  questions: QAItem[];
-  pageSize?: number;
-  title?: string;
-  subtitle?: string;
-  allowEdit?: boolean;
-  allowDelete?: boolean;
-  onEdit?: (id: string, draft: { question: string; answer: string }) => Promise<QAItem> | QAItem;
-  onDelete?: (id: string) => Promise<void> | void;
-  emptyStateHref?: string;
-  emptyStateLabel?: string;
-  onNotify?: (message: string, type: "success" | "error") => void;
-};
-
 export function QuestionAnswersView({
   questions,
   pageSize = 5,
@@ -35,14 +15,14 @@ export function QuestionAnswersView({
   emptyStateHref,
   emptyStateLabel = "Add your first question →",
   onNotify,
-}: QuestionAnswersViewProps) {
+}) {
   const [allQuestions, setAllQuestions] = useState(questions);
   const [filterQuery, setFilterQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState(null);
   const [draft, setDraft] = useState({ question: "", answer: "" });
   const [saving, setSaving] = useState(false);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     setAllQuestions(questions);
@@ -57,7 +37,7 @@ export function QuestionAnswersView({
   const page = Math.min(currentPage, totalPages);
   const paginated = filteredQuestions.slice((page - 1) * pageSize, page * pageSize);
 
-  const startEdit = (item: QAItem) => {
+  const startEdit = (item) => {
     setEditingId(item._id);
     setDraft({ question: item.question, answer: item.answer });
   };
@@ -67,7 +47,7 @@ export function QuestionAnswersView({
     setDraft({ question: "", answer: "" });
   };
 
-  const handleSave = async (id: string) => {
+  const handleSave = async (id) => {
     if (!onEdit) return;
     if (!draft.question.trim() || !draft.answer.trim()) {
       onNotify?.("Question and answer can't be empty.", "error");
@@ -89,7 +69,7 @@ export function QuestionAnswersView({
     }
   };
 
-  const handleDelete = async (item: QAItem) => {
+  const handleDelete = async (item) => {
     if (!onDelete) return;
     if (!window.confirm("Delete this question? This action cannot be undone.")) return;
 
