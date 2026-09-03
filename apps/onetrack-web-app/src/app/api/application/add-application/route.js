@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 // Assuming these imports are correctly configured with path aliases in your project
 import addApplicationModel from "@/database/models/addApplicationModel";
@@ -104,10 +104,12 @@ export async function POST(request) {
         resume: resumeData,
         userId: user._id,
       });
+      revalidateTag(`default-resume-${user._id.toString()}`);
     }
 
 
     // 7. Revalidate Cache
+    revalidateTag(`applications-${user._id.toString()}`);
     revalidatePath("/dashboard/applications");
 
     // 8. Prepare and Send Response
