@@ -2,15 +2,14 @@
 import QuestionAndAnswerModel from "@/database/models/questionAndAnswerModel";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, cacheTag, cacheLife } from "next/cache";
 
-export const getQuestionsAndAnswers = async () => {
-  const session = await getUserSession();
-  const user = await getUserByEmail(session.user.email);
+async function getCachedQuestionsAndAnswers(userId) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`questions-and-answers-${userId}`);
 
-  const questions = await QuestionAndAnswerModel.find({
-    userId: user._id,
-  })
+  const questions = await QuestionAndAnswerModel.find({ userId })
     .lean()
     .sort({ createdAt: -1 });
 
@@ -19,12 +18,19 @@ export const getQuestionsAndAnswers = async () => {
     question: q.question,
     answer: q.answer,
   }));
+}
+
+export const getQuestionsAndAnswers = async () => {
+  const session = await getUserSession();
+  const user = await getUserByEmail(session.user.email);
+  return getCachedQuestionsAndAnswers(user._id.toString());
 };
 
 // accepts a single { question, answer } or an array of them
 export const addQuestionAndAnswer = async (entries) => {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
+  const userId = user._id.toString();
 
   const docs = (Array.isArray(entries) ? entries : [entries]).map((e) => ({
     question: e.question,
@@ -34,15 +40,17 @@ export const addQuestionAndAnswer = async (entries) => {
 
   await QuestionAndAnswerModel.insertMany(docs);
 
+  revalidateTag(`questions-and-answers-${userId}`);
   revalidatePath("/dashboard/interview-answers");
 };
 
 export const editQuestionAndAnswer = async (id, { question, answer }) => {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
+  const userId = user._id.toString();
 
   const updated = await QuestionAndAnswerModel.findOneAndUpdate(
-    { _id: id, userId: user._id },
+    { _id: id, userId },
     { question, answer },
     { new: true }
   ).lean();
@@ -51,6 +59,7 @@ export const editQuestionAndAnswer = async (id, { question, answer }) => {
     throw new Error("Question not found.");
   }
 
+  revalidateTag(`questions-and-answers-${userId}`);
   revalidatePath("/dashboard/interview-answers");
 
   return {
@@ -63,16 +72,18 @@ export const editQuestionAndAnswer = async (id, { question, answer }) => {
 export const deleteQuestionAndAnswer = async (id) => {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
+  const userId = user._id.toString();
 
   const deleted = await QuestionAndAnswerModel.findOneAndDelete({
     _id: id,
-    userId: user._id,
+    userId,
   }).lean();
 
   if (!deleted) {
     throw new Error("Question not found.");
   }
 
+  revalidateTag(`questions-and-answers-${userId}`);
   revalidatePath("/dashboard/interview-answers");
 
   return { _id: deleted._id.toString() };
