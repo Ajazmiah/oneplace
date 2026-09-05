@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { PlusCircle, FileText, MessageSquareText, ClipboardList, Settings, Menu, X } from "lucide-react";
+import { PlusCircle, FileText, MessageSquareText, ClipboardList, Settings, Menu, X, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -69,28 +69,23 @@ export default function Sidebar() {
           >
             <X className="h-4 w-4" />
           </button>
-
-          <button
-            onClick={() => setDesktopExpanded((v) => !v)}
-            aria-label={desktopExpanded ? "Collapse sidebar" : "Expand sidebar"}
-            aria-expanded={desktopExpanded}
-            className="hidden lg:flex text-slate-500 hover:text-brand transition-colors p-1 rounded mx-auto"
-          >
-            <Menu className="h-4 w-4" />
-          </button>
         </div>
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5">
-          <p
-            className={cn(
-              "px-3 pb-2 text-[10px] font-semibold text-slate-600 uppercase tracking-widest",
-              "whitespace-nowrap overflow-hidden transition-all duration-300",
-              !desktopExpanded && "lg:max-h-0 lg:pb-0 lg:opacity-0"
-            )}
+          <button
+            onClick={() => setDesktopExpanded((v) => !v)}
+            aria-label={desktopExpanded ? "Collapse sidebar" : "Expand sidebar"}
+            aria-expanded={desktopExpanded}
+            className="hidden lg:flex items-center justify-center w-full mb-2 text-slate-500 hover:text-brand bg-[#FBF8F3] transition-colors p-2 rounded-lg"
           >
-            dashboard menu
-          </p>
+            <ChevronRight
+              className={cn(
+                "h-4 w-4 transition-transform duration-300",
+                desktopExpanded && "rotate-180"
+              )}
+            />
+          </button>
           {navItems.map(({ href, label, icon: Icon }) => {
             const isActive = pathname === href || pathname.startsWith(href + "/");
             return (
