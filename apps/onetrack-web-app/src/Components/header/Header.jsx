@@ -33,7 +33,7 @@ async function Header() {
   const navigation = session?.user ? Allnavigation : loggedOutNavigation;
 
   return (
-    <header className="sticky inset-x-0 top-0 z-50 transition-colors duration-300 bg-white border-b border-gray-100 shadow-sm">
+    <header className="sticky inset-x-0 top-0 z-50 transition-colors duration-300 bg-white border-b border-gray-100 rounded-[30px] shadow-none">
       <Navigation
         navigation={navigation}
         session={session}

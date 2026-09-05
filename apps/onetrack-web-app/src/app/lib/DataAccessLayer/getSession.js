@@ -1,15 +1,13 @@
 "use server";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { connectDb } from "@/database/dbConnection";
+import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
 
 export async function getUserSession() {
-  let session = await auth();
+  const session = await getCachedAuthSession();
 
   if (!session) {
     redirect("/signin");
   }
-  await connectDb();
 
   return session;
 }

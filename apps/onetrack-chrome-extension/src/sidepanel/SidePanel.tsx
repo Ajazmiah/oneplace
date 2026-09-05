@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import SocialLinks, { type SocialLink } from "./components/SocialLinks";
-import QuestionAnswersView from "./components/QuestionAnswersView";
-import type { QAItem } from "@repo/ui/QuestionAnswersView";
+import QuestionAnswersView, { type QAItem } from "./components/QuestionAnswersView";
 
 const LOGIN_URL = "http://localhost:3000/signin";
 const DASHBOARD_URL = "http://localhost:3000/dashboard/applications";

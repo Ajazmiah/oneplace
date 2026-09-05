@@ -1,13 +1,22 @@
 "use server";
+import userModel from "@/database/models/userModel";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, cacheTag, cacheLife } from "next/cache";
+
+async function getCachedSocialLinks(userId) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(`social-links-${userId}`);
+
+  const user = await userModel.findById(userId).select("socialLinks").lean();
+  return JSON.parse(JSON.stringify(user?.socialLinks ?? []));
+}
 
 export const getSocialLinks = async () => {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
-
-  return JSON.parse(JSON.stringify(user?.socialLinks ?? []));
+  return getCachedSocialLinks(user._id.toString());
 };
 
 export const saveSocialLinks = async (socialLinks) => {
@@ -20,6 +29,7 @@ export const saveSocialLinks = async (socialLinks) => {
       return { success: false, message: "User not found" };
     }
 
+    const userId = user._id.toString();
     const updated = [...savedSocialLinks];
 
     socialLinks.forEach(link => {
@@ -38,6 +48,7 @@ export const saveSocialLinks = async (socialLinks) => {
 
     await user.save();
 
+    revalidateTag(`social-links-${userId}`);
     revalidatePath("/dashboard/settings");
 
     return { success: true, message: "Social links saved" };
