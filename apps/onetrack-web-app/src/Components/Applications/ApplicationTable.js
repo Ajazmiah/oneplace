@@ -132,7 +132,7 @@ export default function ApplicationTable({ applications }) {
                   Company
                 </span>
               </th>
-              <th className="px-3 py-3">
+              <th className="px-3 py-3 hidden md:table-cell">
                 <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Status
                   <ListFilter className="h-3 w-3" />
@@ -143,12 +143,7 @@ export default function ApplicationTable({ applications }) {
                   Date Applied
                 </span>
               </th>
-              <th className="px-3 py-3 hidden lg:table-cell">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Documents
-                </span>
-              </th>
-              <th className="px-3 py-3 text-right">
+              <th className="px-3 py-3 text-right hidden md:table-cell">
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Salary
                 </span>

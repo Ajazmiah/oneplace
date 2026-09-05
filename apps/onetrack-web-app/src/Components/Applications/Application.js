@@ -47,7 +47,7 @@ function Application({ filteredApplications }) {
 
           <td className="px-3 py-4 text-sm text-slate-700">{app.companyName}</td>
 
-          <td className="px-3 py-4">
+          <td className="px-3 py-4 hidden md:table-cell">
             <span className={`badge badge-${app.status}`}>{app.status}</span>
           </td>
 
@@ -55,26 +55,7 @@ function Application({ filteredApplications }) {
             {formatDate(app.createdAt)}
           </td>
 
-          <td className="px-3 py-4 hidden lg:table-cell">
-            <div className="flex items-center gap-1.5">
-              <span
-                className={`rounded-md px-2 py-0.5 text-xs font-medium ${
-                  app.resume ? "bg-emerald-50 text-emerald-700" : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                Resume
-              </span>
-              <span
-                className={`rounded-md px-2 py-0.5 text-xs font-medium ${
-                  app.coverLetter ? "bg-emerald-50 text-emerald-700" : "bg-gray-100 text-gray-400"
-                }`}
-              >
-                Cover Letter
-              </span>
-            </div>
-          </td>
-
-          <td className="px-3 py-4 text-right text-sm font-semibold text-slate-800">
+          <td className="px-3 py-4 text-right text-sm font-semibold text-slate-800 hidden md:table-cell">
             {app.salaryRange || "—"}
           </td>
         </tr>
