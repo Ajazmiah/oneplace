@@ -27,13 +27,6 @@ function Application({ filteredApplications }) {
             index % 2 === 1 ? "bg-[#FBF8F3]" : "bg-white"
           }`}
         >
-          <td className="px-4 py-4">
-            <input
-              type="checkbox"
-              className="size-4 rounded border-gray-300 text-brand focus:ring-brand"
-            />
-          </td>
-
           <td className="px-3 py-4">
             <Link href={`applications/${app._id}`} className="flex items-center gap-3 group">
               <div
