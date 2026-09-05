@@ -121,9 +121,6 @@ export default function ApplicationTable({ applications }) {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-gray-100 bg-brand/10">
-              <th className="w-10 px-4 py-3">
-                <input type="checkbox" className="size-4 rounded border-gray-300 text-brand focus:ring-brand" />
-              </th>
               <th className="px-3 py-3">
                 <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-slate-500">
                   Applications ({filteredApplications.length})
