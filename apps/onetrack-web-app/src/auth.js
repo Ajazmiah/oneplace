@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
+import { headers } from "next/headers";
 import { signup } from "./app/lib/actions/authentication/signupAction";
 import { getUserByEmail } from "./app/lib/utils/databaseUtils";
 
@@ -23,14 +24,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user, account, profile, email }) {
       try {
-        if (!process.env.NEXTAUTH_URL) {
-          console.error("AUTH_LOGIN_ERROR: NEXTAUTH_URL env var is not set");
-        }
+        const headersList = await headers();
+        const host = headersList.get("host");
+        const protocol = host?.startsWith("localhost") ? "http" : "https";
+        const baseUrl = `${protocol}://${host}`;
 
         const res = await fetch(
-          `${process.env.NEXTAUTH_URL}/api/user?email=${encodeURIComponent(
-            user.email
-          )}`
+          `${baseUrl}/api/user?email=${encodeURIComponent(user.email)}`
         );
 
         if (!res.ok) {
