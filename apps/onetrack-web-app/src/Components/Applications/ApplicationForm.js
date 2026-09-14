@@ -45,7 +45,11 @@ function ApplicationForm() {
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
     const file = e.target.files[0];
-    if (!file || !allowedTypes.includes(file.type)) return;
+    if (!file) return;
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Please upload a PDF, DOC, or DOCX file");
+      return;
+    }
 
     if (e.target.name === "resume") {
       setResume(file);
