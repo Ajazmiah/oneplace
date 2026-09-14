@@ -15,7 +15,6 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { Badge } from "../ui/badge";
-import withApplicationContext from "../ContextWrapper/ContextWrapper";
 import { useRouter } from "next/navigation";
 import { deleteApplication } from "@/app/lib/actions/applications/applicationActions";
 import { openDocument } from "@/app/lib/utils/utils";
@@ -239,4 +238,4 @@ function JobDetails({ job }) {
   );
 }
 
-export default withApplicationContext(JobDetails);
+export default JobDetails;
