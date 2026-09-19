@@ -4,7 +4,7 @@ import defaultResumeModel from "@/database/models/defaultResume";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
 import { revalidateTag,revalidatePath } from "next/cache";
-import { getBuffer } from "@/app/lib/utils/utils";
+import { getBuffer, validateFile } from "@/app/lib/utils/utils";
 
 export const editApplication = async (id, formData) => {
   try {
@@ -19,6 +19,19 @@ export const editApplication = async (id, formData) => {
     const coverLetter = formData.get("coverLetter");
     const jobUrl = formData.get("jobUrl");
     const useDefaultResume = formData.get("useDefaultResume");
+
+    if (resume && resume instanceof File && resume.size > 0) {
+      const resumeError = validateFile(resume);
+      if (resumeError) {
+        return { success: false, message: `Resume: ${resumeError}` };
+      }
+    }
+    if (coverLetter && coverLetter instanceof File && coverLetter.size > 0) {
+      const coverLetterError = validateFile(coverLetter);
+      if (coverLetterError) {
+        return { success: false, message: `Cover letter: ${coverLetterError}` };
+      }
+    }
 
     let resumeData = null;
     let coverLetterData = null;
