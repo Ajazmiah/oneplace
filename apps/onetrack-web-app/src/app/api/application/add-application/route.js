@@ -5,7 +5,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "../../../lib/utils/databaseUtils";
 import { getUserSession } from "../../../lib/DataAccessLayer/getSession";
-import { getBuffer } from "../../../lib/utils/utils";
+import { getBuffer, validateFile } from "../../../lib/utils/utils";
 import defaultResume from '@/database/models/defaultResume';
 
 /**
@@ -63,7 +63,27 @@ export async function POST(request) {
       );
     }
     
-    // 5. Process File Uploads
+    // 5. Validate File Uploads
+    if (resume && typeof resume === "object" && resume.size > 0) {
+      const resumeError = validateFile(resume);
+      if (resumeError) {
+        return NextResponse.json(
+          { success: false, message: `Resume: ${resumeError}` },
+          { status: 400 }
+        );
+      }
+    }
+    if (coverLetter && typeof coverLetter === "object" && coverLetter.size > 0) {
+      const coverLetterError = validateFile(coverLetter);
+      if (coverLetterError) {
+        return NextResponse.json(
+          { success: false, message: `Cover letter: ${coverLetterError}` },
+          { status: 400 }
+        );
+      }
+    }
+
+    // 6. Process File Uploads
     let resumeData = null;
     let coverLetterData = null;
 
@@ -85,7 +105,7 @@ export async function POST(request) {
       };
     }
 
-    // 6. Create Database Entry
+    // 7. Create Database Entry
     const application = await addApplicationModel.create({
       jobTitle,
       companyName,
@@ -108,11 +128,11 @@ export async function POST(request) {
     }
 
 
-    // 7. Revalidate Cache
+    // 8. Revalidate Cache
     revalidateTag(`applications-${user._id.toString()}`);
     revalidatePath("/dashboard/applications");
 
-    // 8. Prepare and Send Response
+    // 9. Prepare and Send Response
     // Remove binary data before sending the JSON response
     const responseData = application.toObject();
     delete responseData.resume?.data;
