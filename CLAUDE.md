@@ -1,4 +1,4 @@
-# OneTrack (Resumind) — Claude Code Guide
+# OnePlace (Resumind) — Claude Code Guide
 
 Read [AGENTS.md](AGENTS.md) first: this repo runs Next.js 16, whose APIs differ from older versions. Check `node_modules/next/dist/docs/` before writing Next code.
 
@@ -9,8 +9,8 @@ npm workspaces + Turborepo (`apps/*`, `packages/*`). Run everything from the rep
 ```
 jobprep/
 ├── apps/
-│   ├── onetrack-web-app/           ← Next.js 16 app (the product) — all paths below are relative to this
-│   └── onetrack-chrome-extension/  ← Vite + React/TS MV3 extension (side panel + job-page scraper)
+│   ├── oneplace-web-app/           ← Next.js 16 app (the product) — all paths below are relative to this
+│   └── oneplace-chrome-extension/  ← Vite + React/TS MV3 extension (side panel + job-page scraper)
 ├── packages/
 │   ├── ui/                         ← @repo/ui: shared components (QuestionAnswersView), consumed by both apps
 │   ├── eslint-config/
@@ -27,7 +27,7 @@ jobprep/
 - **UI:** Tailwind CSS 4 + shadcn/ui (Radix), Sonner toasts
 - **Extension:** Vite, React, TypeScript, Manifest V3
 
-## Web App Structure (`apps/onetrack-web-app/src`)
+## Web App Structure (`apps/oneplace-web-app/src`)
 
 ```
 src/

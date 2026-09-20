@@ -12,7 +12,7 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, "src/content-scripts/job-scraper.tsx"),
-      name: "OneTrackScraper",
+      name: "OnePlaceScraper",
       formats: ["iife"],
       fileName: () => "content-scripts/job-scraper.js",
     },

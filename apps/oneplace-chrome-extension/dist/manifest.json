@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "description": "Track your job applications directly from your browser.",
   "action": {
-    "default_title": "OneTrack"
+    "default_title": "OnePlace"
   },
   "permissions": ["storage", "activeTab", "tabs", "sidePanel"],
   "background": {
