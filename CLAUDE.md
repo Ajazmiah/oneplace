@@ -1,316 +1,102 @@
-# JobPrep (Resumind) — Claude Code Guide
+# OneTrack (Resumind) — Claude Code Guide
 
-## Stack
+Read [AGENTS.md](AGENTS.md) first: this repo runs Next.js 16, whose APIs differ from older versions. Check `node_modules/next/dist/docs/` before writing Next code.
 
-- **Framework:** Next.js 15 (App Router) + React 19
-- **Database:** MongoDB via Mongoose
-- **Auth:** NextAuth v5 (GitHub + Google OAuth)
-- **UI:** Tailwind CSS 4 + shadcn/ui (Radix UI primitives)
-- **Notifications:** Sonner (toast)
+## Monorepo Layout
 
----
-
-## Project Tree
+npm workspaces + Turborepo (`apps/*`, `packages/*`). Run everything from the repo root with `npm run dev | build | lint`.
 
 ```
 jobprep/
-├── src/
-│   ├── app/
-│   │   ├── layout.js                        ← Root layout: Header + Footer + Toaster
-│   │   ├── page.js                          ← Home: landing or dashboard redirect
-│   │   ├── globals.css
-│   │   │
-│   │   ├── (pages)/                         ← Route group (no URL segment)
-│   │   │   ├── signin/page.jsx              ← OAuth sign-in (GitHub, Google)
-│   │   │   ├── signup/page.jsx
-│   │   │   ├── about/page.js
-│   │   │   └── dashboard/
-│   │   │       ├── layout.js                ← Dashboard shell: wraps all /dashboard/* with Sidebar
-│   │   │       ├── loading.jsx
-│   │   │       ├── applications/
-│   │   │       │   ├── page.js              ← [SERVER] fetches all apps → renders ApplicationTable
-│   │   │       │   ├── loading.jsx
-│   │   │       │   ├── error.js
-│   │   │       │   └── [applicationId]/
-│   │   │       │       ├── page.js          ← [SERVER] fetches single app → renders JobDetails
-│   │   │       │       ├── not-found.js
-│   │   │       │       └── edit/page.js     ← [CLIENT] reads localStorage → renders ApplicationForm
-│   │   │       ├── add-application/
-│   │   │       │   └── page.js              ← [CLIENT] empty ApplicationForm
-│   │   │       ├── add-interview-answer/
-│   │   │       │   └── page.js
-│   │   │       └── interview-answers/
-│   │   │           └── page.js
-│   │   │
-│   │   ├── api/
-│   │   │   ├── auth/[...nextauth]/route.js  ← NextAuth handler (OAuth callback)
-│   │   │   ├── user/route.js                ← GET: check if user exists by email
-│   │   │   └── application/
-│   │   │       ├── add-application/route.js ← POST: create new application + file upload
-│   │   │       └── [id]/
-│   │   │           ├── resume/route.js      ← GET: stream resume Buffer from DB
-│   │   │           └── coverletter/route.js ← GET: stream cover letter Buffer from DB
-│   │   │
-│   │   └── lib/
-│   │       ├── DataAccessLayer/
-│   │       │   ├── applications.js          ← Server actions: getApplications, getSingleApplication,
-│   │       │   │                                editApplication, deleteApplication
-│   │       │   └── getSession.js            ← getUserSession(): auth check + DB connect
-│   │       ├── actions/
-│   │       │   └── authentication/
-│   │       │       ├── authenticationAction.js
-│   │       │       └── signupAction.js      ← Server action: create user on OAuth signup
-│   │       └── utils/
-│   │           ├── databaseUtils.js         ← getUserByEmail()
-│   │           └── utils.js                 ← formatDate(), getBuffer() (File → Buffer)
-│   │
-│   ├── Components/
-│   │   ├── Applications/
-│   │   │   ├── ApplicationForm.js           ← [CLIENT] shared form: add + edit (file upload)
-│   │   │   ├── ApplicationTable.js          ← [CLIENT] list view: search + filter by status
-│   │   │   ├── Application.js               ← single app row with status highlight
-│   │   │   └── StatusCard.js                ← summary counters (applied/interviewing/etc.)
-│   │   ├── JobDetails/
-│   │   │   └── JobDetails.js                ← [CLIENT] full detail view: edit/delete/download
-│   │   ├── Sidebar/
-│   │   │   └── Sidebar.js                   ← [CLIENT] dashboard nav with active-link state
-│   │   ├── header/
-│   │   │   ├── Header.jsx                   ← [SERVER async] session check → show/hide login
-│   │   │   └── navigation/
-│   │   │       ├── Navigation.js            ← [CLIENT] main nav bar
-│   │   │       └── DropDownMenu.js
-│   │   ├── footer/Footer.jsx
-│   │   ├── Services/Services.jsx            ← Landing page features section
-│   │   ├── AlertDialog/AlertDialog.jsx      ← Confirm-delete modal
-│   │   ├── ContextWrapper/ContextWrapper.jsx
-│   │   └── ui/                              ← shadcn/ui primitives (button, card, input, etc.)
-│   │
-│   ├── database/
-│   │   ├── dbConnection.js                  ← Mongoose connect w/ global cache
-│   │   └── models/
-│   │       ├── userModel.js                 ← { fullname, email, password, timestamps }
-│   │       ├── addApplicationModel.js       ← { jobTitle, companyName, location, status,
-│   │       │                                     resume{Buffer}, coverLetter{Buffer},
-│   │       │                                     jobUrl, description, salaryRange, userId }
-│   │       └── questionAndAnswerModel.js
-│   │
-│   ├── context/index.jsx                    ← ApplicationContext (minimal, mostly unused)
-│   ├── auth.js                              ← NextAuth config: providers, callbacks, adapter
-│   ├── middleware.js                        ← Protects /dashboard/*, /settings/*, /profile/*
-│   └── lib/utils.js                         ← shadcn cn() helper
-│
-├── public/
-├── .env / .env.local                        ← MONGO_URI, NEXTAUTH_*, AUTH_GITHUB_*, AUTH_GOOGLE_*
-├── next.config.mjs
-├── tailwind.config.js
-├── components.json                          ← shadcn config
-└── jsconfig.json                            ← path alias: @/ → src/
+├── apps/
+│   ├── onetrack-web-app/           ← Next.js 16 app (the product) — all paths below are relative to this
+│   └── onetrack-chrome-extension/  ← Vite + React/TS MV3 extension (side panel + job-page scraper)
+├── packages/
+│   ├── ui/                         ← @repo/ui: shared components (QuestionAnswersView), consumed by both apps
+│   ├── eslint-config/
+│   └── typescript-config/
+├── turbo.json                      ← build env vars are declared here (AUTH_*, MONGO_URI, NEXTAUTH_URL, BASE_URL)
+└── AGENTS.md
 ```
 
----
+## Stack
 
-## Data Flow Diagrams
+- **Web app:** Next.js 16 (App Router, `cacheComponents: true`) + React 19, plain JS/JSX
+- **Database:** MongoDB via Mongoose
+- **Auth:** NextAuth v5 beta (GitHub + Google OAuth), MongoDB adapter
+- **UI:** Tailwind CSS 4 + shadcn/ui (Radix), Sonner toasts
+- **Extension:** Vite, React, TypeScript, Manifest V3
 
-### Auth Flow
-
-```
-User → /signin (page.jsx)
-        │
-        ├── GitHub or Google OAuth button
-        │         │
-        │         ▼
-        │   OAuth Provider (external)
-        │         │
-        │         ▼
-        │   NextAuth signIn callback (auth.js)
-        │         │
-        │         ├── fetch /api/user?email=...  ← check if user exists
-        │         │         │
-        │         │         └── if NOT found:
-        │         │               signupAction() → create user in MongoDB
-        │         │
-        │         └── return true
-        │
-        ▼
-  Session stored in MongoDB (NextAuth adapter)
-        │
-        ▼
-  Redirect → /dashboard/applications
-
-Middleware (middleware.js)
-  - /dashboard/* → require session → else redirect /signin
-  - /signin      → if session exists → redirect /dashboard/applications
-```
-
-### Application CRUD Flow
+## Web App Structure (`apps/onetrack-web-app/src`)
 
 ```
-── CREATE ──────────────────────────────────────────────────────────────
-
-/dashboard/add-application (CLIENT page)
-  └── ApplicationForm.js (empty)
-        │
-        │  submit via fetch POST
-        ▼
-  /api/application/add-application/route.js
-        │
-        ├── getUserSession()       ← auth check + DB connect
-        ├── getUserByEmail(email)  ← find user doc
-        ├── parse multipart formData
-        ├── getBuffer(file)        ← File → Buffer
-        └── Application.create({...userId}) → MongoDB
-              │
-              └── revalidatePath('/dashboard/applications')
-                    │
-                    ▼
-              toast success → redirect /dashboard/applications
-
-
-── READ (LIST) ─────────────────────────────────────────────────────────
-
-/dashboard/applications (SERVER page)
-  └── getApplications()            ← server action
-        │
-        ├── getUserSession()
-        └── Application.find({ userId }).sort(-createdAt) → MongoDB
-              │
-              ▼
-        ApplicationTable.js (CLIENT)
-          ├── StatusCard.js         ← counts per status
-          ├── search/filter state (useState)
-          └── Application.js rows  → Link → /applications/[id]
-
-
-── READ (DETAIL) ───────────────────────────────────────────────────────
-
-/dashboard/applications/[applicationId] (SERVER page)
-  └── getSingleApplication(id)     ← server action
-        │
-        └── Application.findById(id) → MongoDB
-              │
-              ▼
-        JobDetails.js (CLIENT)
-          ├── status badge, description, salary, location
-          ├── "View Resume"      → /api/application/[id]/resume
-          ├── "View Cover Letter"→ /api/application/[id]/coverletter
-          ├── "Edit" button      → save to localStorage → /edit
-          └── "Delete" button    → AlertDialog → deleteApplication(id)
-
-
-── UPDATE ──────────────────────────────────────────────────────────────
-
-JobDetails "Edit" click
-  └── app data → localStorage
-        │
-        ▼
-/dashboard/applications/[applicationId]/edit (CLIENT page)
-  └── retrieve from localStorage
-        │
-        ▼
-  ApplicationForm.js (populated)
-        │
-        │  submit via server action
-        ▼
-  editApplication(id, formData)    ← server action
-        │
-        ├── getUserSession()
-        ├── Application.findById(id)
-        ├── update fields + re-buffer new files
-        └── application.save() → MongoDB
-              │
-              └── revalidatePath → toast → redirect /dashboard/applications
-
-
-── DELETE ──────────────────────────────────────────────────────────────
-
-JobDetails "Delete" → AlertDialog confirm
-  └── deleteApplication(id)        ← server action
-        │
-        ├── Application.findByIdAndDelete(id) → MongoDB
-        └── revalidatePath → redirect /dashboard/applications
-
-
-── FILE DOWNLOAD ────────────────────────────────────────────────────────
-
-JobDetails "View Resume" link  →  GET /api/application/[id]/resume
-  └── route.js
-        ├── getUserSession()        ← auth required
-        ├── validate ObjectId
-        ├── Application.findById(id)
-        └── return new Response(buffer, {
-              'Content-Type': mimetype,
-              'Content-Disposition': 'inline'
-            })
-              │
-              ▼
-        Browser renders / downloads PDF
+src/
+├── proxy.js                         ← Next 16 replacement for middleware: auth redirects
+├── auth.js                          ← NextAuth config (providers, callbacks, adapter)
+├── app/
+│   ├── layout.js, page.js, not-found.js
+│   ├── (pages)/
+│   │   ├── signin, signup, about, features, pricing, profile
+│   │   └── dashboard/
+│   │       ├── layout.js            ← Sidebar + ExtensionAuthSync (pushes user/links/Q&A to extension)
+│   │       ├── loading.jsx, error.js
+│   │       ├── applications/        ← list page, error.js, [applicationId]/ (detail, edit, not-found)
+│   │       ├── add-application/, interview-answers/, add-interview-answer/, settings/
+│   ├── api/
+│   │   ├── auth/[...nextauth]/      ← NextAuth handler
+│   │   ├── user/                    ← GET: does user exist by email
+│   │   ├── social-links/
+│   │   ├── default-resume/          ← GET: saved default resume metadata
+│   │   └── application/
+│   │       ├── add-application/     ← POST: create application (used by web form AND extension)
+│   │       └── [id]/resume | coverletter ← GET: stream file Buffer from DB
+│   └── lib/
+│       ├── DataAccessLayer/         ← reads ("use server" + "use cache"): applications, defaultResume,
+│       │                              socialLinks, getQuestionsAndAnswers, account, getSession
+│       ├── actions/
+│       │   ├── applications/applicationActions.js  ← editApplication, deleteApplication
+│       │   └── authentication/                     ← signup/auth actions
+│       └── utils/                   ← databaseUtils (getUserByEmail), getCachedSession,
+│                                      utils (formatDate, getBuffer, validateFile + limits)
+├── Components/                      ← Applications/ (forms, table, cards), JobDetails, Sidebar, header,
+│                                      QuestionAnswers, Profile, ExtensionAuthSync, ui/ (shadcn)
+└── database/
+    ├── dbConnection.js              ← Mongoose connect, cached on global
+    └── models/                      ← userModel (incl. socialLinks), addApplicationModel,
+                                       defaultResume, questionAndAnswerModel
 ```
 
-### Component Hierarchy
+Path alias: `@/` → `src/`.
 
-```
-RootLayout (layout.js)
-  ├── Header.jsx              [SERVER async — reads session]
-  │     └── Navigation.js    [CLIENT — login/logout, avatar]
-  │           └── DropDownMenu.js
-  │
-  ├── {page content}
-  │     │
-  │     ├── Home (page.js)
-  │     │     ├── unauthenticated → Services.jsx (landing)
-  │     │     └── authenticated  → links to dashboard
-  │     │
-  │     ├── SignIn/page.jsx   [CLIENT — OAuth buttons]
-  │     │
-  │     └── DashboardLayout (dashboard/layout.js)
-  │           ├── Sidebar.js  [CLIENT — active-link nav]
-  │           └── {dashboard pages}
-  │                 │
-  │                 ├── applications/page.js       [SERVER]
-  │                 │     └── ApplicationTable.js  [CLIENT]
-  │                 │           ├── StatusCard.js
-  │                 │           └── Application.js (rows)
-  │                 │
-  │                 ├── applications/[id]/page.js  [SERVER]
-  │                 │     └── JobDetails.js        [CLIENT]
-  │                 │           └── AlertDialog.jsx
-  │                 │
-  │                 ├── applications/[id]/edit/page.js  [CLIENT]
-  │                 │     └── ApplicationForm.js (populated)
-  │                 │
-  │                 └── add-application/page.js    [CLIENT]
-  │                       └── ApplicationForm.js (empty)
-  │
-  └── Footer.jsx
-```
+## Auth and Sessions
 
----
+- `getCachedAuthSession()` (`lib/utils/getCachedSession.js`): returns the session or `null`, connects the DB. Use it in **API routes** so signed-out callers get a JSON 401.
+- `getUserSession()` (`lib/DataAccessLayer/getSession.js`): wraps the above but calls `redirect("/signin")` when there is no session. Use it in **pages, server components and server actions**. Never in a route the extension calls: it turns a 401 into a redirect to HTML.
+- `proxy.js` guards `/dashboard/*`, `/settings/*`, `/profile/*`, and sends signed-in users away from `/`, `/signin`, `/signup`.
+- Every query on user data must filter by `userId` (see `deleteApplication`, `editApplication`). Server actions are public endpoints: the caller picks the arguments, so a session alone does not prove ownership of an id.
 
-## Server vs Client Split
+## Chrome Extension Integration
 
-| File | Type | Reason |
-|---|---|---|
-| `app/layout.js` | Server | Static shell, no interactivity |
-| `dashboard/layout.js` | Server | Wraps Sidebar (client island) |
-| `applications/page.js` | Server | DB fetch via server action |
-| `applications/[id]/page.js` | Server | DB fetch via server action |
-| `applications/[id]/edit/page.js` | Client | Reads localStorage |
-| `add-application/page.js` | Client | Interactive form |
-| `Header.jsx` | Server async | Session check at render time |
-| `ApplicationForm.js` | Client | File inputs, controlled state |
-| `ApplicationTable.js` | Client | Search/filter state |
-| `JobDetails.js` | Client | Delete/edit interactions |
-| `Sidebar.js` | Client | Active-link state |
-| `Navigation.js` | Client | Auth state display |
+- The extension POSTs multipart form data to `/api/application/add-application` and depends on it being a real HTTP route. Do not convert it to a server action.
+- Web app → extension: `ExtensionAuthSync` sends `AUTH_STATE` (user, social links, Q&A) via `chrome.runtime.sendMessage(NEXT_PUBLIC_EXTENSION_ID, …)`. The extension accepts it only from `http://localhost:3000` (`externally_connectable` + `background.js`).
+- Base URLs in the extension are hard-coded to `http://localhost:3000` (`SidePanel.tsx`, `manifest.json`); they must change for a deployed site.
 
----
+## Data Flows
+
+**Create.** `ApplicationForm` (client) or the extension → `POST /api/application/add-application` → session check (401) → user lookup → validate required fields and files → `Application.create` → upsert `defaultResume` (when a new resume was uploaded) → `revalidateTag` → toast + redirect.
+
+**Read.** `applications/page.js` (server) → `getApplications()` (cached, tagged `applications-<userId>`) → `ApplicationTable`. Detail: `getSingleApplication(id)` (tagged `application-<id>`) → `JobDetails`. File `data` buffers are excluded from list/detail queries and only streamed by the `resume`/`coverletter` routes.
+
+**Update.** `JobDetails` "Edit" stores the application in `localStorage` → `edit/page.js` (client) reads it → `EditApplicationForm` → `editApplication(id, formData)` server action (finds by `_id` + `userId`, validates files, saves, `revalidateTag`).
+
+**Delete.** `AlertDialog` confirm → `deleteApplication(id)` (filters by `userId`) → `revalidateTag`.
 
 ## Key Patterns
 
-- **Path alias:** `@/` → `src/` (jsconfig.json)
-- **Server actions:** `"use server"` functions in `app/lib/DataAccessLayer/` — called directly from client components, handle their own auth + DB
-- **File storage:** Resume/cover letter stored as raw Buffers in MongoDB (not S3/external)
-- **Cache invalidation:** `revalidatePath()` called after every mutation
-- **DB connection:** Mongoose cached in `global.mongoose` to survive Next.js hot reloads
-- **Edit state handoff:** Server page → `localStorage` → client edit page (workaround for passing data without a URL param round-trip)
-- **Toast pattern:** Sonner `toast()` called client-side after server action resolves
+- **Caching:** reads use `"use cache"` with `cacheLife("hours")` and `cacheTag`. Every mutation must `revalidateTag` the matching tags (`applications-<userId>`, `application-<id>`, `default-resume-<userId>`).
+- **File storage:** resume/cover letter are raw Buffers inside the Mongo document (not S3).
+- **Upload validation:** `validateFile()` in `lib/utils/utils.js` (PDF/DOC/DOCX, max 5MB) runs server-side in the add route and `editApplication`. The add form also checks type and size client-side, with the 5MB limit hard-coded there. Keep the two in sync.
+- **Default resume:** one `defaultResume` doc per user, upserted on `userId`. Older data may still contain duplicates.
+- **Errors:** API routes return JSON `{ success, message }` with a fixed message on 500 (log details server-side, never return the raw error). Forms surface `message` via Sonner toasts. Route segments have `loading.jsx` / `error.js` at `dashboard/` and `applications/`.
+- **Server vs client:** list/detail pages, layouts and `Header` are server components; forms, table, `JobDetails`, `Sidebar`, `Navigation` and the edit page are client components.
+- **Edit state handoff:** application passes through `localStorage` between detail and edit pages.
