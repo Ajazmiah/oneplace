@@ -118,10 +118,11 @@ export async function POST(request) {
     });
 
     if (resumeData && useDefaultResume !== "true") {
-      await defaultResume.create({
-        resume: resumeData,
-        userId: user._id,
-      });
+      await defaultResume.findOneAndUpdate(
+        { userId: user._id },
+        { resume: resumeData },
+        { upsert: true }
+      );
       revalidateTag(`default-resume-${user._id.toString()}`);
     }
 
