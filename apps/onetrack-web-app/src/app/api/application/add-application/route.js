@@ -143,7 +143,7 @@ export async function POST(request) {
   } catch (error) {
     console.error("Error creating application:", error);
     return NextResponse.json(
-      { success: false, message: error },
+      { success: false, message: "Something went wrong while saving the application." },
       { status: 500 } // Internal Server Error
     );
   }
