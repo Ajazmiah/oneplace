@@ -127,6 +127,7 @@ const s: Record<string, React.CSSProperties> = {
   },
   fileInput: { fontSize: 12 },
   errorText: { margin: 0, fontSize: 12, color: "#dc2626" },
+  successText: { margin: 0, fontSize: 12, color: "#16a34a" },
   secondaryButton: {
     width: "100%",
     padding: "8px 0",
@@ -167,6 +168,7 @@ function AddApplicationForm() {
   const [resume, setResume] = useState<File | null>(null);
   const [coverLetter, setCoverLetter] = useState<File | null>(null);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [autofillHint, setAutofillHint] = useState("");
   const [isAutofilling, setIsAutofilling] = useState(false);
@@ -211,6 +213,7 @@ function AddApplicationForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     if (!jobTitle || !companyName) {
       setError("Job title and company are required");
@@ -243,6 +246,8 @@ function AddApplicationForm() {
         return;
       }
       reset();
+      setSuccess("Application saved");
+      setTimeout(() => setSuccess(""), 3000);
     } catch {
       setError("Network error — please try again");
     } finally {
@@ -349,6 +354,7 @@ function AddApplicationForm() {
         </div>
 
         {error && <p style={s.errorText}>{error}</p>}
+        {success && <p style={s.successText}>{success} ✓</p>}
 
         <button type="submit" style={s.buttonFull} disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save Application"}
