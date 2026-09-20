@@ -4,7 +4,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 // Assuming these imports are correctly configured with path aliases in your project
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "../../../lib/utils/databaseUtils";
-import { getUserSession } from "../../../lib/DataAccessLayer/getSession";
+import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
 import { getBuffer, validateFile } from "../../../lib/utils/utils";
 import defaultResume from '@/database/models/defaultResume';
 
@@ -14,29 +14,27 @@ import defaultResume from '@/database/models/defaultResume';
  * @param {Request} request The incoming Next.js Request object.
  */
 export async function POST(request) {
-
-  console.log("___REQ____", request)
-  // 1. Get Session & Authenticate
-  const session = await getUserSession();
-
-  if (!session?.user?.email) {
-    return NextResponse.json(
-      { success: false, message: "Not authenticated" },
-      { status: 401 } // Unauthorized
-    );
-  }
-
-  // 2. Find User
-  const user = await getUserByEmail(session.user.email);
-
-  if (!user) {
-    return NextResponse.json(
-      { success: false, message: "User Not Found!" },
-      { status: 404 } // Not Found
-    );
-  }
-
   try {
+    // 1. Get Session & Authenticate
+    const session = await getCachedAuthSession();
+
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { success: false, message: "Not authenticated" },
+        { status: 401 } // Unauthorized
+      );
+    }
+
+    // 2. Find User
+    const user = await getUserByEmail(session.user.email);
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "User Not Found!" },
+        { status: 404 } // Not Found
+      );
+    }
+
     // 3. Extract Form Data
     // For file uploads and multipart/form-data, use request.formData()
     const formData = await request.formData();
