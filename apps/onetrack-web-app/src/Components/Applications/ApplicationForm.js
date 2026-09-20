@@ -282,11 +282,19 @@ function ApplicationForm() {
                       />
                       <div>
                         <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
-                          {resume?.name || defaultResume?.filename}
+                          {isDefaultLoading && !resume ? (
+                            <span className="h-4 w-28 rounded bg-gray-100 animate-pulse" />
+                          ) : (
+                            resume?.name || defaultResume?.filename
+                          )}
                           <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                         </p>
                         <p className="text-xs text-gray-400 mt-0.5">
-                          {!resume ? "Last used" : "PDF, DOC, DOCX"}
+                          {isDefaultLoading && !resume
+                            ? ""
+                            : !resume
+                              ? "Last used"
+                              : "PDF, DOC, DOCX"}
                         </p>
                       </div>
                     </div>
