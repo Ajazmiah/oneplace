@@ -8,7 +8,15 @@ import { getBuffer, validateFile } from "@/app/lib/utils/utils";
 
 export const editApplication = async (id, formData) => {
   try {
-    const application = await AddApplicationModel.findOneAndUpdate({ _id: id });
+    const session = await getUserSession();
+    const user = await getUserByEmail(session.user.email);
+    const userId = user._id.toString();
+
+    const application = await AddApplicationModel.findOne({ _id: id, userId });
+    if (!application) {
+      return { success: false, message: "application not found" };
+    }
+
     const jobTitle = formData.get("jobTitle");
     const companyName = formData.get("companyName");
     const status = formData.get("status");
@@ -35,9 +43,6 @@ export const editApplication = async (id, formData) => {
 
     let resumeData = null;
     let coverLetterData = null;
-    const session = await getUserSession();
-    const user = await getUserByEmail(session.user.email);
-    const userId = user._id.toString();
 
     if (useDefaultResume === "true") {
       const saved = await defaultResumeModel.findOne({ userId: user._id });
