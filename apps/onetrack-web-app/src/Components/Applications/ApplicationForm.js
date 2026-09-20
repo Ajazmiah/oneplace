@@ -23,6 +23,7 @@ import ApplicationFormHeader from "./ApplicationFormHeader";
 function ApplicationForm() {
   const [resume, setResume] = useState(null);
   const [defaultResume, setDefaultResume] = useState(null);
+  const [isDefaultLoading, setIsDefaultLoading] = useState(true);
   const [coverLetter, setCoverLetter] = useState(null);
   const resumeInputRef = useRef(null);
 
@@ -50,11 +51,11 @@ function ApplicationForm() {
       toast.error("Please upload a PDF, DOC, or DOCX file");
       return;
     }
-
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File must be 5MB or smaller");
       return;
     }
+
     if (e.target.name === "resume") {
       setResume(file);
     } else {
@@ -62,16 +63,21 @@ function ApplicationForm() {
     }
   }
 
-  const getDfaultResume = async () => {
-    const res = await fetch("/api/default-resume");
-    const savedDefaultResume = await res.json();
-    const resumeData = savedDefaultResume?.resumeData.resume;
-    console.log("DAAA", resumeData);
-    setDefaultResume(resumeData);
+  const getDefaultResume = async () => {
+    try {
+      const res = await fetch("/api/default-resume");
+      if (!res.ok) return;
+      const saved = await res.json();
+      setDefaultResume(saved?.resumeData?.resume ?? null);
+    } catch {
+      setDefaultResume(null);
+    } finally {
+      setIsDefaultLoading(false);
+    }
   };
 
   useEffect(() => {
-    getDfaultResume();
+    getDefaultResume();
   }, []);
 
   const getFormData = () => {
