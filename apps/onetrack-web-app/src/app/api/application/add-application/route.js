@@ -10,7 +10,7 @@ import defaultResume from '@/database/models/defaultResume';
 
 /**
  * Handles POST requests to create a new application.
- * Expected URL: /api/applications
+ * Expected URL: /api/application/add-application
  * @param {Request} request The incoming Next.js Request object.
  */
 export async function POST(request) {

@@ -3,7 +3,7 @@ import AddApplicationModel from "@/database/models/addApplicationModel";
 import defaultResumeModel from "@/database/models/defaultResume";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
-import { revalidateTag,revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { getBuffer, validateFile } from "@/app/lib/utils/utils";
 
 export const editApplication = async (id, formData) => {
@@ -114,7 +114,7 @@ export const deleteApplication = async (id) => {
       message: "application deleted successfully",
     };
   } catch (error) {
-    console.log("ERROR", error.message);
+    console.error("Error deleting application:", error.message);
     return {
       success: false,
       message: "deleting application failed!",
