@@ -51,6 +51,10 @@ function ApplicationForm() {
       return;
     }
 
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File must be 5MB or smaller");
+      return;
+    }
     if (e.target.name === "resume") {
       setResume(file);
     } else {
@@ -103,10 +107,10 @@ function ApplicationForm() {
         method: "POST",
         body: formData,
       });
-      const response = await res.json();
+      const response = await res.json().catch(() => null);
 
-      if (!response?.success) {
-        setError(response.message || "Something went wrong");
+      if (!res.ok || !response?.success) {
+        toast.error(response?.message || "Something went wrong");
         return;
       }
       toast("Application added");
