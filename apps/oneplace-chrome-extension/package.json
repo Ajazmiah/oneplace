@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vite build --watch & vite build --config vite.config.content.js --watch",
-    "build": "vite build && vite build --config vite.config.content.js",
+    "dev": "vite build --watch --mode development & vite build --config vite.config.content.js --watch",
+    "build": "vite build --mode production && vite build --config vite.config.content.js",
     "lint": "eslint src --max-warnings 0",
     "preview": "vite preview"
   },
