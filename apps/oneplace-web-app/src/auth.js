@@ -77,14 +77,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.AUTH_GOOGLE_ID,
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
       allowDangerousEmailAccountLinking: true,
-
-      authorization: {
-        params: {
-          prompt: "consent",
-        },
-       //"online" (default) → you only get an access token
-      // "offline" → you also get a refresh token
-      },
     }),
   ],
 });
