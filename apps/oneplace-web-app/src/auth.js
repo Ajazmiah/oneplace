@@ -7,7 +7,7 @@ import { signup } from "./app/lib/actions/authentication/signupAction";
 import { getUserByEmail } from "./app/lib/utils/databaseUtils";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  debug: true,
+  debug: process.env.NODE_ENV === "development",
   logger: {
     error(error) {
       console.error("AUTH_ERROR", error.name, error.message, error);
