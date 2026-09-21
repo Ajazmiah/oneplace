@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { headers } from "next/headers";
 import { signup } from "./app/lib/actions/authentication/signupAction";
 import { getUserByEmail } from "./app/lib/utils/databaseUtils";
 
@@ -27,18 +26,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async signIn({ user, account, profile, email }) {
+    async signIn({ user }) {
       try {
-        const headersList = await headers();
-        const host = headersList.get("host");
-        const protocol = host?.startsWith("localhost") ? "http" : "https";
-        const baseUrl = `${protocol}://${host}`;
+        const existingUser = await getUserByEmail(user.email);
 
-        const res = await fetch(
-          `${baseUrl}/api/user?email=${encodeURIComponent(user.email)}`
-        );
-
-        if (!res.ok) {
+        if (!existingUser) {
           const authUser = {
             name: user.name,
             email: user.email,
