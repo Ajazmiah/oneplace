@@ -40,6 +40,7 @@ export function Dropdown({ session }) {
                 <img
                   src={user_image}
                   alt={user_name}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
               ) : (

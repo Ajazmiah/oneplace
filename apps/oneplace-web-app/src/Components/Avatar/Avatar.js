@@ -12,6 +12,7 @@ const Avatar = forwardRef((props, ref) => {
       <img
         src={props.session?.user?.image}
         alt="User Avatar"
+        referrerPolicy="no-referrer"
         className="w-full h-full object-cover"
       />
     </div>

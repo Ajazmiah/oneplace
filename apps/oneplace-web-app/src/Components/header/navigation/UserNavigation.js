@@ -54,6 +54,7 @@ function UserNavigation({ session, userNavigations = [], onNavigate }) {
             <img
               src={user.image}
               alt={user?.name || "User"}
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
             />
           ) : (
