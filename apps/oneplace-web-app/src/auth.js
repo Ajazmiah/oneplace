@@ -21,6 +21,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/signin",
   },
 
+  session: {
+    maxAge: 15 * 24 * 60 * 60, // 15 days
+    updateAge: 24 * 60 * 60, // refresh the session once per day of activity
+  },
+
   callbacks: {
     async signIn({ user, account, profile, email }) {
       try {
