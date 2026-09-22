@@ -16,6 +16,7 @@ import {
 import AlertDialogBox from "@/Components/AlertDialog/AlertDialog";
 import { getSocialLinks, saveSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 import { deleteAccount } from "@/app/lib/DataAccessLayer/account";
+import { notifyExtension } from "@/app/lib/utils/notifyExtension";
 
 const initialSocialFields = [
   {
@@ -156,6 +157,7 @@ export default function SettingsPage() {
   const handleDeleteAccount = async () => {
     setDeletingAccount(true);
     localStorage.clear();
+    notifyExtension({ type: "AUTH_STATE", user: null });
 
     const res = await deleteAccount();
 
