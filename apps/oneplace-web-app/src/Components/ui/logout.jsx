@@ -1,15 +1,12 @@
 "use client";
 
 import { logout } from "@/app/lib/actions/authentication/authenticationAction";
+import { notifyExtension } from "@/app/lib/utils/notifyExtension";
 import React from "react";
-
-const EXTENSION_ID = process.env.NEXT_PUBLIC_EXTENSION_ID;
 
 function Logout() {
   const handleLogout = () => {
-    if (EXTENSION_ID && typeof chrome !== "undefined" && chrome.runtime?.sendMessage) {
-      chrome.runtime.sendMessage(EXTENSION_ID, { type: "AUTH_STATE", user: null });
-    }
+    notifyExtension({ type: "AUTH_STATE", user: null });
     logout();
   };
 
