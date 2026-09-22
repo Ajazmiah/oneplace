@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import SocialLinks, { type SocialLink } from "./components/SocialLinks";
 import QuestionAnswersView, { type QAItem } from "./components/QuestionAnswersView";
 
-const LOGIN_URL = "http://localhost:3000/signin";
-const DASHBOARD_URL = "http://localhost:3000/dashboard/applications";
-const ADD_APPLICATION_URL = "http://localhost:3000/api/application/add-application";
+const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL;
+const LOGIN_URL = `${WEB_APP_URL}/signin`;
+const DASHBOARD_URL = `${WEB_APP_URL}/dashboard/applications`;
+const ADD_APPLICATION_URL = `${WEB_APP_URL}/api/application/add-application`;
 
 type AuthUser = {
   name?: string;

@@ -5,6 +5,7 @@ import { resolve } from "path";
 export default defineConfig({
   plugins: [react()],
   root: "src",
+  envDir: __dirname,
   publicDir: resolve(__dirname, "public"),
   resolve: {
     alias: {

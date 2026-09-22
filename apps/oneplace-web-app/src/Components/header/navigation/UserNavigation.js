@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { logout } from "@/app/lib/actions/authentication/authenticationAction";
+import { notifyExtension } from "@/app/lib/utils/notifyExtension";
 
 const itemClass =
   "flex items-center cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-600 gap-3 focus:bg-[#0bbcaa]/5 focus:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 hover:text-[#0bbcaa] transition-colors";
@@ -98,6 +99,7 @@ function UserNavigation({ session, userNavigations = [], onNavigate }) {
         type="button"
         onClick={() => {
           onNavigate?.();
+          notifyExtension({ type: "AUTH_STATE", user: null });
           logout();
         }}
         className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-gray-500 hover:bg-red-50 hover:text-red-500 focus:bg-red-50 focus:text-red-500 transition-colors"
