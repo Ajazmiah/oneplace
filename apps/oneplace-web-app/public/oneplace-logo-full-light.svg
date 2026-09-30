@@ -1,6 +1,6 @@
-<svg width="520" height="160" viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg">
-  <title>OnePlace Logo</title>
-  <desc>OnePlace full wordmark logo with icon, for dark backgrounds</desc>
+<svg width="700" height="160" viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg">
+  <title>OneSimplifyd Logo</title>
+  <desc>OneSimplifyd full wordmark logo with icon, for dark backgrounds</desc>
   <defs>
     <style>
       .logo-text { fill: #ffffff; }
@@ -24,5 +24,5 @@
   <text x="144" y="98"
     font-family="system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif"
     font-size="90" font-weight="500" letter-spacing="1"
-    class="logo-text">one<tspan class="logo-sub">place</tspan></text>
+    class="logo-text">one<tspan class="logo-sub">simplifyd</tspan></text>
 </svg>
