@@ -35,7 +35,7 @@ const s: Record<string, React.CSSProperties> = {
     overflowY: "auto",
     fontFamily: "system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif",
   },
-  logo: { width: "100%", maxWidth: 150 },
+  logo: { width: "100%", maxWidth: 200 },
   headerRow: { display: "flex", alignItems: "center", gap: 10, width: "100%" },
   avatar: { width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 },
   name: {
@@ -404,7 +404,7 @@ function SidePanel() {
 
   return (
     <div style={s.wrap}>
-      <img src="/logo.svg" alt="OnePlace" style={s.logo} />
+      <img src="/logo.svg" alt="OneSimplifyd" style={s.logo} />
 
       {authUser ? (
         <>
