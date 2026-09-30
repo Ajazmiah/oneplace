@@ -2,6 +2,7 @@ import Services from "@/Components/Services/Services";
 import dashboardImage from "../../assets/dashboard.png";
 import glanceImage from "../../assets/glance.png";
 import Image from "next/image";
+import { APP_NAME } from "@/app/lib/constants";
 
 export default function Example() {
   return (
@@ -73,7 +74,7 @@ export default function Example() {
             <div className="relative ml-auto w-[92%] rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 overflow-hidden">
               <Image
                 src={dashboardImage}
-                alt="OnePlace dashboard showing tracked applications"
+                alt={`${APP_NAME} dashboard showing tracked applications`}
                 className="w-full h-auto -mt-[1.5%]"
                 sizes="(min-width: 1024px) 45vw, 92vw"
                 priority

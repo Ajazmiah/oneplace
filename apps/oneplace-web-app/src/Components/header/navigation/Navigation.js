@@ -8,6 +8,7 @@ import UserNavigation from "./UserNavigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { login } from "@/app/lib/actions/authentication/authenticationAction";
+import { APP_NAME } from "@/app/lib/constants";
 
 const DARK_HEADER_PATHS = ["/", "/about", "/signin"];
 
@@ -41,7 +42,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
           <Link href="/" className="flex items-center">
             <img
               src={isDark ? "/oneplace-logo-full-light.svg" : "/oneplace-logo-full.svg"}
-              alt="OnePlace"
+              alt={APP_NAME}
               className="h-10 w-auto"
             />
           </Link>
@@ -102,7 +103,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
             <Link href="/" onClick={closeMenu}>
               <img
                 src="/oneplace-logo-full.svg"
-                alt="OnePlace"
+                alt={APP_NAME}
                 className="h-10 w-auto"
               />
             </Link>

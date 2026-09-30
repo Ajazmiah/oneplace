@@ -1,5 +1,6 @@
 import React from "react";
 import Heading from "../ui/Heading";
+import { APP_NAME } from "@/app/lib/constants";
 
 
 function Services() {
@@ -18,7 +19,7 @@ function Services() {
             <p className="text-gray-dark">
               Tailoring your resume for each job helps you stand out — but it’s
               hard to remember what you sent when interviews come weeks later.
-              Resumind keeps a record of every resume and cover letter you’ve
+              {APP_NAME} keeps a record of every resume and cover letter you’ve
               used, so you can prep with confidence
             </p>
           </div>

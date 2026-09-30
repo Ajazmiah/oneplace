@@ -1,22 +1,23 @@
 import Link from "next/link";
 // TEMPORARY: remove this import (and the <WorkInProgressNotice /> below) once billing is live.
 import WorkInProgressNotice from "./WorkInProgressNotice";
+import { APP_NAME } from "@/app/lib/constants";
 
 export const metadata = {
-  title: "Pricing – OnePlace",
+  title: `Pricing – ${APP_NAME}`,
   description:
-    "Simple, transparent pricing for OnePlace. Track unlimited job applications, store resumes and cover letters, and stay interview-ready. Start free, upgrade anytime.",
+    `Simple, transparent pricing for ${APP_NAME}. Track unlimited job applications, store resumes and cover letters, and stay interview-ready. Start free, upgrade anytime.`,
   keywords: [
     "job application tracker pricing",
     "resume manager pricing",
-    "OnePlace pricing",
+    `${APP_NAME} pricing`,
     "job search tool cost",
   ],
   alternates: {
     canonical: "/pricing",
   },
   openGraph: {
-    title: "Pricing – OnePlace",
+    title: `Pricing – ${APP_NAME}`,
     description:
       "Simple, transparent pricing to track your job applications and stay interview-ready. Start free, upgrade anytime.",
     url: "/pricing",
@@ -24,7 +25,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pricing – OnePlace",
+    title: `Pricing – ${APP_NAME}`,
     description:
       "Simple, transparent pricing to track your job applications and stay interview-ready.",
   },
@@ -80,7 +81,7 @@ const plans = [
 
 const faqs = [
   {
-    question: "Can I try OnePlace for free?",
+    question: `Can I try ${APP_NAME} for free?`,
     answer:
       "Yes. The Free plan lets you track up to 10 applications with no time limit and no credit card required. Upgrade to Pro whenever you need more.",
   },
@@ -122,7 +123,7 @@ function CheckIcon() {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Product",
-  name: "OnePlace",
+  name: APP_NAME,
   description:
     "Track job applications, store resumes and cover letters, and stay interview-ready — all in one place.",
   offers: plans.map((plan) => ({

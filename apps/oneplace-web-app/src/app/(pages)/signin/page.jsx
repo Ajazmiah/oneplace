@@ -3,6 +3,7 @@ import { getProviders, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { APP_NAME } from "@/app/lib/constants";
 
 export default function AuthPage() {
   const [providers, setProviders] = useState(null);
@@ -71,13 +72,13 @@ export default function AuthPage() {
             <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
               <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
-                OnePlace
+                {APP_NAME}
               </span>
             </div>
             <h1 className="font-bold tracking-tight text-white text-3xl leading-[1.08]">
               Welcome to{" "}
               <span className="text-brand">
-                OnePlace.
+                {APP_NAME}.
               </span>
             </h1>
           </div>

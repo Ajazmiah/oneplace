@@ -4,9 +4,10 @@ import ExtensionAuthSync from "@/Components/ExtensionAuthSync/ExtensionAuthSync"
 import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
 import { getSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 import { getQuestionsAndAnswers } from "@/app/lib/DataAccessLayer/getQuestionsAndAnswers";
+import { APP_NAME } from "@/app/lib/constants";
 
 export const metadata = {
-  title: "Resumind | Dashboard",
+  title: `${APP_NAME} | Dashboard`,
   description:
     "Dashboard with all the applications and form to add application",
 };

@@ -1,22 +1,23 @@
 import Link from "next/link";
+import { APP_NAME } from "@/app/lib/constants";
 
 export const metadata = {
-  title: "Features – OnePlace",
+  title: `Features – ${APP_NAME}`,
   description:
-    "Everything OnePlace gives you to run your job search: application tracking, resume and cover letter storage, status analytics, an interview answer library, secure sign-in, and more — all in one place.",
+    `Everything ${APP_NAME} gives you to run your job search: application tracking, resume and cover letter storage, status analytics, an interview answer library, secure sign-in, and more — all in one place.`,
   keywords: [
     "job application tracker features",
     "resume manager",
     "cover letter storage",
     "interview answer library",
     "job search dashboard",
-    "OnePlace features",
+    `${APP_NAME} features`,
   ],
   alternates: {
     canonical: "/features",
   },
   openGraph: {
-    title: "Features – OnePlace",
+    title: `Features – ${APP_NAME}`,
     description:
       "Application tracking, document storage, status analytics, an interview answer library, and secure sign-in — everything to stay interview-ready.",
     url: "/features",
@@ -24,9 +25,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Features – OnePlace",
+    title: `Features – ${APP_NAME}`,
     description:
-      "Everything OnePlace gives you to run your job search — all in one place.",
+      `Everything ${APP_NAME} gives you to run your job search — all in one place.`,
   },
 };
 
@@ -150,7 +151,7 @@ export default function FeaturesPage() {
             Everything you need to run your job search
           </h1>
           <p className="mt-6 text-lg text-gray-500">
-            From the first application to the final offer, OnePlace keeps every
+            From the first application to the final offer, {APP_NAME} keeps every
             detail organized so you can stay focused and interview-ready.
           </p>
         </header>

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { PlusCircle, FileText, MessageSquareText, ClipboardList, Settings, Menu, X, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { APP_NAME } from "@/app/lib/constants";
 
 const navItems = [
   { href: "/dashboard/applications", label: "Applications", icon: FileText },
@@ -129,7 +130,7 @@ export default function Sidebar() {
             !desktopExpanded && "lg:max-h-0 lg:py-0 lg:opacity-0"
           )}
         >
-          <p className="text-[11px] text-slate-600">Resumind © 2025</p>
+          <p className="text-[11px] text-slate-600">{APP_NAME} © 2025</p>
         </div>
       </aside>
     </>
