@@ -2,53 +2,35 @@ import React from "react";
 
 function About() {
   return (
-    <div className="bg-white min-h-screen relative overflow-hidden">
-      {/* Background teal glow */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: "800px",
-          height: "800px",
-          background: "radial-gradient(circle, #0bbcaa 0%, transparent 70%)",
-          opacity: 0.06,
-          top: "-10%",
-          right: "-15%",
-        }}
-      />
-
-      <div className="relative z-10 max-w-3xl mx-auto px-6 py-24 sm:py-32">
-
-        {/* Badge */}
-        <div className="flex justify-center mb-10">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-            <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
-              Our story
-            </span>
+    // -mt-6 cancels the layout's space-y-6 so the hero sits flush under the header
+    <div className="min-h-screen -mt-6">
+      {/* Shadow + clip-path bleed the background to the left and right edges */}
+      <section className="bg-[#085041] text-white shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
+        <div className="max-w-3xl mx-auto px-6 py-24 sm:py-32">
+          {/* Badge */}
+          <div className="flex justify-center mb-10">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
+              <span className="text-xs font-semibold tracking-widest uppercase text-brand">
+                Our story
+              </span>
+            </div>
           </div>
+
+          {/* Headline */}
+          <h1 className="font-bold tracking-tight text-center text-4xl sm:text-5xl leading-[1.08] mb-6">
+            Why we built <span className="text-brand">OnePlace.</span>
+          </h1>
+
+          {/* Subtext */}
+          <p className="text-center text-lg text-white/80 leading-relaxed max-w-xl mx-auto">
+            A tool born from the frustration of applying, tailoring, and then
+            completely forgetting what you sent.
+          </p>
         </div>
+      </section>
 
-        {/* Headline */}
-        <h1 className="font-bold tracking-tight text-center text-gray-900 text-4xl sm:text-5xl leading-[1.08] mb-6">
-          Why we built{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            OnePlace.
-          </span>
-        </h1>
-
-        {/* Subtext */}
-        <p className="text-center text-lg text-gray-500 leading-relaxed mb-16 max-w-xl mx-auto">
-          A tool born from the frustration of applying, tailoring, and then
-          completely forgetting what you sent.
-        </p>
-
+      <div className="max-w-3xl mx-auto px-6 py-16 sm:py-24">
         {/* Divider */}
         <div className="flex items-center gap-4 mb-14">
           <div className="flex-1 h-px bg-gray-100" />
