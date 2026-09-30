@@ -20,47 +20,27 @@ export default function AuthPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white flex">
+    // -mt-6 cancels the layout's space-y-6; shadow + clip-path bleed the color edge to edge
+    <main className="min-h-screen -mt-6 flex bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
       {/* Left: brand panel — desktop only */}
-      <div className="hidden lg:flex flex-col justify-center pl-16 pr-10 w-1/2 relative overflow-hidden border-r border-gray-100">
-        {/* Teal radial glow */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            width: "700px",
-            height: "700px",
-            background: "radial-gradient(circle, #0bbcaa 0%, transparent 70%)",
-            opacity: 0.08,
-            top: "50%",
-            left: "0%",
-            transform: "translate(-35%, -50%)",
-          }}
-        />
-
-        <div className="relative z-10 max-w-md ml-auto">
+      <div className="hidden lg:flex flex-col justify-center pl-16 pr-10 w-1/2 border-r border-white/10">
+        <div className="max-w-md ml-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
+          <div className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
             <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
             <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
               Your search hub
             </span>
           </div>
 
-          <h2 className="font-bold tracking-tight text-gray-900 text-4xl xl:text-5xl leading-[1.08]">
+          <h2 className="font-bold tracking-tight text-white text-4xl xl:text-5xl leading-[1.08]">
             Every application,{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
+            <span className="text-brand">
               one place.
             </span>
           </h2>
 
-          <p className="mt-5 text-lg text-gray-500 leading-relaxed">
+          <p className="mt-5 text-lg text-white/80 leading-relaxed">
             Sign in to pick up exactly where you left off. Your tracked
             applications are waiting.
           </p>
@@ -76,7 +56,7 @@ export default function AuthPage() {
                 <span className="text-[#0bbcaa] text-lg leading-none">
                   {item.icon}
                 </span>
-                <span className="text-sm text-gray-600">{item.label}</span>
+                <span className="text-sm text-white/80">{item.label}</span>
               </div>
             ))}
           </div>
@@ -84,48 +64,26 @@ export default function AuthPage() {
       </div>
 
       {/* Right: form panel */}
-      <div className="flex-1 flex items-center justify-center px-6 lg:justify-start lg:pl-10 lg:pr-6 py-16 relative">
-        {/* Subtle background glow */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            width: "500px",
-            height: "500px",
-            background: "radial-gradient(circle, #0bbcaa 0%, transparent 70%)",
-            opacity: 0.06,
-            top: "50%",
-            right: "-10%",
-            transform: "translateY(-50%)",
-          }}
-        />
-
-        <div className="w-full max-w-sm relative z-10">
+      <div className="flex-1 flex items-center justify-center px-6 lg:justify-start lg:pl-10 lg:pr-6 py-16">
+        <div className="w-full max-w-sm">
           {/* Mobile-only badge + heading */}
           <div className="lg:hidden mb-8">
-            <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
+            <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
               <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
                 OnePlace
               </span>
             </div>
-            <h1 className="font-bold tracking-tight text-gray-900 text-3xl leading-[1.08]">
+            <h1 className="font-bold tracking-tight text-white text-3xl leading-[1.08]">
               Welcome to{" "}
-              <span
-                style={{
-                  background:
-                    "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
+              <span className="text-brand">
                 OnePlace.
               </span>
             </h1>
           </div>
 
           {/* Card */}
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
             {/* Desktop card heading */}
             <div className="hidden lg:block mb-7">
               <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">

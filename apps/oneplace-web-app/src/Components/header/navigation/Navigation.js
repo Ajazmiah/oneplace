@@ -9,7 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { login } from "@/app/lib/actions/authentication/authenticationAction";
 
-const DARK_HEADER_PATHS = ["/", "/about"];
+const DARK_HEADER_PATHS = ["/", "/about", "/signin"];
 
 function Navigation({ navigation, session, userNavigations = [] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
