@@ -1,10 +1,12 @@
 import React from "react";
 import Heading from "../ui/Heading";
+import { APP_NAME } from "@/app/lib/constants";
 
 
 function Services() {
   return (
-    <section className="bg-gray">
+    // Shadow + clip-path bleed the background to the left and right edges
+    <section className="bg-gray shadow-[0_0_0_100vmax_var(--color-gray)] [clip-path:inset(0_-100vmax)]">
       <div className="px-10 py-10 max-w-[960px] mx-auto">
         <div className="py-12">
           <div className="">
@@ -17,7 +19,7 @@ function Services() {
             <p className="text-gray-dark">
               Tailoring your resume for each job helps you stand out — but it’s
               hard to remember what you sent when interviews come weeks later.
-              Resumind keeps a record of every resume and cover letter you’ve
+              {APP_NAME} keeps a record of every resume and cover letter you’ve
               used, so you can prep with confidence
             </p>
           </div>

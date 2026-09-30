@@ -5,6 +5,7 @@ import Header from "../Components/header/Header";
 import HeaderSkeleton from "../Components/header/HeaderSkeleton";
 import Footer from "@/Components/footer/Footer";
 import { Toaster } from "@/Components/ui/sonner";
+import { APP_NAME } from "@/app/lib/constants";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "OnePlace – Track Job Applications Effortlessly",
+  title: `${APP_NAME} – Track Job Applications Effortlessly`,
   description:
     "Easily track your job applications, save resumes, cover letters, and important details—all in one place to stay organized and interview-ready.",
 };

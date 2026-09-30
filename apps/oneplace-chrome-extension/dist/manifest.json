@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
   "host_permissions": ["http://localhost:3000/*", "https://resumind-lilac.vercel.app/*"],
-  "name": "OnePlace",
+  "name": "OneSimplifyd",
   "version": "0.1.0",
   "description": "Track your job applications directly from your browser.",
   "action": {
-    "default_title": "OnePlace"
+    "default_title": "OneSimplifyd"
   },
   "permissions": ["storage", "activeTab", "tabs", "sidePanel"],
   "background": {

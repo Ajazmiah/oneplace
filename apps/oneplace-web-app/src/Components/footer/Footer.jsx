@@ -1,4 +1,5 @@
 import React from "react";
+import { APP_NAME, CONTACT_EMAIL } from "@/app/lib/constants";
 
 function Footer() {
   return (
@@ -14,7 +15,7 @@ function Footer() {
             <a href="/">
               <img
                 src="/oneplace-logo-full.svg"
-                alt="OnePlace"
+                alt={APP_NAME}
                 className="h-8 w-auto mb-3"
               />
             </a>
@@ -78,10 +79,10 @@ function Footer() {
               Connect
             </h3>
             <a
-              href="mailto:hello@oneplace.app"
+              href={`mailto:${CONTACT_EMAIL}`}
               className="text-sm text-gray-500 hover:text-[#0bbcaa] transition-colors"
             >
-              hello@oneplace.app
+              {CONTACT_EMAIL}
             </a>
             <div className="flex gap-3 mt-4">
               {[
@@ -117,7 +118,7 @@ function Footer() {
         {/* Bottom row */}
         <div className="mt-10 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-400">
-            &copy; 2026 OnePlace. All rights reserved.
+            &copy; 2026 {APP_NAME}. All rights reserved.
           </p>
           <div className="flex gap-5 text-xs text-gray-400">
             {[

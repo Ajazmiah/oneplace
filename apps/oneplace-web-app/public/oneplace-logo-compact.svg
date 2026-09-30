@@ -1,5 +1,5 @@
 <svg width="260" height="80" viewBox="0 0 260 80" xmlns="http://www.w3.org/2000/svg">
-  <title>OnePlace Logo Compact</title>
+  <title>OneSimplifyd Logo Compact</title>
   <defs>
     <style>
       .logo-text { fill: #2C2C2A; }
@@ -27,5 +27,5 @@
   <text x="74" y="50"
     font-family="system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif"
     font-size="26" font-weight="500" letter-spacing="-0.5"
-    class="logo-text">one<tspan class="logo-sub">place</tspan></text>
+    class="logo-text">one<tspan class="logo-sub">simplifyd</tspan></text>
 </svg>

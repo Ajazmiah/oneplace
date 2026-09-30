@@ -1,22 +1,15 @@
 <svg width="700" height="160" viewBox="0 0 700 160" xmlns="http://www.w3.org/2000/svg">
   <title>OneSimplifyd Logo</title>
-  <desc>OneSimplifyd full wordmark logo with icon</desc>
+  <desc>OneSimplifyd full wordmark logo with icon, for dark backgrounds</desc>
   <defs>
     <style>
-      .logo-text { fill: #000000; }
+      .logo-text { fill: #ffffff; }
       .logo-sub  { fill: #0bbcaa; }
-      .d1 { fill: #1D9E75; }
-      .d2 { fill: #0F6E56; }
-      .d3 { fill: #5DCAA5; }
-      .d4 { fill: #085041; }
-      .d5 { fill: #9FE1CB; }
-      @media (prefers-color-scheme: dark) {
-        .d1 { fill: #1D9E75; }
-        .d2 { fill: #5DCAA5; }
-        .d3 { fill: #0F6E56; }
-        .d4 { fill: #9FE1CB; }
-        .d5 { fill: #085041; }
-      }
+      .d1 { fill: #5DCAA5; }
+      .d2 { fill: #9FE1CB; }
+      .d3 { fill: #1D9E75; }
+      .d4 { fill: #9FE1CB; }
+      .d5 { fill: #5DCAA5; }
     </style>
   </defs>
   <!-- Icon -->
