@@ -1,5 +1,5 @@
 import React from "react";
-import { APP_NAME } from "@/app/lib/constants";
+import { APP_NAME, CONTACT_EMAIL } from "@/app/lib/constants";
 
 function Footer() {
   return (
@@ -79,10 +79,10 @@ function Footer() {
               Connect
             </h3>
             <a
-              href="mailto:hello@oneplace.app"
+              href={`mailto:${CONTACT_EMAIL}`}
               className="text-sm text-gray-500 hover:text-[#0bbcaa] transition-colors"
             >
-              hello@oneplace.app
+              {CONTACT_EMAIL}
             </a>
             <div className="flex gap-3 mt-4">
               {[
