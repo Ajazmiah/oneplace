@@ -4,7 +4,8 @@ import Heading from "../ui/Heading";
 
 function Services() {
   return (
-    <section className="bg-gray">
+    // Shadow + clip-path bleed the background to the left and right edges
+    <section className="bg-gray shadow-[0_0_0_100vmax_var(--color-gray)] [clip-path:inset(0_-100vmax)]">
       <div className="px-10 py-10 max-w-[960px] mx-auto">
         <div className="py-12">
           <div className="">
