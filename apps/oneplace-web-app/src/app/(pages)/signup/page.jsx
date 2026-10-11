@@ -172,24 +172,15 @@ export default function SignupPage() {
           <div className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8">
             {/* Desktop card heading */}
             <div className="hidden lg:block mb-7">
-              <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">
-                Create account
-              </p>
               <h3 className="font-bold text-gray-900 text-2xl tracking-tight">
                 Get started free
               </h3>
-              <p className="text-sm text-gray-500 mt-1">
-                Begin your job search journey today
-              </p>
             </div>
 
             {/* TEMP: email/password sign-up disabled until credentials auth is implemented.
                 Sign-up currently happens via Google/GitHub on the sign-in page.
                 To restore, remove this block and the `false && (` wrapper below. */}
             <div className="space-y-3">
-              <p className="text-sm text-gray-500 text-center">
-                Create your account instantly with Google or GitHub.
-              </p>
               <Link
                 href="/signin"
                 className="block w-full bg-[#0bbcaa] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#09a898] transition-colors text-center"
