@@ -4,6 +4,8 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { signup } from "./app/lib/actions/authentication/signupAction";
 import { getUserByEmail } from "./app/lib/utils/databaseUtils";
+import { AGE_COOKIE, verifyAgeToken } from "./app/lib/utils/ageVerification";
+import { cookies } from "next/headers";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: process.env.NODE_ENV === "development",
@@ -26,16 +28,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
       try {
         const existingUser = await getUserByEmail(user.email);
 
         if (!existingUser) {
+          // New accounts require the signed 18+ cookie set on /confirm-age.
+          // Without it, ask for the age; that page restarts this sign-in.
+          const cookieStore = await cookies();
+          if (!verifyAgeToken(cookieStore.get(AGE_COOKIE)?.value)) {
+            return `/confirm-age?provider=${account.provider}`;
+          }
+
           const authUser = {
             name: user.name,
             email: user.email,
           };
           await signup({ authUser });
+          cookieStore.delete(AGE_COOKIE);
         }
 
         return true;
