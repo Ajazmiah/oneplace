@@ -138,7 +138,7 @@ export default function AuthPage() {
 
             {/* OAuth providers */}
             <p className="text-sm text-gray-500 mb-4 text-center">
-              Continue with Google or GitHub to sign in or create an account.
+              Continue with Google or GitHub.
             </p>
             <div className="space-y-2.5">
               {providers &&
