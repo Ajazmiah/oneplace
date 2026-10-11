@@ -149,7 +149,8 @@ const faqJsonLd = {
 
 export default function PricingPage() {
   return (
-    <div className="relative overflow-hidden">
+    // -mt-6 cancels the layout's space-y-6 so the hero sits flush under the header
+    <div className="-mt-6">
       {/* TEMPORARY: work-in-progress popup for pricing/payments — remove when billing is live */}
       <WorkInProgressNotice />
 
@@ -163,41 +164,30 @@ export default function PricingPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      {/* Background teal glow */}
-      <div
-        className="pointer-events-none absolute"
-        style={{
-          width: "800px",
-          height: "800px",
-          background: "radial-gradient(circle, #0bbcaa 0%, transparent 70%)",
-          opacity: 0.06,
-          top: "-10%",
-          right: "-15%",
-        }}
-      />
-
-      <div className="relative z-10 mx-auto max-w-5xl px-6 py-24 sm:py-32">
-        {/* Header */}
-        <header className="mx-auto max-w-2xl text-center">
+      {/* Shadow + clip-path bleed the background to the left and right edges */}
+      <header className="bg-[#085041] text-white shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
+        <div className="mx-auto max-w-2xl px-6 py-24 text-center sm:py-32">
           <div className="mb-8 flex justify-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/5 px-3.5 py-1.5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5">
               <span className="size-1.5 animate-pulse rounded-full bg-brand" />
               <span className="text-xs font-semibold uppercase tracking-widest text-brand">
                 Pricing
               </span>
             </div>
           </div>
-          <h1 className="text-4xl font-bold leading-[1.08] tracking-tight text-gray-900 sm:text-5xl">
+          <h1 className="text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl">
             Simple pricing for every job search
           </h1>
-          <p className="mt-6 text-lg text-gray-500">
+          <p className="mt-6 text-lg text-white/80">
             Start free and upgrade when you&apos;re ready. No hidden fees, cancel
             anytime.
           </p>
-        </header>
+        </div>
+      </header>
 
+      <div className="mx-auto max-w-5xl px-6 py-16 sm:py-24">
         {/* Plans */}
-        <section className="mt-16" aria-label="Pricing plans">
+        <section aria-label="Pricing plans">
           <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-3">
             {plans.map((plan) => (
               <div
