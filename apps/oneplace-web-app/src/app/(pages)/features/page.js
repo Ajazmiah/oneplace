@@ -186,7 +186,7 @@ export default function FeaturesPage() {
             </Link>
             <Link
               href="/pricing"
-              className="rounded-xl bg-brand/10 px-5 py-2.5 text-sm font-medium text-brand transition-colors hover:bg-brand/20"
+              className="rounded-xl bg-brand/10 px-5 py-2.5 text-sm font-medium text-brand-strong transition-colors hover:bg-brand/20"
             >
               See pricing
             </Link>

@@ -78,7 +78,7 @@ export default function Sidebar() {
             onClick={() => setDesktopExpanded((v) => !v)}
             aria-label={desktopExpanded ? "Collapse sidebar" : "Expand sidebar"}
             aria-expanded={desktopExpanded}
-            className="hidden lg:flex items-center justify-center w-full mb-2 text-slate-500 hover:text-brand bg-[#FBF8F3] transition-colors p-2 rounded-lg"
+            className="hidden lg:flex items-center justify-center w-full mb-2 text-slate-500 hover:text-brand-strong bg-[#FBF8F3] transition-colors p-2 rounded-lg"
           >
             <ChevronRight
               className={cn(

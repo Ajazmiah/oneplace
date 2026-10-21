@@ -37,7 +37,7 @@ function Application({ filteredApplications }) {
                 <Briefcase className="h-4 w-4" />
               </div>
               <div>
-                <p className="font-semibold text-slate-800 group-hover:text-brand group-hover:underline">
+                <p className="font-semibold text-slate-800 group-hover:text-brand-strong group-hover:underline">
                   {app.jobTitle}
                 </p>
                 <p className="text-sm text-gray-500">{app.location || "—"}</p>

@@ -207,7 +207,7 @@ export default function SettingsPage() {
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/5 px-3.5 py-1.5">
           <span className="size-1.5 animate-pulse rounded-full bg-brand" />
-          <span className="text-xs font-semibold uppercase tracking-widest text-brand">
+          <span className="text-xs font-semibold uppercase tracking-widest text-brand-strong">
             Settings
           </span>
         </div>
@@ -244,7 +244,7 @@ export default function SettingsPage() {
                       type="button"
                       onClick={() => toggleEditField(name)}
                       aria-label={`Edit ${label}`}
-                      className="text-gray-400 hover:text-brand transition-colors"
+                      className="text-gray-400 hover:text-brand-strong transition-colors"
                     >
                       <Pencil className="h-4 w-4" />
                     </button>
@@ -272,7 +272,7 @@ export default function SettingsPage() {
 
           <div
             onClick={() => setOpen(true)}
-            className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-400 hover:border-[#0bbcaa] hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-all duration-200"
+            className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-400 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-all duration-200"
           >
             + Add another link
           </div>

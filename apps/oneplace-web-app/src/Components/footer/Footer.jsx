@@ -40,7 +40,7 @@ function Footer() {
                 <li key={label}>
                   <a
                     href={href}
-                    className="text-gray-500 hover:text-[#0bbcaa] transition-colors"
+                    className="text-gray-500 hover:text-brand-strong transition-colors"
                   >
                     {label}
                   </a>
@@ -64,7 +64,7 @@ function Footer() {
                 <li key={label}>
                   <a
                     href={href}
-                    className="text-gray-500 hover:text-[#0bbcaa] transition-colors"
+                    className="text-gray-500 hover:text-brand-strong transition-colors"
                   >
                     {label}
                   </a>
@@ -80,7 +80,7 @@ function Footer() {
             </h3>
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="text-sm text-gray-500 hover:text-[#0bbcaa] transition-colors"
+              className="text-sm text-gray-500 hover:text-brand-strong transition-colors"
             >
               {CONTACT_EMAIL}
             </a>
@@ -106,7 +106,7 @@ function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:text-[#0bbcaa] hover:border-[#0bbcaa]/30 transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:text-brand-strong hover:border-[#0bbcaa]/30 transition-colors"
                 >
                   {icon}
                 </a>
@@ -129,7 +129,7 @@ function Footer() {
               <a
                 key={label}
                 href={href}
-                className="hover:text-[#0bbcaa] transition-colors"
+                className="hover:text-brand-strong transition-colors"
               >
                 {label}
               </a>

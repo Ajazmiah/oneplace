@@ -90,7 +90,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
             <button
               type="button"
               onClick={closeMenu}
-              className="-m-2.5 rounded-md p-2.5 text-gray-500 hover:text-brand transition-colors"
+              className="-m-2.5 rounded-md p-2.5 text-gray-500 hover:text-brand-strong transition-colors"
             >
               <span className="sr-only">Close menu</span>
               <XMarkIcon className="size-6 cursor-pointer" aria-hidden="true" />

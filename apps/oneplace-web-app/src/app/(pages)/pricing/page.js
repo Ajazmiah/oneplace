@@ -203,7 +203,7 @@ export default function PricingPage() {
                     {plan.name}
                   </h3>
                   {plan.badge && (
-                    <span className="rounded-full bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand">
+                    <span className="rounded-full bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand-strong">
                       {plan.badge}
                     </span>
                   )}
@@ -224,7 +224,7 @@ export default function PricingPage() {
                   className={`mt-6 block rounded-xl px-4 py-2.5 text-center text-sm font-medium transition-colors ${
                     plan.highlighted
                       ? "bg-brand-strong text-white hover:bg-brand-strong-hover"
-                      : "bg-brand/10 text-brand hover:bg-brand/20"
+                      : "bg-brand/10 text-brand-strong hover:bg-brand/20"
                   }`}
                 >
                   {plan.cta}

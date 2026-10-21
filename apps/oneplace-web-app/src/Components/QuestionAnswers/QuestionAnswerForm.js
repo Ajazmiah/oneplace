@@ -64,7 +64,7 @@ export default function QuestionAnswerForm() {
           className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4"
         >
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand/10 text-brand text-sm font-semibold flex-shrink-0">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand/10 text-brand-strong text-sm font-semibold flex-shrink-0">
               {index + 1}
             </span>
             {entries.length > 1 && (
@@ -113,7 +113,7 @@ export default function QuestionAnswerForm() {
         <button
           type="button"
           onClick={addEntry}
-          className="flex items-center justify-center gap-2 rounded-lg border border-brand/30 bg-brand/5 px-4 py-2 text-sm font-medium text-brand hover:bg-brand/10 transition-colors"
+          className="flex items-center justify-center gap-2 rounded-lg border border-brand/30 bg-brand/5 px-4 py-2 text-sm font-medium text-brand-strong hover:bg-brand/10 transition-colors"
         >
           <Plus size={15} />
           Add another question

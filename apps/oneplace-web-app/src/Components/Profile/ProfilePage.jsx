@@ -37,7 +37,7 @@ export default function ProfilePage({
         {/* Back link */}
         <Link
           href="/dashboard/applications"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-[#0bbcaa] transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-brand-strong transition-colors mb-8"
         >
           <svg
             className="w-3.5 h-3.5"
@@ -96,7 +96,7 @@ export default function ProfilePage({
             {/* Settings link — far right on desktop, below on mobile */}
             <Link
               href="/dashboard/settings"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:border-[#0bbcaa] hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-colors"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-colors"
             >
               <svg
                 className="w-4 h-4 flex-shrink-0"
@@ -153,7 +153,7 @@ export default function ProfilePage({
 
             <Link
               href="/dashboard/settings"
-              className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-400 hover:border-[#0bbcaa] hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-all duration-200"
+              className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-400 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-all duration-200"
             >
               + Add another link
             </Link>

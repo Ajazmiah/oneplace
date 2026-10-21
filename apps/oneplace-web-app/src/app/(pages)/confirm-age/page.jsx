@@ -63,7 +63,7 @@ function ConfirmAgeContent() {
             Something went wrong.{" "}
             <Link
               href="/signin"
-              className="text-[#0bbcaa] font-semibold hover:text-[#085041] transition-colors"
+              className="text-brand-strong font-semibold hover:text-[#085041] transition-colors"
             >
               Back to sign in →
             </Link>
@@ -117,7 +117,7 @@ function ConfirmAgeContent() {
             <p className="text-xs text-gray-400 mt-6 text-center">
               <Link
                 href="/"
-                className="text-[#0bbcaa] font-semibold hover:text-[#085041] transition-colors"
+                className="text-brand-strong font-semibold hover:text-[#085041] transition-colors"
               >
                 Cancel
               </Link>

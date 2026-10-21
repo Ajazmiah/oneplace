@@ -5,7 +5,7 @@ import { logout } from "@/app/lib/actions/authentication/authenticationAction";
 import { notifyExtension } from "@/app/lib/utils/notifyExtension";
 
 const itemClass =
-  "flex items-center cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-600 gap-3 focus:bg-[#0bbcaa]/5 focus:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 hover:text-[#0bbcaa] transition-colors";
+  "flex items-center cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-600 gap-3 focus:bg-[#0bbcaa]/5 focus:text-brand-strong hover:bg-[#0bbcaa]/5 hover:text-brand-strong transition-colors";
 
 const iconClass = "w-4 h-4 flex-shrink-0";
 

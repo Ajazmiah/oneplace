@@ -152,7 +152,7 @@ function ApplicationForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2 flex flex-col gap-1">
                 <label className="text-xs font-medium text-gray-600">
-                  Job Title <span className="text-[#0bbcaa]">*</span>
+                  Job Title <span className="text-brand-strong">*</span>
                 </label>
                 <Input
                   name="jobTitle"
@@ -166,7 +166,7 @@ function ApplicationForm() {
 
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-gray-600">
-                  Company <span className="text-[#0bbcaa]">*</span>
+                  Company <span className="text-brand-strong">*</span>
                 </label>
                 <Input
                   name="company"

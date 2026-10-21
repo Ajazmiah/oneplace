@@ -89,7 +89,7 @@ function About() {
             Built by someone who&apos;s been there — applying, tailoring, and
             forgetting. {APP_NAME} is the tool I wish I had when job hunting.
           </p>
-          <footer className="mt-3 text-sm font-semibold text-[#0bbcaa]">
+          <footer className="mt-3 text-sm font-semibold text-brand-strong">
             — The {APP_NAME} Team
           </footer>
         </blockquote>
