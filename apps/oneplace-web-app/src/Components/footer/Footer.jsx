@@ -27,7 +27,7 @@ function Footer() {
 
           {/* Product */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Product
             </h3>
             <ul className="space-y-2.5 text-sm">
@@ -51,7 +51,7 @@ function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Resources
             </h3>
             <ul className="space-y-2.5 text-sm">
@@ -75,7 +75,7 @@ function Footer() {
 
           {/* Connect */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Connect
             </h3>
             <a
@@ -106,7 +106,7 @@ function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:text-brand-strong hover:border-[#0bbcaa]/30 transition-colors"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:text-brand-strong hover:border-[#0bbcaa]/30 transition-colors"
                 >
                   {icon}
                 </a>
@@ -117,10 +117,10 @@ function Footer() {
 
         {/* Bottom row */}
         <div className="mt-10 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500">
             &copy; 2026 {APP_NAME}. All rights reserved.
           </p>
-          <div className="flex gap-5 text-xs text-gray-400">
+          <div className="flex gap-5 text-xs text-gray-500">
             {[
               { label: "Privacy Policy", href: "/privacy" },
               { label: "Terms of Service", href: "/terms" },

@@ -59,7 +59,7 @@ export function Dropdown({ session }) {
               <p className="text-sm font-semibold text-gray-900 truncate">
                 {user_name}
               </p>
-              <p className="text-xs text-gray-400 truncate">{user_email}</p>
+              <p className="text-xs text-gray-500 truncate">{user_email}</p>
             </div>
           </div>
 

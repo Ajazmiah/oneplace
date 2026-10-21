@@ -16,7 +16,7 @@ function Services() {
               noTrim
               size={2}
             />
-            <p className="text-gray-dark">
+            <p className="text-gray-600">
               Tailoring your resume for each job helps you stand out — but it’s
               hard to remember what you sent when interviews come weeks later.
               {APP_NAME} keeps a record of every resume and cover letter you’ve
@@ -29,7 +29,7 @@ function Services() {
               <span className="text-2xl font-bold text-brand-strong">
                 How it works video
               </span>
-              <span className="text-gray-dark">Coming soon</span>
+              <span className="text-gray-500">Coming soon</span>
             </div>
           </div>
         </div>

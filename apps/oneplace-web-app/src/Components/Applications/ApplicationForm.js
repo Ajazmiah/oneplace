@@ -146,7 +146,7 @@ function ApplicationForm() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Section: Role details */}
           <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Role details
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -245,7 +245,7 @@ function ApplicationForm() {
 
           {/* Section: Notes */}
           <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Notes
             </p>
             <Textarea
@@ -262,7 +262,7 @@ function ApplicationForm() {
 
           {/* Section: Documents */}
           <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Documents
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -292,7 +292,7 @@ function ApplicationForm() {
                           )}
                           <ChevronDown aria-hidden="true" className="w-3.5 h-3.5 text-gray-400" />
                         </span>
-                        <span className="block text-xs text-gray-400 mt-0.5">
+                        <span className="block text-xs text-gray-500 mt-0.5">
                           {isDefaultLoading && !resume
                             ? ""
                             : !resume
@@ -333,7 +333,7 @@ function ApplicationForm() {
                     onClick={() => {
                       setResume(null);
                     }}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
+                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -364,7 +364,7 @@ function ApplicationForm() {
                   <p className="text-sm font-medium text-gray-700">
                     {coverLetter ? coverLetter.name : "Upload Cover Letter"}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">PDF, DOC, DOCX</p>
+                  <p className="text-xs text-gray-500 mt-0.5">PDF, DOC, DOCX</p>
                 </div>
                 {coverLetter && (
                   <button
@@ -373,7 +373,7 @@ function ApplicationForm() {
                       e.preventDefault();
                       setCoverLetter(null);
                     }}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
+                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
                     <X className="w-3 h-3" />
                   </button>

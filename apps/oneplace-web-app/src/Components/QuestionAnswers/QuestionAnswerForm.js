@@ -71,7 +71,7 @@ export default function QuestionAnswerForm() {
               <button
                 type="button"
                 onClick={() => removeEntry(index)}
-                className="text-gray-400 hover:text-red-500 transition-colors"
+                className="text-gray-500 hover:text-red-500 transition-colors"
                 aria-label="Remove question"
               >
                 <Trash2 size={16} />

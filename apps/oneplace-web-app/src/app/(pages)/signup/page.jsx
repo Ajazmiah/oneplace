@@ -114,14 +114,14 @@ export default function SignupPage() {
               <span className="text-2xl font-bold text-gray-900 leading-none">
                 500+
               </span>
-              <span className="text-xs text-gray-400 mt-1">apps tracked</span>
+              <span className="text-xs text-gray-500 mt-1">apps tracked</span>
             </div>
             <div className="w-px h-10 bg-gray-200" />
             <div className="flex flex-col">
               <span className="text-2xl font-bold text-gray-900 leading-none">
                 Free
               </span>
-              <span className="text-xs text-gray-400 mt-1">forever</span>
+              <span className="text-xs text-gray-500 mt-1">forever</span>
             </div>
           </div>
         </div>
@@ -249,7 +249,7 @@ export default function SignupPage() {
             )}
 
             {/* Footer link */}
-            <p className="text-xs text-gray-400 mt-6 text-center">
+            <p className="text-xs text-gray-500 mt-6 text-center">
               Already have an account?{" "}
               <Link
                 href="/signin"

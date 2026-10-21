@@ -221,7 +221,7 @@ export default function SettingsPage() {
 
       {/* Social media card */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
-        <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+        <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
           Social profiles
         </p>
         <div className="grid grid-cols-1 gap-4">
@@ -244,7 +244,7 @@ export default function SettingsPage() {
                       type="button"
                       onClick={() => toggleEditField(name)}
                       aria-label={`Edit ${label}`}
-                      className="text-gray-400 hover:text-brand-strong transition-colors"
+                      className="text-gray-500 hover:text-brand-strong transition-colors"
                     >
                       <Pencil className="h-4 w-4" />
                     </button>
@@ -252,7 +252,7 @@ export default function SettingsPage() {
                       type="button"
                       onClick={() => handleDeleteLink(name)}
                       aria-label={`Delete ${label}`}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
+                      className="text-gray-500 hover:text-red-500 transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -272,7 +272,7 @@ export default function SettingsPage() {
 
           <div
             onClick={() => setOpen(true)}
-            className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-400 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-all duration-200"
+            className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-500 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-all duration-200"
           >
             + Add another link
           </div>

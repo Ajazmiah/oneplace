@@ -87,7 +87,7 @@ export default function AuthPage() {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             {/* Desktop card heading */}
             <div className="hidden lg:block mb-7">
-              <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">
+              <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">
                 Sign in
               </p>
               <h3 className="font-bold text-gray-900 text-2xl tracking-tight">
@@ -128,7 +128,7 @@ export default function AuthPage() {
                 {/* Divider */}
                 <div className="my-5 flex items-center gap-3">
                   <div className="flex-1 h-px bg-gray-100" />
-                  <span className="text-xs text-gray-400 font-medium tracking-wide">
+                  <span className="text-xs text-gray-500 font-medium tracking-wide">
                     or continue with
                   </span>
                   <div className="flex-1 h-px bg-gray-100" />
