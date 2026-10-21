@@ -330,12 +330,13 @@ function ApplicationForm() {
                 {resume && (
                   <button
                     type="button"
+                    aria-label="Remove resume"
                     onClick={() => {
                       setResume(null);
                     }}
                     className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-3 h-3" aria-hidden="true" />
                   </button>
                 )}
 
@@ -369,13 +370,14 @@ function ApplicationForm() {
                 {coverLetter && (
                   <button
                     type="button"
+                    aria-label="Remove cover letter"
                     onClick={(e) => {
                       e.preventDefault();
                       setCoverLetter(null);
                     }}
                     className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-3 h-3" aria-hidden="true" />
                   </button>
                 )}
                 <input
