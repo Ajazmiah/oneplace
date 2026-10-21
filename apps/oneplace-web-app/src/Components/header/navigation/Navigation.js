@@ -10,7 +10,7 @@ import { login } from "@/app/lib/actions/authentication/authenticationAction";
 import { APP_NAME } from "@/app/lib/constants";
 
 const itemClass =
-  "cursor-pointer rounded-xl px-3 py-2.5 text-sm gap-3 transition-colors text-white/85 hover:bg-white/10 hover:text-brand focus:bg-white/10 focus:text-brand";
+  "cursor-pointer rounded-xl px-3 py-2.5 text-sm gap-3 transition-colors text-white/85 hover:bg-white/10 hover:text-brand-bright focus:bg-white/10 focus:text-brand-bright";
 
 function Navigation({ navigation, session, userNavigations = [] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -57,7 +57,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(true)}
-          className="-m-2.5 rounded-md p-2.5 text-white hover:text-[#0bbcaa] transition-colors lg:hidden"
+          className="-m-2.5 rounded-md p-2.5 text-white hover:text-brand-bright transition-colors lg:hidden"
         >
           <span className="sr-only">Open menu</span>
           <Bars3Icon className="size-6" aria-hidden="true" />

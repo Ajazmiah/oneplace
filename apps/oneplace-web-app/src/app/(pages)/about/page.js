@@ -12,7 +12,7 @@ function About() {
           <div className="flex justify-center mb-10">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
               <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-brand">
+              <span className="text-xs font-semibold tracking-widest uppercase text-brand-bright">
                 Our story
               </span>
             </div>

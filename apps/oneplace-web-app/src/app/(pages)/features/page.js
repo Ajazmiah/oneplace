@@ -130,7 +130,7 @@ export default function FeaturesPage() {
           <div className="mb-8 flex justify-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3.5 py-1.5">
               <span className="size-1.5 animate-pulse rounded-full bg-brand" />
-              <span className="text-xs font-semibold uppercase tracking-widest text-brand">
+              <span className="text-xs font-semibold uppercase tracking-widest text-brand-bright">
                 Features
               </span>
             </div>

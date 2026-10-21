@@ -62,7 +62,7 @@ export default function Example() {
               </a>
               <a
                 href="#services"
-                className="text-sm font-semibold text-white/80 hover:text-brand transition-colors"
+                className="text-sm font-semibold text-white/80 hover:text-brand-bright transition-colors"
               >
                 See how it works
               </a>

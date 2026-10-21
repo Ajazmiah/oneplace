@@ -16,7 +16,7 @@
      so keep it for borders, tints, icons and decoration only. */
   --color-brand-strong: #087e73; /* 4.95:1 on white */
   --color-brand-strong-hover: #066b62; /* 6.39:1 on white */
-  --color-brand-bright: #2dd4bf; /* 5.05:1 on the #085041 green */
+  --color-brand-bright: #5eead4; /* 6.35:1 on the #085041 green, 4.83:1 on its white/10 hover tint */
 
   /* ── App chrome ─────────────────────────────────── */
   --color-sidebar-bg: #0f172a;
