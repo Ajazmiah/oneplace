@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 
-import { Search, Download, Plus, ChevronsUpDown, ListFilter } from "lucide-react";
+import { Search, Plus, ChevronsUpDown, ListFilter } from "lucide-react";
 import StatusCard from "./StatusCard";
 import Application from "./Application";
 import Pagination from "../Pagination/Pagination";
@@ -105,9 +105,17 @@ export default function ApplicationTable({ applications }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" className="bg-white">
-            <Download className="h-4 w-4" />
+          {/* TODO: hidden until download/export is implemented — a button that
+              does nothing confuses users, especially screen reader users.
+          <Button
+            variant="outline"
+            size="icon"
+            className="bg-white"
+            aria-label="Download applications"
+          >
+            <Download className="h-4 w-4" aria-hidden="true" />
           </Button>
+          */}
           <Button asChild className="bg-slate-900 hover:bg-slate-800">
             <Link href="/dashboard/add-application">
               <Plus className="h-4 w-4" />
