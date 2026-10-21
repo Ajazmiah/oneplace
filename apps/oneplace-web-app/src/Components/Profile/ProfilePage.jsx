@@ -65,11 +65,11 @@ export default function ProfilePage({
                 {image ? (
                   <img
                     src={image}
-                    alt={name}
+                    alt=""
                     className="w-20 h-20 rounded-2xl object-cover shadow-lg"
                   />
                 ) : (
-                  <div
+                  <div aria-hidden="true"
                     className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg"
                     style={{
                       background:

@@ -54,12 +54,12 @@ function UserNavigation({ session, userNavigations = [], onNavigate }) {
           {user?.image ? (
             <img
               src={user.image}
-              alt={user?.name || "User"}
+              alt=""
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
             />
           ) : (
-            <div
+            <div aria-hidden="true"
               className="w-full h-full flex items-center justify-center text-white text-sm font-bold"
               style={{
                 background: "linear-gradient(135deg, #0bbcaa 0%, #085041 100%)",

@@ -39,12 +39,12 @@ export function Dropdown({ session }) {
               {user_image ? (
                 <img
                   src={user_image}
-                  alt={user_name}
+                  alt=""
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div
+                <div aria-hidden="true"
                   className="w-full h-full flex items-center justify-center text-white text-sm font-bold"
                   style={{
                     background:
