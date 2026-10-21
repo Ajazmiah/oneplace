@@ -82,16 +82,29 @@ export default function ApplicationTable({ applications }) {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative w-full max-w-sm">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+            <Search
+              className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400"
+              aria-hidden="true"
+            />
+            {/* Placeholders aren't labels: screen readers need aria-label */}
             <Input
+              type="search"
+              aria-label="Search applications by job title or company"
               placeholder="Search by job title or company..."
               className="pl-8 bg-white"
               onChange={(e) => setFilterQuery(e.target.value)}
             />
           </div>
 
-          <Select onValueChange={(value) => setFilterByStatus(value)}>
-            <SelectTrigger className="w-[180px] bg-white">
+          {/* Controlled so it stays in sync when a status card sets the filter */}
+          <Select
+            value={filterByStatus}
+            onValueChange={(value) => setFilterByStatus(value)}
+          >
+            <SelectTrigger
+              aria-label="Filter applications by status"
+              className="w-[180px] bg-white"
+            >
               <SelectValue placeholder="All" />
             </SelectTrigger>
             <SelectContent>
