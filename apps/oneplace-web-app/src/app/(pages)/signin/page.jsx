@@ -34,12 +34,12 @@ export default function AuthPage() {
             </span>
           </div>
 
-          <h2 className="font-bold tracking-tight text-white text-4xl xl:text-5xl leading-[1.08]">
+          <h1 className="font-bold tracking-tight text-white text-4xl xl:text-5xl leading-[1.08]">
             Every application,{" "}
             <span className="text-brand">
               one place.
             </span>
-          </h2>
+          </h1>
 
           <p className="mt-5 text-lg text-white/80 leading-relaxed">
             Sign in to pick up exactly where you left off. Your tracked
@@ -90,9 +90,9 @@ export default function AuthPage() {
               <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">
                 Sign in
               </p>
-              <h3 className="font-bold text-gray-900 text-2xl tracking-tight">
+              <h2 className="font-bold text-gray-900 text-2xl tracking-tight">
                 Welcome
-              </h3>
+              </h2>
             </div>
 
             {/* TEMP: email/password sign-in disabled until credentials auth is implemented.

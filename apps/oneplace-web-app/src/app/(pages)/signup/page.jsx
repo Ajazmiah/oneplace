@@ -73,7 +73,7 @@ export default function SignupPage() {
             </span>
           </div>
 
-          <h2 className="font-bold tracking-tight text-gray-900 text-4xl xl:text-5xl leading-[1.08]">
+          <h1 className="font-bold tracking-tight text-gray-900 text-4xl xl:text-5xl leading-[1.08]">
             Your job search,{" "}
             <span
               style={{
@@ -85,7 +85,7 @@ export default function SignupPage() {
             >
               organized.
             </span>
-          </h2>
+          </h1>
 
           <p className="mt-5 text-lg text-gray-500 leading-relaxed">
             Create your free account and start tracking every application,
@@ -172,9 +172,9 @@ export default function SignupPage() {
           <div className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8">
             {/* Desktop card heading */}
             <div className="hidden lg:block mb-7">
-              <h3 className="font-bold text-gray-900 text-2xl tracking-tight">
+              <h2 className="font-bold text-gray-900 text-2xl tracking-tight">
                 Get started free
-              </h3>
+              </h2>
             </div>
 
             {/* TEMP: email/password sign-up disabled until credentials auth is implemented.

@@ -199,9 +199,9 @@ export default function PricingPage() {
                 }`}
               >
                 <div className="flex items-center justify-between gap-x-4">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h2 className="text-lg font-semibold text-gray-900">
                     {plan.name}
-                  </h3>
+                  </h2>
                   {plan.badge && (
                     <span className="rounded-full bg-brand/10 px-2.5 py-1 text-xs font-semibold text-brand-strong">
                       {plan.badge}

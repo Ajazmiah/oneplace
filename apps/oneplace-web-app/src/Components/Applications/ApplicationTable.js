@@ -68,6 +68,9 @@ export default function ApplicationTable({ applications }) {
 
   return (
     <div className="rounded-2xl p-6 space-y-6">
+      {/* Page title for screen readers; the page has no visible heading */}
+      <h1 className="sr-only">Applications</h1>
+
       {/* Cards [applications , interviewing, offered , rejected] */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-white">
         <StatusCard

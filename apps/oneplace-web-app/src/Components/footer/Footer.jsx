@@ -27,9 +27,9 @@ function Footer() {
 
           {/* Product */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
+            <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Product
-            </h3>
+            </h2>
             <ul className="space-y-2.5 text-sm">
               {[
                 { label: "Features", href: "/features" },
@@ -51,9 +51,9 @@ function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
+            <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Resources
-            </h3>
+            </h2>
             <ul className="space-y-2.5 text-sm">
               {[
                 { label: "About", href: "/about" },
@@ -75,9 +75,9 @@ function Footer() {
 
           {/* Connect */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
+            <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Connect
-            </h3>
+            </h2>
             <a
               href={`mailto:${CONTACT_EMAIL}`}
               className="text-sm text-gray-500 hover:text-brand-strong transition-colors"
