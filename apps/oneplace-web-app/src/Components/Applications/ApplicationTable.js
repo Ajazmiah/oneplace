@@ -73,6 +73,7 @@ export default function ApplicationTable({ applications }) {
         <StatusCard
           applications={applications}
           applicationStatus={applicationStatus}
+          filterByStatus={filterByStatus}
           setFilterByStatus={setFilterByStatus}
         />
       </div>

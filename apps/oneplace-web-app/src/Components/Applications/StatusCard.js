@@ -39,7 +39,12 @@ const stats = [
   },
 ];
 
-function StatusCard({ applicationStatus, applications, setFilterByStatus }) {
+function StatusCard({
+  applicationStatus,
+  applications,
+  filterByStatus,
+  setFilterByStatus,
+}) {
   const values = {
     all: applications.length,
     interviewing: applicationStatus.interviewing,
@@ -50,19 +55,23 @@ function StatusCard({ applicationStatus, applications, setFilterByStatus }) {
   return (
     <>
       {stats.map(({ key, label, icon: Icon, color, bg, border, hoverBg }) => (
-        <div
+        // A real button so the filter works with Tab + Enter/Space;
+        // aria-pressed tells screen readers which filter is on
+        <button
           key={key}
+          type="button"
           onClick={() => setFilterByStatus(key)}
-          className={`bg-white rounded-xl border ${border} p-5 flex items-center gap-4 shadow-sm cursor-pointer transition-colors ${hoverBg}`}
+          aria-pressed={filterByStatus === key}
+          className={`bg-white rounded-xl border ${border} p-5 flex items-center gap-4 shadow-sm cursor-pointer text-left transition-colors ${hoverBg} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400`}
         >
-          <div className={`${bg} ${color} rounded-lg p-2.5 flex-shrink-0`}>
-            <Icon className="h-5 w-5" />
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-slate-800 leading-none">{values[key]}</p>
-            <p className="text-xs text-slate-500 mt-1">{label}</p>
-          </div>
-        </div>
+          <span className={`${bg} ${color} rounded-lg p-2.5 flex-shrink-0`}>
+            <Icon className="h-5 w-5" aria-hidden="true" />
+          </span>
+          <span>
+            <span className="block text-2xl font-bold text-slate-800 leading-none">{values[key]}</span>
+            <span className="block text-xs text-slate-500 mt-1">{label}</span>
+          </span>
+        </button>
       ))}
     </>
   );
