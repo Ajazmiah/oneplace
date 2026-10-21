@@ -122,7 +122,7 @@ export default function QuestionAnswerForm() {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors sm:ml-auto"
+          className="flex items-center justify-center gap-2 rounded-lg bg-brand-strong px-5 py-2 text-sm font-medium text-white hover:bg-brand-strong-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors sm:ml-auto"
         >
           {loading ? (
             <>

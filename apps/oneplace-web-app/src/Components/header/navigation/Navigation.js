@@ -128,7 +128,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
                   closeMenu();
                   login();
                 }}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-main px-3 py-2.5 text-sm font-semibold text-white shadow-inner shadow-white/10 hover:bg-main-light transition-colors"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand-strong px-3 py-2.5 text-sm font-semibold text-white shadow-inner shadow-white/10 hover:bg-brand-strong-hover transition-colors"
               >
                 Sign In
               </button>

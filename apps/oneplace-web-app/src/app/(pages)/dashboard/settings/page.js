@@ -282,7 +282,7 @@ export default function SettingsPage() {
           <button
             onClick={handleSave}
             type="button"
-            className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors"
+            className="rounded-lg bg-brand-strong px-6 py-3 text-sm font-semibold text-white hover:bg-brand-strong-hover transition-colors"
           >
             Save changes
           </button>

@@ -27,7 +27,7 @@ export default function Sidebar() {
         aria-label="Open menu"
         className={cn(
           "fixed left-0 top-1/2 -translate-y-1/2 z-40 lg:hidden",
-          "bg-brand text-white rounded-r-xl px-1.5 py-4 shadow-lg",
+          "bg-brand-strong text-white rounded-r-xl px-1.5 py-4 shadow-lg",
           "flex flex-col items-center gap-1.5 transition-transform duration-300",
           mobileOpen ? "-translate-x-full" : "translate-x-0"
         )}

@@ -108,7 +108,7 @@ function ConfirmAgeContent() {
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full bg-[#0bbcaa] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#09a898] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-brand-strong text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-strong-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isPending ? "Continuing…" : "Continue"}
               </button>

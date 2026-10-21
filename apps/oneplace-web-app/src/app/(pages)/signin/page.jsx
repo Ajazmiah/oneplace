@@ -119,7 +119,7 @@ export default function AuthPage() {
                   />
                   <button
                     type="submit"
-                    className="w-full bg-main text-white py-3 rounded-lg text-sm font-semibold hover:bg-main-light transition-colors"
+                    className="w-full bg-brand-strong text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-strong-hover transition-colors"
                   >
                     Sign in
                   </button>

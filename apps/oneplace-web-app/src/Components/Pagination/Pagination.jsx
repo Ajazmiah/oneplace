@@ -24,7 +24,7 @@ function Pagination({
           onClick={() => setCurrentPage(page)}
           className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
             page === currentPage
-              ? "bg-[#0bbcaa] text-white"
+              ? "bg-brand-strong text-white"
               : "border border-gray-200 text-gray-600 hover:border-[#0bbcaa] hover:text-[#0bbcaa]"
           }`}
         >

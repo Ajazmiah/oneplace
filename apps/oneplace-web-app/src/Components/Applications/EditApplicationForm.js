@@ -352,7 +352,7 @@ function EditApplicationForm({ application }) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="rounded-lg bg-brand-strong px-6 py-3 text-sm font-semibold text-white hover:bg-brand-strong-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Saving..." : "Save Changes →"}
             </button>

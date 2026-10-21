@@ -12,6 +12,11 @@
   /* ── Brand ──────────────────────────────────────── */
   --color-brand: #0bbcaa;
   --color-brand-light: #0bbcaaab;
+  /* Readable teal: use for text and solid buttons. #0bbcaa is 2.4:1 on white,
+     so keep it for borders, tints, icons and decoration only. */
+  --color-brand-strong: #087e73; /* 4.95:1 on white */
+  --color-brand-strong-hover: #066b62; /* 6.39:1 on white */
+  --color-brand-bright: #2dd4bf; /* 5.05:1 on the #085041 green */
 
   /* ── App chrome ─────────────────────────────────── */
   --color-sidebar-bg: #0f172a;

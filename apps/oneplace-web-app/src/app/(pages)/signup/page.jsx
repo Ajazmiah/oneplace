@@ -183,7 +183,7 @@ export default function SignupPage() {
             <div className="space-y-3">
               <Link
                 href="/signin"
-                className="block w-full bg-[#0bbcaa] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#09a898] transition-colors text-center"
+                className="block w-full bg-brand-strong text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-strong-hover transition-colors text-center"
               >
                 Continue to sign up
               </Link>
@@ -240,7 +240,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#0bbcaa] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#09a898] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-brand-strong text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-strong-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading ? "Creating account…" : "Create Account"}
               </button>

@@ -223,7 +223,7 @@ export default function PricingPage() {
                   href={plan.href}
                   className={`mt-6 block rounded-xl px-4 py-2.5 text-center text-sm font-medium transition-colors ${
                     plan.highlighted
-                      ? "bg-brand text-white hover:bg-brand/90"
+                      ? "bg-brand-strong text-white hover:bg-brand-strong-hover"
                       : "bg-brand/10 text-brand hover:bg-brand/20"
                   }`}
                 >

@@ -61,7 +61,7 @@ export default function WorkInProgressNotice() {
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="mt-6 w-full rounded-xl bg-brand px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-brand/90 cursor-pointer"
+          className="mt-6 w-full rounded-xl bg-brand-strong px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-brand-strong-hover cursor-pointer"
         >
           Got it
         </button>

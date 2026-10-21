@@ -180,7 +180,7 @@ export default function FeaturesPage() {
           <div className="mt-8 flex justify-center gap-4">
             <Link
               href="/signup"
-              className="rounded-xl bg-brand px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand/90"
+              className="rounded-xl bg-brand-strong px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-strong-hover"
             >
               Get started free
             </Link>
