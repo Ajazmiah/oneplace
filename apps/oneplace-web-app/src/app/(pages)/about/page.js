@@ -11,8 +11,8 @@ function About() {
           {/* Badge */}
           <div className="flex justify-center mb-10">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
-              <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-brand">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand motion-safe:animate-pulse" />
+              <span className="text-xs font-semibold tracking-widest uppercase text-brand-bright">
                 Our story
               </span>
             </div>
@@ -89,7 +89,7 @@ function About() {
             Built by someone who&apos;s been there — applying, tailoring, and
             forgetting. {APP_NAME} is the tool I wish I had when job hunting.
           </p>
-          <footer className="mt-3 text-sm font-semibold text-[#0bbcaa]">
+          <footer className="mt-3 text-sm font-semibold text-brand-strong">
             — The {APP_NAME} Team
           </footer>
         </blockquote>

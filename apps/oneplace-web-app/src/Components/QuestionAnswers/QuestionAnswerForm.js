@@ -64,14 +64,14 @@ export default function QuestionAnswerForm() {
           className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4"
         >
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand/10 text-brand text-sm font-semibold flex-shrink-0">
+            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-brand/10 text-brand-strong text-sm font-semibold flex-shrink-0">
               {index + 1}
             </span>
             {entries.length > 1 && (
               <button
                 type="button"
                 onClick={() => removeEntry(index)}
-                className="text-gray-400 hover:text-red-500 transition-colors"
+                className="text-gray-500 hover:text-red-500 transition-colors"
                 aria-label="Remove question"
               >
                 <Trash2 size={16} />
@@ -113,7 +113,7 @@ export default function QuestionAnswerForm() {
         <button
           type="button"
           onClick={addEntry}
-          className="flex items-center justify-center gap-2 rounded-lg border border-brand/30 bg-brand/5 px-4 py-2 text-sm font-medium text-brand hover:bg-brand/10 transition-colors"
+          className="flex items-center justify-center gap-2 rounded-lg border border-brand/30 bg-brand/5 px-4 py-2 text-sm font-medium text-brand-strong hover:bg-brand/10 transition-colors"
         >
           <Plus size={15} />
           Add another question
@@ -122,7 +122,7 @@ export default function QuestionAnswerForm() {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center justify-center gap-2 rounded-lg bg-brand px-5 py-2 text-sm font-medium text-white hover:bg-brand/90 disabled:opacity-60 disabled:cursor-not-allowed transition-colors sm:ml-auto"
+          className="flex items-center justify-center gap-2 rounded-lg bg-brand-strong px-5 py-2 text-sm font-medium text-white hover:bg-brand-strong-hover disabled:opacity-60 disabled:cursor-not-allowed transition-colors sm:ml-auto"
         >
           {loading ? (
             <>

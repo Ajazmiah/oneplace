@@ -11,8 +11,8 @@ function LoginButton({ display, loggedIn, ...rest }) {
 
   const authText = loggedIn ? "Sign Out" : "Sign In";
   const backgroundColor = loggedIn
-    ? "bg-black data-hover:bg-gray-900"
-    : "bg-main data-hover:bg-main-light";
+    ? "bg-black text-white data-hover:bg-gray-900"
+    : "bg-[#ccf3ee] text-[#085041] data-hover:bg-white";
 
   const authFunction = loggedIn ? logout : login;
 
@@ -27,7 +27,7 @@ function LoginButton({ display, loggedIn, ...rest }) {
       <Button
         type="submit"
         onClick={authFunction}
-        className={`inline-flex items-center gap-2 rounded-md ${backgroundColor} px-3 py-1.5 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white hover:cursor-pointer`}
+        className={`inline-flex items-center gap-2 rounded-md ${backgroundColor} px-3 py-1.5 text-sm/6 font-semibold shadow-inner shadow-white/10 focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white hover:cursor-pointer`}
       >
         {authText}
       </Button>

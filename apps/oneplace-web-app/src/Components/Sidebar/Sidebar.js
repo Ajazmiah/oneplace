@@ -27,7 +27,7 @@ export default function Sidebar() {
         aria-label="Open menu"
         className={cn(
           "fixed left-0 top-1/2 -translate-y-1/2 z-40 lg:hidden",
-          "bg-brand text-white rounded-r-xl px-1.5 py-4 shadow-lg",
+          "bg-brand-strong text-white rounded-r-xl px-1.5 py-4 shadow-lg",
           "flex flex-col items-center gap-1.5 transition-transform duration-300",
           mobileOpen ? "-translate-x-full" : "translate-x-0"
         )}
@@ -78,7 +78,7 @@ export default function Sidebar() {
             onClick={() => setDesktopExpanded((v) => !v)}
             aria-label={desktopExpanded ? "Collapse sidebar" : "Expand sidebar"}
             aria-expanded={desktopExpanded}
-            className="hidden lg:flex items-center justify-center w-full mb-2 text-slate-500 hover:text-brand bg-[#FBF8F3] transition-colors p-2 rounded-lg"
+            className="hidden lg:flex items-center justify-center w-full mb-2 text-slate-500 hover:text-brand-strong bg-[#FBF8F3] transition-colors p-2 rounded-lg"
           >
             <ChevronRight
               className={cn(
@@ -98,6 +98,7 @@ export default function Sidebar() {
                   setDesktopExpanded(true);
                 }}
                 aria-label={label}
+                aria-current={isActive ? "page" : undefined}
                 title={label}
                 className={cn(
                   "sidebar-link",

@@ -146,13 +146,13 @@ function ApplicationForm() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Section: Role details */}
           <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Role details
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2 flex flex-col gap-1">
                 <label className="text-xs font-medium text-gray-600">
-                  Job Title <span className="text-[#0bbcaa]">*</span>
+                  Job Title <span className="text-brand-strong">*</span>
                 </label>
                 <Input
                   name="jobTitle"
@@ -166,7 +166,7 @@ function ApplicationForm() {
 
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-gray-600">
-                  Company <span className="text-[#0bbcaa]">*</span>
+                  Company <span className="text-brand-strong">*</span>
                 </label>
                 <Input
                   name="company"
@@ -245,7 +245,7 @@ function ApplicationForm() {
 
           {/* Section: Notes */}
           <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Notes
             </p>
             <Textarea
@@ -262,7 +262,7 @@ function ApplicationForm() {
 
           {/* Section: Documents */}
           <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4">
+            <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
               Documents
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -270,34 +270,37 @@ function ApplicationForm() {
               <div className="relative">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <div
-                      className={`flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors select-none ${
+                    {/* A real button so the resume menu opens with Tab + Enter/Space */}
+                    <button
+                      type="button"
+                      className={`w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0bbcaa]/40 ${
                         resume || defaultResume
                           ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
                           : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
                       }`}
                     >
                       <FileText
+                        aria-hidden="true"
                         className={`w-6 h-6 ${resume || defaultResume ? "text-[#0bbcaa]" : "text-gray-400"}`}
                       />
-                      <div>
-                        <p className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
+                      <span className="block">
+                        <span className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
                           {isDefaultLoading && !resume ? (
-                            <span className="h-4 w-28 rounded bg-gray-100 animate-pulse" />
+                            <span className="h-4 w-28 rounded bg-gray-100 motion-safe:animate-pulse" />
                           ) : (
                             resume?.name || defaultResume?.filename
                           )}
-                          <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
-                        </p>
-                        <p className="text-xs text-gray-400 mt-0.5">
+                          <ChevronDown aria-hidden="true" className="w-3.5 h-3.5 text-gray-400" />
+                        </span>
+                        <span className="block text-xs text-gray-500 mt-0.5">
                           {isDefaultLoading && !resume
                             ? ""
                             : !resume
                               ? "Last used"
                               : "PDF, DOC, DOCX"}
-                        </p>
-                      </div>
-                    </div>
+                        </span>
+                      </span>
+                    </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="center" className="w-52">
                     {resume ? (
@@ -327,12 +330,13 @@ function ApplicationForm() {
                 {resume && (
                   <button
                     type="button"
+                    aria-label="Remove resume"
                     onClick={() => {
                       setResume(null);
                     }}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
+                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-3 h-3" aria-hidden="true" />
                   </button>
                 )}
 
@@ -348,7 +352,7 @@ function ApplicationForm() {
 
               {/* Cover Letter — plain upload */}
               <label
-                className={`relative flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors ${
+                className={`relative flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-[#0bbcaa]/40 ${
                   coverLetter
                     ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
                     : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
@@ -361,25 +365,27 @@ function ApplicationForm() {
                   <p className="text-sm font-medium text-gray-700">
                     {coverLetter ? coverLetter.name : "Upload Cover Letter"}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">PDF, DOC, DOCX</p>
+                  <p className="text-xs text-gray-500 mt-0.5">PDF, DOC, DOCX</p>
                 </div>
                 {coverLetter && (
                   <button
                     type="button"
+                    aria-label="Remove cover letter"
                     onClick={(e) => {
                       e.preventDefault();
                       setCoverLetter(null);
                     }}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 transition-colors"
+                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 transition-colors"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-3 h-3" aria-hidden="true" />
                   </button>
                 )}
                 <input
                   name="coverLetter"
                   type="file"
                   accept=".pdf,.doc,.docx"
-                  className="hidden"
+                  // sr-only, not hidden: display:none would drop it from the tab order
+                  className="sr-only"
                   onChange={handleFileUpload}
                 />
               </label>
@@ -392,7 +398,7 @@ function ApplicationForm() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-lg bg-main px-6 py-3 text-sm font-semibold text-white hover:bg-main-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="rounded-lg bg-brand-strong px-6 py-3 text-sm font-semibold text-white hover:bg-brand-strong-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isSubmitting ? "Saving..." : "Save Application →"}
             </button>

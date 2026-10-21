@@ -52,3 +52,5 @@ next-env.d.ts
 
 # claude code (personal, machine-specific settings)
 .claude/settings.local.json
+# personal session notes
+/NEXT_SESSION.md

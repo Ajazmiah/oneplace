@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 
-import { Search, Download, Plus, ChevronsUpDown, ListFilter } from "lucide-react";
+import { Search, Plus, ChevronsUpDown, ListFilter } from "lucide-react";
 import StatusCard from "./StatusCard";
 import Application from "./Application";
 import Pagination from "../Pagination/Pagination";
@@ -68,11 +68,15 @@ export default function ApplicationTable({ applications }) {
 
   return (
     <div className="rounded-2xl p-6 space-y-6">
+      {/* Page title for screen readers; the page has no visible heading */}
+      <h1 className="sr-only">Applications</h1>
+
       {/* Cards [applications , interviewing, offered , rejected] */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-white">
         <StatusCard
           applications={applications}
           applicationStatus={applicationStatus}
+          filterByStatus={filterByStatus}
           setFilterByStatus={setFilterByStatus}
         />
       </div>
@@ -81,16 +85,29 @@ export default function ApplicationTable({ applications }) {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative w-full max-w-sm">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+            <Search
+              className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400"
+              aria-hidden="true"
+            />
+            {/* Placeholders aren't labels: screen readers need aria-label */}
             <Input
+              type="search"
+              aria-label="Search applications by job title or company"
               placeholder="Search by job title or company..."
               className="pl-8 bg-white"
               onChange={(e) => setFilterQuery(e.target.value)}
             />
           </div>
 
-          <Select onValueChange={(value) => setFilterByStatus(value)}>
-            <SelectTrigger className="w-[180px] bg-white">
+          {/* Controlled so it stays in sync when a status card sets the filter */}
+          <Select
+            value={filterByStatus}
+            onValueChange={(value) => setFilterByStatus(value)}
+          >
+            <SelectTrigger
+              aria-label="Filter applications by status"
+              className="w-[180px] bg-white"
+            >
               <SelectValue placeholder="All" />
             </SelectTrigger>
             <SelectContent>
@@ -104,9 +121,17 @@ export default function ApplicationTable({ applications }) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" className="bg-white">
-            <Download className="h-4 w-4" />
+          {/* TODO: hidden until download/export is implemented — a button that
+              does nothing confuses users, especially screen reader users.
+          <Button
+            variant="outline"
+            size="icon"
+            className="bg-white"
+            aria-label="Download applications"
+          >
+            <Download className="h-4 w-4" aria-hidden="true" />
           </Button>
+          */}
           <Button asChild className="bg-slate-900 hover:bg-slate-800">
             <Link href="/dashboard/add-application">
               <Plus className="h-4 w-4" />

@@ -14,7 +14,7 @@ import { logout } from "@/app/lib/actions/authentication/authenticationAction";
 import Link from "next/link";
 
 const itemClass =
-  "cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-600 gap-3 focus:bg-[#0bbcaa]/5 focus:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 hover:text-[#0bbcaa] transition-colors";
+  "cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-600 gap-3 focus:bg-[#0bbcaa]/5 focus:text-brand-strong hover:bg-[#0bbcaa]/5 hover:text-brand-strong transition-colors";
 
 export function Dropdown({ session }) {
   const user_name = session?.user?.name;
@@ -39,12 +39,12 @@ export function Dropdown({ session }) {
               {user_image ? (
                 <img
                   src={user_image}
-                  alt={user_name}
+                  alt=""
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div
+                <div aria-hidden="true"
                   className="w-full h-full flex items-center justify-center text-white text-sm font-bold"
                   style={{
                     background:
@@ -59,7 +59,7 @@ export function Dropdown({ session }) {
               <p className="text-sm font-semibold text-gray-900 truncate">
                 {user_name}
               </p>
-              <p className="text-xs text-gray-400 truncate">{user_email}</p>
+              <p className="text-xs text-gray-500 truncate">{user_email}</p>
             </div>
           </div>
 

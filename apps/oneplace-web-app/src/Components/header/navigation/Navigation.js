@@ -6,42 +6,30 @@ import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { Dropdown } from "./DropDownMenu";
 import UserNavigation from "./UserNavigation";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { login } from "@/app/lib/actions/authentication/authenticationAction";
 import { APP_NAME } from "@/app/lib/constants";
 
-const DARK_HEADER_PATHS = ["/", "/about", "/signin"];
+const itemClass =
+  "cursor-pointer rounded-xl px-3 py-2.5 text-sm gap-3 transition-colors text-white/85 hover:bg-white/10 hover:text-brand-bright focus:bg-white/10 focus:text-brand-bright";
 
 function Navigation({ navigation, session, userNavigations = [] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const loggedIn = session?.user || null;
-  // Header blends into the dark hero on these pages
-  const isDark = DARK_HEADER_PATHS.includes(usePathname());
-
-  const itemClass = `cursor-pointer rounded-xl px-3 py-2.5 text-sm gap-3 transition-colors ${
-    isDark
-      ? "text-white/85 hover:bg-white/10 hover:text-brand focus:bg-white/10 focus:text-brand"
-      : "text-gray-600 focus:bg-[#0bbcaa]/5 focus:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 hover:text-[#0bbcaa]"
-  }`;
 
   const closeMenu = () => setMobileMenuOpen(false);
 
   return (
     <>
+      {/* Shadow + clip-path bleed the color past the layout padding to the top, left and right edges */}
       <nav
-        className={`flex items-center justify-between py-4 px-5 ${
-          isDark
-            ? // Bleed the color past the layout padding to the top, left and right edges
-              "bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(-100vmax_-100vmax_0)]"
-            : "bg-white border-b border-gray-100"
-        }`}
+        className="flex items-center justify-between py-4 px-5 bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(-100vmax_-100vmax_0)]"
         aria-label="Global"
       >
         {/* Logo */}
         <div className="flex lg:flex-1">
           <Link href="/" className="flex items-center">
             <img
-              src={isDark ? "/oneplace-logo-full-light.svg" : "/oneplace-logo-full.svg"}
+              src="/oneplace-logo-full-light.svg"
               alt={APP_NAME}
               className="h-10 w-auto"
             />
@@ -69,9 +57,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(true)}
-          className={`-m-2.5 rounded-md p-2.5 hover:text-[#0bbcaa] transition-colors lg:hidden ${
-            isDark ? "text-white" : "text-gray-600"
-          }`}
+          className="-m-2.5 rounded-md p-2.5 text-white hover:text-brand-bright transition-colors lg:hidden"
         >
           <span className="sr-only">Open menu</span>
           <Bars3Icon className="size-6" aria-hidden="true" />
@@ -79,13 +65,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
       </nav>
 
       {/* Thin teal accent line */}
-      <div
-        className={
-          isDark
-            ? "bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]"
-            : "bg-white"
-        }
-      >
+      <div className="bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
         <div className="divider-brand" />
       </div>
 
@@ -110,7 +90,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
             <button
               type="button"
               onClick={closeMenu}
-              className="-m-2.5 rounded-md p-2.5 text-gray-500 hover:text-brand transition-colors"
+              className="-m-2.5 rounded-md p-2.5 text-gray-500 hover:text-brand-strong transition-colors"
             >
               <span className="sr-only">Close menu</span>
               <XMarkIcon className="size-6 cursor-pointer" aria-hidden="true" />
@@ -148,7 +128,7 @@ function Navigation({ navigation, session, userNavigations = [] }) {
                   closeMenu();
                   login();
                 }}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-main px-3 py-2.5 text-sm font-semibold text-white shadow-inner shadow-white/10 hover:bg-main-light transition-colors"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand-strong px-3 py-2.5 text-sm font-semibold text-white shadow-inner shadow-white/10 hover:bg-brand-strong-hover transition-colors"
               >
                 Sign In
               </button>

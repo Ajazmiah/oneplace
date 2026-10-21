@@ -47,7 +47,7 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-white flex">
       {/* Left: brand panel — desktop only */}
       <div className="hidden lg:flex flex-col justify-center pl-16 pr-10 w-1/2 relative overflow-hidden border-r border-gray-100">
         {/* Teal radial glow */}
@@ -67,13 +67,13 @@ export default function SignupPage() {
         <div className="relative z-10 max-w-md ml-auto">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-            <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] motion-safe:animate-pulse" />
+            <span className="text-xs font-semibold tracking-widest uppercase text-brand-strong">
               Join for free
             </span>
           </div>
 
-          <h2 className="font-bold tracking-tight text-gray-900 text-4xl xl:text-5xl leading-[1.08]">
+          <h1 className="font-bold tracking-tight text-gray-900 text-4xl xl:text-5xl leading-[1.08]">
             Your job search,{" "}
             <span
               style={{
@@ -85,7 +85,7 @@ export default function SignupPage() {
             >
               organized.
             </span>
-          </h2>
+          </h1>
 
           <p className="mt-5 text-lg text-gray-500 leading-relaxed">
             Create your free account and start tracking every application,
@@ -114,14 +114,14 @@ export default function SignupPage() {
               <span className="text-2xl font-bold text-gray-900 leading-none">
                 500+
               </span>
-              <span className="text-xs text-gray-400 mt-1">apps tracked</span>
+              <span className="text-xs text-gray-500 mt-1">apps tracked</span>
             </div>
             <div className="w-px h-10 bg-gray-200" />
             <div className="flex flex-col">
               <span className="text-2xl font-bold text-gray-900 leading-none">
                 Free
               </span>
-              <span className="text-xs text-gray-400 mt-1">forever</span>
+              <span className="text-xs text-gray-500 mt-1">forever</span>
             </div>
           </div>
         </div>
@@ -147,8 +147,8 @@ export default function SignupPage() {
           {/* Mobile-only badge + heading */}
           <div className="lg:hidden mb-8">
             <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] motion-safe:animate-pulse" />
+              <span className="text-xs font-semibold tracking-widest uppercase text-brand-strong">
                 Join free
               </span>
             </div>
@@ -172,27 +172,18 @@ export default function SignupPage() {
           <div className="bg-white rounded-2xl border border-gray-100 shadow-xl p-8">
             {/* Desktop card heading */}
             <div className="hidden lg:block mb-7">
-              <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">
-                Create account
-              </p>
-              <h3 className="font-bold text-gray-900 text-2xl tracking-tight">
+              <h2 className="font-bold text-gray-900 text-2xl tracking-tight">
                 Get started free
-              </h3>
-              <p className="text-sm text-gray-500 mt-1">
-                Begin your job search journey today
-              </p>
+              </h2>
             </div>
 
             {/* TEMP: email/password sign-up disabled until credentials auth is implemented.
                 Sign-up currently happens via Google/GitHub on the sign-in page.
                 To restore, remove this block and the `false && (` wrapper below. */}
             <div className="space-y-3">
-              <p className="text-sm text-gray-500 text-center">
-                Create your account instantly with Google or GitHub.
-              </p>
               <Link
                 href="/signin"
-                className="block w-full bg-[#0bbcaa] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#09a898] transition-colors text-center"
+                className="block w-full bg-brand-strong text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-strong-hover transition-colors text-center"
               >
                 Continue to sign up
               </Link>
@@ -249,7 +240,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#0bbcaa] text-white py-3 rounded-lg text-sm font-semibold hover:bg-[#09a898] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-brand-strong text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-strong-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading ? "Creating account…" : "Create Account"}
               </button>
@@ -258,11 +249,11 @@ export default function SignupPage() {
             )}
 
             {/* Footer link */}
-            <p className="text-xs text-gray-400 mt-6 text-center">
+            <p className="text-xs text-gray-500 mt-6 text-center">
               Already have an account?{" "}
               <Link
                 href="/signin"
-                className="text-[#0bbcaa] font-semibold hover:text-[#085041] transition-colors"
+                className="text-brand-strong font-semibold hover:text-[#085041] transition-colors"
               >
                 Sign in →
               </Link>
@@ -270,6 +261,6 @@ export default function SignupPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

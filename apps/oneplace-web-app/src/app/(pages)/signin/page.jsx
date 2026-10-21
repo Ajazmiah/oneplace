@@ -22,24 +22,24 @@ export default function AuthPage() {
 
   return (
     // -mt-6 cancels the layout's space-y-6; shadow + clip-path bleed the color edge to edge
-    <main className="min-h-screen -mt-6 flex bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
+    <div className="min-h-screen -mt-6 flex bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
       {/* Left: brand panel — desktop only */}
       <div className="hidden lg:flex flex-col justify-center pl-16 pr-10 w-1/2 border-r border-white/10">
         <div className="max-w-md ml-auto">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-            <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] motion-safe:animate-pulse" />
+            <span className="text-xs font-semibold tracking-widest uppercase text-brand-bright">
               Your search hub
             </span>
           </div>
 
-          <h2 className="font-bold tracking-tight text-white text-4xl xl:text-5xl leading-[1.08]">
+          <h1 className="font-bold tracking-tight text-white text-4xl xl:text-5xl leading-[1.08]">
             Every application,{" "}
             <span className="text-brand">
               one place.
             </span>
-          </h2>
+          </h1>
 
           <p className="mt-5 text-lg text-white/80 leading-relaxed">
             Sign in to pick up exactly where you left off. Your tracked
@@ -70,8 +70,8 @@ export default function AuthPage() {
           {/* Mobile-only badge + heading */}
           <div className="lg:hidden mb-8">
             <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-[#0bbcaa]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] motion-safe:animate-pulse" />
+              <span className="text-xs font-semibold tracking-widest uppercase text-brand-bright">
                 {APP_NAME}
               </span>
             </div>
@@ -87,12 +87,12 @@ export default function AuthPage() {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             {/* Desktop card heading */}
             <div className="hidden lg:block mb-7">
-              <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">
+              <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">
                 Sign in
               </p>
-              <h3 className="font-bold text-gray-900 text-2xl tracking-tight">
+              <h2 className="font-bold text-gray-900 text-2xl tracking-tight">
                 Welcome
-              </h3>
+              </h2>
             </div>
 
             {/* TEMP: email/password sign-in disabled until credentials auth is implemented.
@@ -119,7 +119,7 @@ export default function AuthPage() {
                   />
                   <button
                     type="submit"
-                    className="w-full bg-main text-white py-3 rounded-lg text-sm font-semibold hover:bg-main-light transition-colors"
+                    className="w-full bg-brand-strong text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-strong-hover transition-colors"
                   >
                     Sign in
                   </button>
@@ -128,7 +128,7 @@ export default function AuthPage() {
                 {/* Divider */}
                 <div className="my-5 flex items-center gap-3">
                   <div className="flex-1 h-px bg-gray-100" />
-                  <span className="text-xs text-gray-400 font-medium tracking-wide">
+                  <span className="text-xs text-gray-500 font-medium tracking-wide">
                     or continue with
                   </span>
                   <div className="flex-1 h-px bg-gray-100" />
@@ -138,7 +138,7 @@ export default function AuthPage() {
 
             {/* OAuth providers */}
             <p className="text-sm text-gray-500 mb-4 text-center">
-              Continue with Google or GitHub to sign in or create an account.
+              Continue with Google or GitHub.
             </p>
             <div className="space-y-2.5">
               {providers &&
@@ -164,6 +164,6 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

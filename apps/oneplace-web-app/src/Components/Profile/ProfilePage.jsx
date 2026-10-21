@@ -19,7 +19,7 @@ export default function ProfilePage({
   );
 
   return (
-    <main className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden">
       {/* Background teal glow */}
       <div
         className="absolute pointer-events-none"
@@ -37,7 +37,7 @@ export default function ProfilePage({
         {/* Back link */}
         <Link
           href="/dashboard/applications"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-400 hover:text-[#0bbcaa] transition-colors mb-8"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-brand-strong transition-colors mb-8"
         >
           <svg
             className="w-3.5 h-3.5"
@@ -65,11 +65,11 @@ export default function ProfilePage({
                 {image ? (
                   <img
                     src={image}
-                    alt={name}
+                    alt=""
                     className="w-20 h-20 rounded-2xl object-cover shadow-lg"
                   />
                 ) : (
-                  <div
+                  <div aria-hidden="true"
                     className="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg"
                     style={{
                       background:
@@ -89,14 +89,14 @@ export default function ProfilePage({
                     {name}
                   </h1>
                 </div>
-                <p className="text-sm text-gray-400">{email}</p>
+                <p className="text-sm text-gray-500">{email}</p>
               </div>
             </div>
 
             {/* Settings link — far right on desktop, below on mobile */}
             <Link
               href="/dashboard/settings"
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:border-[#0bbcaa] hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-colors"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-colors"
             >
               <svg
                 className="w-4 h-4 flex-shrink-0"
@@ -125,7 +125,7 @@ export default function ProfilePage({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Social links card */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-xl p-6">
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-5">
+            <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-5">
               Social links
             </p>
 
@@ -138,7 +138,7 @@ export default function ProfilePage({
                     className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-md text-gray-400 mb-0.5">
+                      <p className="text-md text-gray-500 mb-0.5">
                         {social.socialLabel}
                       </p>
                       <p className="text-sm font-medium text-gray-700 truncate">
@@ -153,7 +153,7 @@ export default function ProfilePage({
 
             <Link
               href="/dashboard/settings"
-              className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-400 hover:border-[#0bbcaa] hover:text-[#0bbcaa] hover:bg-[#0bbcaa]/5 transition-all duration-200"
+              className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-500 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-all duration-200"
             >
               + Add another link
             </Link>
@@ -161,7 +161,7 @@ export default function ProfilePage({
 
           {/* Stats card */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-xl p-6 flex flex-col justify-between">
-            <p className="text-xs font-semibold tracking-widest uppercase text-gray-400 mb-5">
+            <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-5">
               At a glance
             </p>
             <div className="grid grid-cols-2 gap-4 flex-1">
@@ -186,7 +186,7 @@ export default function ProfilePage({
                   >
                     {stat.value}
                   </span>
-                  <span className="text-xs text-gray-400 mt-1">
+                  <span className="text-xs text-gray-500 mt-1">
                     {stat.label}
                   </span>
                 </div>
@@ -195,6 +195,6 @@ export default function ProfilePage({
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

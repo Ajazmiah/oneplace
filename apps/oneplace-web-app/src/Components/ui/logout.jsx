@@ -2,8 +2,10 @@
 
 import { logout } from "@/app/lib/actions/authentication/authenticationAction";
 import { notifyExtension } from "@/app/lib/utils/notifyExtension";
+import { DropdownMenuItem } from "@/Components/ui/dropdown-menu";
 import React from "react";
 
+// Must be a menu item (not a plain div) so keyboard and screen reader users can reach it
 function Logout() {
   const handleLogout = () => {
     notifyExtension({ type: "AUTH_STATE", user: null });
@@ -11,9 +13,13 @@ function Logout() {
   };
 
   return (
-    <div className="flex w-full p-[12px] items-center cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-500 gap-3 focus:bg-red-50 focus:text-red-500 hover:bg-red-50 hover:text-red-500 transition-colors" onClick={handleLogout}>
+    <DropdownMenuItem
+      onSelect={handleLogout}
+      className="flex w-full items-center cursor-pointer rounded-xl px-3 py-2.5 text-sm text-gray-500 gap-3 focus:bg-red-50 focus:text-red-500 hover:bg-red-50 hover:text-red-500 transition-colors"
+    >
       <svg
-        className="w-4 h-4 flex-shrink-0"
+        className="w-4 h-4 flex-shrink-0 text-current"
+        aria-hidden="true"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -26,7 +32,7 @@ function Logout() {
         />
       </svg>
       Sign out
-    </div>
+    </DropdownMenuItem>
   );
 }
 
