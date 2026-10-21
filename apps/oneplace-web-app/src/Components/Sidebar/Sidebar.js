@@ -98,6 +98,7 @@ export default function Sidebar() {
                   setDesktopExpanded(true);
                 }}
                 aria-label={label}
+                aria-current={isActive ? "page" : undefined}
                 title={label}
                 className={cn(
                   "sidebar-link",
