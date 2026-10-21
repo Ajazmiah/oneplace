@@ -67,7 +67,7 @@ export default function SignupPage() {
         <div className="relative z-10 max-w-md ml-auto">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] motion-safe:animate-pulse" />
             <span className="text-xs font-semibold tracking-widest uppercase text-brand-strong">
               Join for free
             </span>
@@ -147,7 +147,7 @@ export default function SignupPage() {
           {/* Mobile-only badge + heading */}
           <div className="lg:hidden mb-8">
             <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1.5 rounded-full border border-[#0bbcaa]/25 bg-[#0bbcaa]/5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] motion-safe:animate-pulse" />
               <span className="text-xs font-semibold tracking-widest uppercase text-brand-strong">
                 Join free
               </span>

@@ -206,7 +206,7 @@ export default function SettingsPage() {
       />
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-brand/5 px-3.5 py-1.5">
-          <span className="size-1.5 animate-pulse rounded-full bg-brand" />
+          <span className="size-1.5 motion-safe:animate-pulse rounded-full bg-brand" />
           <span className="text-xs font-semibold uppercase tracking-widest text-brand-strong">
             Settings
           </span>

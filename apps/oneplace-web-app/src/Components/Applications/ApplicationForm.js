@@ -286,7 +286,7 @@ function ApplicationForm() {
                       <span className="block">
                         <span className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
                           {isDefaultLoading && !resume ? (
-                            <span className="h-4 w-28 rounded bg-gray-100 animate-pulse" />
+                            <span className="h-4 w-28 rounded bg-gray-100 motion-safe:animate-pulse" />
                           ) : (
                             resume?.name || defaultResume?.filename
                           )}

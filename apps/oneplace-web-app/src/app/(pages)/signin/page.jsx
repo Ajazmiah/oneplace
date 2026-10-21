@@ -28,7 +28,7 @@ export default function AuthPage() {
         <div className="max-w-md ml-auto">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 mb-10 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] motion-safe:animate-pulse" />
             <span className="text-xs font-semibold tracking-widest uppercase text-brand-bright">
               Your search hub
             </span>
@@ -70,7 +70,7 @@ export default function AuthPage() {
           {/* Mobile-only badge + heading */}
           <div className="lg:hidden mb-8">
             <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1.5 rounded-full border border-white/20 bg-white/5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0bbcaa] motion-safe:animate-pulse" />
               <span className="text-xs font-semibold tracking-widest uppercase text-brand-bright">
                 {APP_NAME}
               </span>
