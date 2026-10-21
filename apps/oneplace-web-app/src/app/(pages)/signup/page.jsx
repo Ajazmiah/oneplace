@@ -47,7 +47,7 @@ export default function SignupPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-white flex">
       {/* Left: brand panel — desktop only */}
       <div className="hidden lg:flex flex-col justify-center pl-16 pr-10 w-1/2 relative overflow-hidden border-r border-gray-100">
         {/* Teal radial glow */}
@@ -261,6 +261,6 @@ export default function SignupPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

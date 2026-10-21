@@ -49,7 +49,7 @@ function ConfirmAgeContent() {
 
   return (
     // -mt-6 cancels the layout's space-y-6; shadow + clip-path bleed the color edge to edge
-    <main className="min-h-screen -mt-6 flex items-center justify-center px-6 py-16 bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
+    <div className="min-h-screen -mt-6 flex items-center justify-center px-6 py-16 bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
       <div className="w-full max-w-sm bg-white rounded-2xl shadow-xl p-8">
         <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-2">
           Create account
@@ -125,6 +125,6 @@ function ConfirmAgeContent() {
           </>
         )}
       </div>
-    </main>
+    </div>
   );
 }

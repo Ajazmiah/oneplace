@@ -22,7 +22,7 @@ export default function AuthPage() {
 
   return (
     // -mt-6 cancels the layout's space-y-6; shadow + clip-path bleed the color edge to edge
-    <main className="min-h-screen -mt-6 flex bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
+    <div className="min-h-screen -mt-6 flex bg-[#085041] shadow-[0_0_0_100vmax_#085041] [clip-path:inset(0_-100vmax)]">
       {/* Left: brand panel — desktop only */}
       <div className="hidden lg:flex flex-col justify-center pl-16 pr-10 w-1/2 border-r border-white/10">
         <div className="max-w-md ml-auto">
@@ -164,6 +164,6 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

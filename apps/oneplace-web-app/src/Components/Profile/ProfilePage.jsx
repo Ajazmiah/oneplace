@@ -19,7 +19,7 @@ export default function ProfilePage({
   );
 
   return (
-    <main className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden">
       {/* Background teal glow */}
       <div
         className="absolute pointer-events-none"
@@ -195,6 +195,6 @@ export default function ProfilePage({
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
