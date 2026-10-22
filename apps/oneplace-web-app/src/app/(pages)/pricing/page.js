@@ -36,6 +36,7 @@ const paidFeatures = [
   "Store resumes & cover letters",
   "Status tracking & analytics",
   "Interview answer library",
+  "Auto-fill applications from job posts (extension)",
   "Priority support",
 ];
 
@@ -59,7 +60,7 @@ const plans = [
   {
     name: "Pro",
     tagline: "Full access for 1 month",
-    price: 5,
+    price: 5.99,
     period: "/month",
     cta: "Get Pro",
     href: "/signup",
@@ -69,7 +70,7 @@ const plans = [
   {
     name: "Premium",
     tagline: "Full access for 3 months — enough time to land the job",
-    price: 12,
+    price: 14.99,
     period: "/3 months",
     cta: "Get Premium",
     href: "/signup",
@@ -98,7 +99,7 @@ const faqs = [
   {
     question: "What's the difference between Pro and Premium?",
     answer:
-      "The features are exactly the same — both give you unlimited tracking, document storage, the interview answer library, and priority support. Pro covers 1 month for $5, while Premium covers 3 months for $12. Since most job searches take a few months, Premium works out about 20% cheaper than paying monthly.",
+      "The features are exactly the same — both give you unlimited tracking, document storage, the interview answer library, and priority support. Pro covers 1 month for $5.99, while Premium covers 3 months for $14.99. Since most job searches take a few months, Premium works out about 17% cheaper than paying monthly.",
   },
 ];
 
