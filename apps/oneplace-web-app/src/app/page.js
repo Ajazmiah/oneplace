@@ -2,7 +2,12 @@ import Services from "@/Components/Services/Services";
 import dashboardImage from "../../assets/dashboard.png";
 import glanceImage from "../../assets/glance.png";
 import Image from "next/image";
-import { APP_NAME } from "@/app/lib/constants";
+import { FaChrome } from "react-icons/fa";
+import { APP_NAME, EXTENSION_URL } from "@/app/lib/constants";
+
+// White with a shadow so it stands out over both the green hero and white sections
+const extensionButtonClass =
+  "fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[#085041] shadow-xl ring-1 ring-black/5 hover:bg-[#ccf3ee] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-strong";
 
 export default function Example() {
   return (
@@ -94,6 +99,25 @@ export default function Example() {
       <div id="services">
         <Services />
       </div>
+
+      {/* Floating extension button, pinned bottom-right while scrolling.
+          Becomes a real link once EXTENSION_URL is set in lib/constants.js */}
+      {EXTENSION_URL ? (
+        <a
+          href={EXTENSION_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={extensionButtonClass}
+        >
+          <FaChrome className="size-5" aria-hidden="true" />
+          Download our extension
+        </a>
+      ) : (
+        <button type="button" className={extensionButtonClass}>
+          <FaChrome className="size-5" aria-hidden="true" />
+          Download our extension
+        </button>
+      )}
     </div>
   );
 }
