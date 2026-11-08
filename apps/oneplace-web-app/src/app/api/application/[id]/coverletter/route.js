@@ -1,11 +1,11 @@
 import Application from "@/database/models/addApplicationModel";
 import { Types } from "mongoose";
-import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
+import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { fileResponseHeaders } from "@/app/lib/utils/utils";
 
 export async function GET(req, context) {
-  const session = await getUserSession();
+  const session = await getCachedAuthSession();
   const params = await context.params;
 
   if (!session) return new Response("Unauthorized", { status: 401 });
