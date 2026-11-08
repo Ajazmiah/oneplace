@@ -19,5 +19,6 @@ async function getCachedDefaultResume(userId) {
 export const getDefaultResume = async () => {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
+  if (!user) return null;
   return getCachedDefaultResume(user._id.toString());
 };

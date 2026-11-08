@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
 
 const userSchema = mongoose.Schema(
   {
@@ -11,12 +10,9 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       trim: true,
+      lowercase: true,
       required: true,
       unique: true,
-    },
-    password: {
-      type: String,
-      trim: true,
     },
     // optional social/profile links — user can add these later or leave blank
     socialLinks: [
@@ -31,15 +27,6 @@ const userSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
-// Hashing password pre-save hook
-// userSchema.pre("save", async function (next) {
-//   if (!this.isModified("password") || !this.password) {
-//     next();
-//   }
-//   const salt = await bcrypt.genSalt(10);
-//   this.password = await bcrypt.hash(this.password, salt);
-// });
 
 // Create and export the model
 // This is the key change to prevent the "override" error.
