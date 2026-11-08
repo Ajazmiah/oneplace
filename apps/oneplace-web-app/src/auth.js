@@ -1,8 +1,7 @@
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-import Credentials from "next-auth/providers/credentials";
-import { signup } from "./app/lib/actions/authentication/signupAction";
+import { createOAuthUser } from "./app/lib/actions/authentication/createOAuthUser";
 import { getUserByEmail } from "./app/lib/utils/databaseUtils";
 import { AGE_COOKIE, verifyAgeToken } from "./app/lib/utils/ageVerification";
 import { cookies } from "next/headers";
@@ -71,11 +70,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return `/confirm-age?provider=${account.provider}`;
           }
 
-          const authUser = {
-            name: user.name,
-            email: user.email,
-          };
-          await signup({ authUser });
+          await createOAuthUser({ name: user.name, email: user.email });
           cookieStore.delete(AGE_COOKIE);
         }
 
