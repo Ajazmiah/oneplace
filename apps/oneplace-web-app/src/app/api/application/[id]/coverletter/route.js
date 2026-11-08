@@ -15,6 +15,7 @@ export async function GET(req, context) {
   }
 
   const user = await getUserByEmail(session.user.email);
+  if (!user) return new Response("Unauthorized", { status: 401 });
 
   // findById expects just the id
   const application = await Application.findById(params.id);

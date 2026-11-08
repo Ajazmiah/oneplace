@@ -16,6 +16,7 @@ async function getCachedSocialLinks(userId) {
 export const getSocialLinks = async () => {
   const session = await getUserSession();
   const user = await getUserByEmail(session.user.email);
+  if (!user) return [];
   return getCachedSocialLinks(user._id.toString());
 };
 
@@ -23,11 +24,11 @@ export const saveSocialLinks = async (socialLinks) => {
   try {
     const session = await getUserSession();
     const user = await getUserByEmail(session.user.email);
-    const savedSocialLinks = JSON.parse(JSON.stringify(user?.socialLinks ?? []));
-
     if (!user) {
       return { success: false, message: "User not found" };
     }
+
+    const savedSocialLinks = JSON.parse(JSON.stringify(user.socialLinks ?? []));
 
     const userId = user._id.toString();
     const updated = [...savedSocialLinks];
