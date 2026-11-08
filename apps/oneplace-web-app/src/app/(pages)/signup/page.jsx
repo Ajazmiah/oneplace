@@ -1,51 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { signup } from "../../lib/actions/authentication/signupAction";
 import Link from "next/link";
 
 export default function SignupPage() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError("");
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-    if (!form.email.includes("@")) {
-      setError("Enter a valid email");
-      return;
-    }
-
-    setLoading(true);
-    const result = await signup({
-      name: form.name,
-      email: form.email,
-      password: form.password,
-    });
-    setLoading(false);
-
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      window.location.href = "/signin";
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white flex">
       {/* Left: brand panel — desktop only */}
@@ -177,9 +134,7 @@ export default function SignupPage() {
               </h2>
             </div>
 
-            {/* TEMP: email/password sign-up disabled until credentials auth is implemented.
-                Sign-up currently happens via Google/GitHub on the sign-in page.
-                To restore, remove this block and the `false && (` wrapper below. */}
+            {/* Accounts are created on first Google/GitHub sign-in, on the sign-in page */}
             <div className="space-y-3">
               <Link
                 href="/signin"
@@ -188,65 +143,6 @@ export default function SignupPage() {
                 Continue to sign up
               </Link>
             </div>
-
-            {/* TEMP: email/password sign-up disabled — see note above. */}
-            {false && (
-              <>
-                {/* Error message */}
-                {error && (
-                  <div className="mb-4 px-3 py-2.5 rounded-lg bg-red-50 border border-red-100">
-                    <p className="text-xs text-red-500 font-medium">{error}</p>
-                  </div>
-                )}
-
-                {/* Signup form */}
-                <form onSubmit={handleSubmit} className="space-y-3">
-              <input
-                name="name"
-                type="text"
-                placeholder="Full Name"
-                required
-                value={form.name}
-                onChange={handleChange}
-                className="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0bbcaa]/40 focus:border-[#0bbcaa] transition-colors"
-              />
-              <input
-                name="email"
-                type="email"
-                placeholder="Email"
-                required
-                value={form.email}
-                onChange={handleChange}
-                className="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0bbcaa]/40 focus:border-[#0bbcaa] transition-colors"
-              />
-              <input
-                name="password"
-                type="password"
-                placeholder="Password"
-                required
-                value={form.password}
-                onChange={handleChange}
-                className="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0bbcaa]/40 focus:border-[#0bbcaa] transition-colors"
-              />
-              <input
-                name="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-                required
-                value={form.confirmPassword}
-                onChange={handleChange}
-                className="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#0bbcaa]/40 focus:border-[#0bbcaa] transition-colors"
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-brand-strong text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-strong-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {loading ? "Creating account…" : "Create Account"}
-              </button>
-                </form>
-              </>
-            )}
 
             {/* Footer link */}
             <p className="text-xs text-gray-500 mt-6 text-center">
