@@ -53,3 +53,14 @@ export const validateFile = (file) => {
 export const openDocument = (url) => {
   window.open(url, "_blank");
 };
+
+// lib/utils/utils.js
+export const fileResponseHeaders = ({ mimetype, filename }) => {
+  const type = ALLOWED_FILE_TYPES.includes(mimetype) ? mimetype : "application/octet-stream";
+  const asciiName = (filename || "file").replace(/[^\x20-\x7E]|["\\]/g, "_");
+  return {
+    "Content-Type": type,
+    "Content-Disposition": `inline; filename="${asciiName}"; filename*=UTF-8''${encodeURIComponent(filename || "file")}`,
+    "X-Content-Type-Options": "nosniff",
+  };
+};

@@ -2,6 +2,7 @@ import Application from "@/database/models/addApplicationModel";
 import { Types } from "mongoose";
 import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
+import { fileResponseHeaders } from "@/app/lib/utils/utils";
 
 export async function GET(req, context) {
   const session = await getUserSession();
@@ -27,9 +28,6 @@ export async function GET(req, context) {
   }
 
   return new Response(application.resume.data, {
-    headers: {
-      "Content-Type": application.resume.mimetype,
-      "Content-Disposition": `inline; filename="${application.resume.filename}"`,
-    },
+    headers: fileResponseHeaders(application.resume)
   });
 }
