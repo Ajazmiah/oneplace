@@ -7,6 +7,33 @@ import { getUserByEmail } from "./app/lib/utils/databaseUtils";
 import { AGE_COOKIE, verifyAgeToken } from "./app/lib/utils/ageVerification";
 import { cookies } from "next/headers";
 
+// Only trust an email the provider says the user has verified.
+// All account lookups key on email, so an unverified one could reach someone else's data.
+async function isEmailVerified({ user, account, profile }) {
+  if (!user.email) return false;
+
+  if (account.provider === "google") {
+    return profile?.email_verified === true;
+  }
+
+  if (account.provider === "github") {
+    const res = await fetch("https://api.github.com/user/emails", {
+      headers: {
+        Authorization: `Bearer ${account.access_token}`,
+        "User-Agent": "authjs",
+      },
+    });
+    if (!res.ok) return false;
+
+    const emails = await res.json();
+    return emails.some(
+      (e) => e.verified && e.email.toLowerCase() === user.email.toLowerCase()
+    );
+  }
+
+  return false;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: process.env.NODE_ENV === "development",
   logger: {
@@ -28,8 +55,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
 
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, profile }) {
       try {
+        if (!(await isEmailVerified({ user, account, profile }))) {
+          return "/signin?error=EmailNotVerified";
+        }
+
         const existingUser = await getUserByEmail(user.email);
 
         if (!existingUser) {
