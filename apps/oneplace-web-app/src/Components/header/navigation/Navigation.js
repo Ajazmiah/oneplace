@@ -5,6 +5,7 @@ import { Dialog, DialogPanel } from "@headlessui/react";
 import { XMarkIcon, Bars3Icon } from "@heroicons/react/24/outline";
 import { Dropdown } from "./DropDownMenu";
 import UserNavigation from "./UserNavigation";
+import ExtensionButton from "@/Components/ExtensionButton/ExtensionButton";
 import Link from "next/link";
 import { login } from "@/app/lib/actions/authentication/authenticationAction";
 import { APP_NAME } from "@/app/lib/constants";
@@ -42,14 +43,21 @@ function Navigation({ navigation, session, userNavigations = [] }) {
               {item.name}
             </Link>
           ))}
+          {/* Logged in: extension button sits with the nav links */}
+          {loggedIn && (
+            <ExtensionButton size="sm" className="ml-2" />
+          )}
         </div>
 
-        {/* Desktop right: avatar or sign in */}
+        {/* Desktop right: avatar, or extension + sign in */}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           {session ? (
             <Dropdown loggedIn={loggedIn} session={session} />
           ) : (
-            <LoginButton display="desktop" loggedIn={loggedIn} />
+            <div className="flex items-center gap-3">
+              <ExtensionButton size="sm" />
+              <LoginButton display="desktop" loggedIn={loggedIn} />
+            </div>
           )}
         </div>
 
@@ -110,6 +118,11 @@ function Navigation({ navigation, session, userNavigations = [] }) {
                   {item.name}
                 </Link>
               ))}
+              <ExtensionButton
+                size="sm"
+                onClick={closeMenu}
+                className="mt-2 w-full justify-center"
+              />
             </div>
 
             {/* Divider between app nav and user nav */}
