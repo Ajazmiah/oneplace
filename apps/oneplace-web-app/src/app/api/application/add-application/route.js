@@ -6,12 +6,12 @@ import { Types } from "mongoose";
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "../../../lib/utils/databaseUtils";
 import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
-import { validateFile } from "../../../lib/utils/utils";
 import { deleteFiles } from "@/app/lib/s3/s3";
 import {
-  uploadApplicationFile,
+  claimUpload,
   resumeFromDefault,
   saveDefaultResume,
+  UploadError,
 } from "@/app/lib/s3/applicationFiles";
 
 /**
@@ -54,9 +54,12 @@ export async function POST(request) {
     const salaryRange = formData.get("salaryRange");
     const jobUrl = formData.get("jobUrl");
 
-    // File fields (will be File objects or null)
-    const coverLetter = formData.get("coverLetter");
-    const resume = formData.get("resume");
+    // Files were already uploaded straight to S3 (see /api/uploads/presign);
+    // the client sends each upload's key and original filename instead of the bytes
+    const resumeKey = formData.get("resumeKey");
+    const resumeName = formData.get("resumeName");
+    const coverLetterKey = formData.get("coverLetterKey");
+    const coverLetterName = formData.get("coverLetterName");
     const useDefaultResume = formData.get("useDefaultResume");
 
     // 4. Basic Validation
@@ -66,35 +69,14 @@ export async function POST(request) {
         { status: 400 } // Bad Request
       );
     }
-    
-    // 5. Validate File Uploads
-    if (resume && typeof resume === "object" && resume.size > 0) {
-      const resumeError = validateFile(resume);
-      if (resumeError) {
-        return NextResponse.json(
-          { success: false, message: `Resume: ${resumeError}` },
-          { status: 400 }
-        );
-      }
-    }
-    if (coverLetter && typeof coverLetter === "object" && coverLetter.size > 0) {
-      const coverLetterError = validateFile(coverLetter);
-      if (coverLetterError) {
-        return NextResponse.json(
-          { success: false, message: `Cover letter: ${coverLetterError}` },
-          { status: 400 }
-        );
-      }
-    }
 
-    // 6. Upload files to S3, then create the database entry.
-    // The _id is created up front so file keys can include it.
+    // 5. Move uploads into the application's folder, then create the database entry.
+    // The _id is created up front so file keys can include it. claimUpload checks each
+    // key belongs to this user and validates the stored file's type and size.
     const userId = user._id.toString();
     const applicationId = new Types.ObjectId();
     const fileParams = { userId, applicationId: applicationId.toString() };
-    const isUploadedResume =
-      useDefaultResume !== "true" &&
-      resume && typeof resume === "object" && resume.size > 0;
+    const isUploadedResume = useDefaultResume !== "true" && Boolean(resumeKey);
 
     let resumeData = null;
     let coverLetterData = null;
@@ -104,13 +86,19 @@ export async function POST(request) {
       if (useDefaultResume === "true") {
         resumeData = await resumeFromDefault(fileParams);
       } else if (isUploadedResume) {
-        resumeData = await uploadApplicationFile({ ...fileParams, kind: "resume", file: resume });
+        resumeData = await claimUpload({
+          ...fileParams,
+          kind: "resume",
+          key: resumeKey,
+          filename: resumeName,
+        });
       }
-      if (coverLetter && typeof coverLetter === "object" && coverLetter.size > 0) {
-        coverLetterData = await uploadApplicationFile({
+      if (coverLetterKey) {
+        coverLetterData = await claimUpload({
           ...fileParams,
           kind: "coverletter",
-          file: coverLetter,
+          key: coverLetterKey,
+          filename: coverLetterName,
         });
       }
 
@@ -163,6 +151,12 @@ export async function POST(request) {
       { status: 201 } // Created
     );
   } catch (error) {
+    if (error instanceof UploadError) {
+      return NextResponse.json(
+        { success: false, message: error.message },
+        { status: 400 }
+      );
+    }
     console.error("Error creating application:", error);
     return NextResponse.json(
       { success: false, message: "Something went wrong while saving the application." },

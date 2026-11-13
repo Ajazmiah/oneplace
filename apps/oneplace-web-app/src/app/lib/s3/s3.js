@@ -1,14 +1,15 @@
 // S3 storage for resumes and cover letters. Server-side only: it uses the AWS secret key.
 import {
   S3Client,
-  PutObjectCommand,
   GetObjectCommand,
+  HeadObjectCommand,
   CopyObjectCommand,
   DeleteObjectsCommand,
   paginateListObjectsV2,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { getBuffer, fileResponseHeaders } from "@/app/lib/utils/utils";
+import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { fileResponseHeaders, MAX_FILE_SIZE_BYTES } from "@/app/lib/utils/utils";
 
 const BUCKET = process.env.AWS_S3_BUCKET;
 const REGION = process.env.AWS_REGION;
@@ -16,6 +17,9 @@ const REGION = process.env.AWS_REGION;
 // How long a view link works. Long enough that refreshing the PDF tab during a normal
 // read still works, short enough that a copied link is useless soon after.
 const VIEW_URL_EXPIRES_SECONDS = 5 * 60;
+
+// How long the browser has to start an upload after asking for permission
+const UPLOAD_EXPIRES_SECONDS = 5 * 60;
 
 // S3 accepts at most 1000 keys per DeleteObjects request
 const DELETE_BATCH_SIZE = 1000;
@@ -33,8 +37,12 @@ const EXTENSIONS = {
  *
  *   application file: users/<userId>/applications/<applicationId>/<kind>-<uuid>.<ext>
  *   default resume:   users/<userId>/default-resume/<uuid>.<ext>
+ *   browser upload:   tmp/<userId>/<uuid>.<ext>   (moved into place on submit)
  *
- * @param {{ userId: string, kind: "resume" | "coverletter" | "default-resume",
+ * Uploads sit under a top-level tmp/ because an S3 lifecycle rule can only match a key's
+ * start, so "expire tmp/ after 1 day" cleans up uploads that were never submitted.
+ *
+ * @param {{ userId: string, kind: "resume" | "coverletter" | "default-resume" | "upload",
  *           applicationId?: string, mimetype: string }} params
  * @returns {string}
  */
@@ -42,6 +50,9 @@ export function buildFileKey({ userId, kind, applicationId, mimetype }) {
   const ext = EXTENSIONS[mimetype] ?? "bin";
   const id = crypto.randomUUID();
 
+  if (kind === "upload") {
+    return `tmp/${userId}/${id}.${ext}`;
+  }
   if (kind === "default-resume") {
     return `users/${userId}/default-resume/${id}.${ext}`;
   }
@@ -49,6 +60,19 @@ export function buildFileKey({ userId, kind, applicationId, mimetype }) {
     throw new Error("buildFileKey: applicationId is required for application files");
   }
   return `users/${userId}/applications/${applicationId}/${kind}-${id}.${ext}`;
+}
+
+/**
+ * True when `key` is a browser upload made by this user, exactly as buildFileKey() shapes it.
+ * The client sends the key back on submit, so this stops a user claiming someone else's
+ * upload or pointing at any other object in the bucket.
+ * @param {string} userId
+ * @param {unknown} key
+ */
+export function isUploadKeyOf(userId, key) {
+  const exts = Object.values(EXTENSIONS).join("|");
+  const pattern = new RegExp(`^tmp/${userId}/[0-9a-f-]{36}\\.(${exts})$`);
+  return typeof key === "string" && pattern.test(key);
 }
 
 if (!BUCKET || !REGION) {
@@ -61,37 +85,46 @@ const s3 =
   global._s3Client ?? (global._s3Client = new S3Client({ region: REGION }));
 
 /**
- * Upload a file to the bucket under `key`.
- * @param {string} key  Object key, e.g. "users/<userId>/applications/<appId>/resume-<uuid>.pdf"
- * @param {File} file   File from request.formData(); validate it with validateFile() first
- * @returns {Promise<{ key: string, filename: string, mimetype: string, size: number }>}
- *          Metadata to store in Mongo in place of the file bytes
+ * Signed form that lets the browser upload one file straight to S3, so the bytes never pass
+ * through our server (Vercel rejects request bodies over 4.5MB). S3 itself enforces the
+ * conditions: this exact key, this content type, and 1 byte to MAX_FILE_SIZE_BYTES.
+ * Validate the type and size with validateFile() before calling it.
+ * @param {{ key: string, mimetype: string }} params
+ * @returns {Promise<{ url: string, fields: Record<string, string> }>}
+ *          POST multipart to `url` with every field, then the file last, as "file"
  */
-export async function uploadFile(key, file) {
-  const body = await getBuffer(file);
+export async function createUploadPost({ key, mimetype }) {
+  return createPresignedPost(s3, {
+    Bucket: BUCKET,
+    Key: key,
+    Fields: { "Content-Type": mimetype },
+    Conditions: [
+      ["content-length-range", 1, MAX_FILE_SIZE_BYTES],
+      ["eq", "$Content-Type", mimetype],
+    ],
+    Expires: UPLOAD_EXPIRES_SECONDS,
+  });
+}
 
-  await s3.send(
-    new PutObjectCommand({
-      Bucket: BUCKET,
-      Key: key,
-      Body: body,
-      ContentType: file.type,
-      ContentLength: body.length,
-    })
-  );
-
-  return {
-    key,
-    filename: file.name,
-    mimetype: file.type,
-    size: body.length,
-  };
+/**
+ * Size and type of a stored file, read from S3 rather than trusted from the client.
+ * @param {string} key
+ * @returns {Promise<{ size: number, mimetype: string } | null>} null when there's no such file
+ */
+export async function getFileInfo(key) {
+  try {
+    const head = await s3.send(new HeadObjectCommand({ Bucket: BUCKET, Key: key }));
+    return { size: head.ContentLength, mimetype: head.ContentType };
+  } catch (error) {
+    if (error.name === "NotFound") return null;
+    throw error;
+  }
 }
 
 /**
  * Short-lived signed URL for viewing a private file. Only call it after checking that
  * the signed-in user owns the file; anyone holding the URL can open it until it expires.
- * @param {string} key  Object key saved by uploadFile()
+ * @param {string} key  Object key stored in Mongo
  * @param {{ filename: string, mimetype: string }} meta  Original name and type, from Mongo
  * @returns {Promise<string>} URL to redirect the browser to
  */
@@ -169,7 +202,8 @@ export async function deleteFiles(keys) {
 }
 
 /**
- * Delete every file a user has (everything under "users/<userId>/"). Used on account deletion.
+ * Delete every file a user has: everything under "users/<userId>/" plus any unsubmitted
+ * uploads under "tmp/<userId>/". Used on account deletion.
  * Needs s3:ListBucket on the bucket in addition to s3:DeleteObject.
  * @param {string | import("mongoose").Types.ObjectId} userId
  * @returns {Promise<void>}
@@ -183,14 +217,16 @@ export async function deleteUserFiles(userId) {
     throw new Error("deleteUserFiles: userId must be a valid ObjectId");
   }
 
-  const pages = paginateListObjectsV2(
-    { client: s3, pageSize: DELETE_BATCH_SIZE },
-    { Bucket: BUCKET, Prefix: `users/${id}/` }
-  );
+  for (const prefix of [`users/${id}/`, `tmp/${id}/`]) {
+    const pages = paginateListObjectsV2(
+      { client: s3, pageSize: DELETE_BATCH_SIZE },
+      { Bucket: BUCKET, Prefix: prefix }
+    );
 
-  // Delete page by page so large accounts never hold every key in memory
-  for await (const page of pages) {
-    const keys = (page.Contents ?? []).map((obj) => obj.Key);
-    if (keys.length) await deleteFiles(keys);
+    // Delete page by page so large accounts never hold every key in memory
+    for await (const page of pages) {
+      const keys = (page.Contents ?? []).map((obj) => obj.Key);
+      if (keys.length) await deleteFiles(keys);
+    }
   }
 }

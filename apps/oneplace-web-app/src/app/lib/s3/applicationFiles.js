@@ -1,8 +1,18 @@
 // File handling shared by the add-application route and editApplication.
 // Every function returns the metadata to store in Mongo ({ filename, mimetype, key, size }).
 import defaultResumeModel from "@/database/models/defaultResume";
-import { fileResponseHeaders } from "@/app/lib/utils/utils";
-import { buildFileKey, uploadFile, copyFile, deleteFiles, getViewUrl } from "./s3";
+import { fileResponseHeaders, validateFile } from "@/app/lib/utils/utils";
+import {
+  buildFileKey,
+  isUploadKeyOf,
+  getFileInfo,
+  copyFile,
+  deleteFiles,
+  getViewUrl,
+} from "./s3";
+
+/** A problem with what the client sent; its message is safe to show the user (HTTP 400). */
+export class UploadError extends Error {}
 
 /**
  * Response that shows a stored resume or cover letter. Call it only after checking that
@@ -34,12 +44,45 @@ export async function fileViewResponse(file, label) {
 }
 
 /**
- * Upload a resume or cover letter into the application's folder.
- * @param {{ userId: string, applicationId: string, kind: "resume" | "coverletter", file: File }} params
+ * Turn a browser upload (tmp/<userId>/...) into an application's resume or cover letter:
+ * check it belongs to this user, check what actually arrived in S3, then move it into the
+ * application's folder. Type and size come from S3, never from the client.
+ * @param {{ userId: string, applicationId: string, kind: "resume" | "coverletter",
+ *           key: string, filename: string }} params
+ * @returns {Promise<{ filename: string, mimetype: string, size: number, key: string }>}
+ * @throws {UploadError} when the key isn't this user's upload, or the file is missing or invalid
  */
-export async function uploadApplicationFile({ userId, applicationId, kind, file }) {
-  const key = buildFileKey({ userId, applicationId, kind, mimetype: file.type });
-  return uploadFile(key, file);
+export async function claimUpload({ userId, applicationId, kind, key, filename }) {
+  if (!isUploadKeyOf(userId, key)) {
+    throw new UploadError("Invalid upload.");
+  }
+
+  const info = await getFileInfo(key);
+  if (!info) {
+    throw new UploadError("Upload not found or expired. Please choose the file again.");
+  }
+
+  // S3 already enforced these via the upload policy; checked again in case it ever changes
+  const fileError = validateFile({ type: info.mimetype, size: info.size });
+  if (fileError) {
+    await deleteFiles([key]).catch(() => {});
+    throw new UploadError(fileError);
+  }
+
+  const finalKey = buildFileKey({ userId, applicationId, kind, mimetype: info.mimetype });
+  await copyFile(key, finalKey);
+
+  // The tmp/ lifecycle rule removes it anyway, so a failure here is harmless
+  await deleteFiles([key]).catch((error) =>
+    console.error("Failed to delete claimed upload:", error)
+  );
+
+  return {
+    filename: String(filename || "file").slice(0, 255),
+    mimetype: info.mimetype,
+    size: info.size,
+    key: finalKey,
+  };
 }
 
 /**

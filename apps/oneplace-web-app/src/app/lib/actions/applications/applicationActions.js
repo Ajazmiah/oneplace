@@ -3,14 +3,12 @@ import AddApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
 import { revalidateTag } from "next/cache";
-import { validateFile } from "@/app/lib/utils/utils";
 import { deleteFiles } from "@/app/lib/s3/s3";
 import {
-  uploadApplicationFile,
+  claimUpload,
   resumeFromDefault,
+  UploadError,
 } from "@/app/lib/s3/applicationFiles";
-
-const isUploadedFile = (value) => value instanceof File && value.size > 0;
 
 export const editApplication = async (id, formData) => {
   try {
@@ -29,23 +27,14 @@ export const editApplication = async (id, formData) => {
     const description = formData.get("details");
     const location = formData.get("location");
     const salaryRange = formData.get("salaryRange");
-    const resume = formData.get("resume");
-    const coverLetter = formData.get("coverLetter");
     const jobUrl = formData.get("jobUrl");
     const useDefaultResume = formData.get("useDefaultResume");
-
-    if (isUploadedFile(resume)) {
-      const resumeError = validateFile(resume);
-      if (resumeError) {
-        return { success: false, message: `Resume: ${resumeError}` };
-      }
-    }
-    if (isUploadedFile(coverLetter)) {
-      const coverLetterError = validateFile(coverLetter);
-      if (coverLetterError) {
-        return { success: false, message: `Cover letter: ${coverLetterError}` };
-      }
-    }
+    // Files were already uploaded straight to S3 (see /api/uploads/presign), which also keeps
+    // this server action under Next's 1MB request limit; only keys and filenames arrive here
+    const resumeKey = formData.get("resumeKey");
+    const resumeName = formData.get("resumeName");
+    const coverLetterKey = formData.get("coverLetterKey");
+    const coverLetterName = formData.get("coverLetterName");
 
     // Keys of the files being replaced, deleted only after the save succeeds
     const oldResumeKey = application.resume?.key;
@@ -58,15 +47,21 @@ export const editApplication = async (id, formData) => {
     try {
       if (useDefaultResume === "true") {
         newResume = await resumeFromDefault(fileParams);
-      } else if (isUploadedFile(resume)) {
-        newResume = await uploadApplicationFile({ ...fileParams, kind: "resume", file: resume });
+      } else if (resumeKey) {
+        newResume = await claimUpload({
+          ...fileParams,
+          kind: "resume",
+          key: resumeKey,
+          filename: resumeName,
+        });
       }
-      // Only a real file replaces the cover letter; an empty string or empty File keeps it
-      if (isUploadedFile(coverLetter)) {
-        newCoverLetter = await uploadApplicationFile({
+      // Only a new upload replaces the cover letter; no key keeps the existing one
+      if (coverLetterKey) {
+        newCoverLetter = await claimUpload({
           ...fileParams,
           kind: "coverletter",
-          file: coverLetter,
+          key: coverLetterKey,
+          filename: coverLetterName,
         });
       }
 
@@ -106,6 +101,9 @@ export const editApplication = async (id, formData) => {
       message: "Successfully edited",
     };
   } catch (error) {
+    if (error instanceof UploadError) {
+      return { success: false, message: error.message };
+    }
     console.error("Error fetching application:", error.message);
     return {
       success: false,
