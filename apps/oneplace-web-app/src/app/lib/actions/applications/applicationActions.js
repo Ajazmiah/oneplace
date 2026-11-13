@@ -1,10 +1,16 @@
 "use server";
 import AddApplicationModel from "@/database/models/addApplicationModel";
-import defaultResumeModel from "@/database/models/defaultResume";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "@/app/lib/DataAccessLayer/getSession";
 import { revalidateTag } from "next/cache";
-import { getBuffer, validateFile } from "@/app/lib/utils/utils";
+import { validateFile } from "@/app/lib/utils/utils";
+import { deleteFiles } from "@/app/lib/s3/s3";
+import {
+  uploadApplicationFile,
+  resumeFromDefault,
+} from "@/app/lib/s3/applicationFiles";
+
+const isUploadedFile = (value) => value instanceof File && value.size > 0;
 
 export const editApplication = async (id, formData) => {
   try {
@@ -28,54 +34,73 @@ export const editApplication = async (id, formData) => {
     const jobUrl = formData.get("jobUrl");
     const useDefaultResume = formData.get("useDefaultResume");
 
-    if (resume && resume instanceof File && resume.size > 0) {
+    if (isUploadedFile(resume)) {
       const resumeError = validateFile(resume);
       if (resumeError) {
         return { success: false, message: `Resume: ${resumeError}` };
       }
     }
-    if (coverLetter && coverLetter instanceof File && coverLetter.size > 0) {
+    if (isUploadedFile(coverLetter)) {
       const coverLetterError = validateFile(coverLetter);
       if (coverLetterError) {
         return { success: false, message: `Cover letter: ${coverLetterError}` };
       }
     }
 
-    let resumeData = null;
-    let coverLetterData = null;
+    // Keys of the files being replaced, deleted only after the save succeeds
+    const oldResumeKey = application.resume?.key;
+    const oldCoverLetterKey = application.coverLetter?.key;
+    const fileParams = { userId, applicationId: application._id.toString() };
 
-    if (useDefaultResume === "true") {
-      const saved = await defaultResumeModel.findOne({ userId: user._id });
-      if (saved?.resume) resumeData = saved.resume;
-    } else if (resume && resume instanceof File && resume.size > 0) {
-      resumeData = {
-        filename: resume.name,
-        mimetype: resume.type,
-        data: await getBuffer(resume),
-      };
+    let newResume = null;
+    let newCoverLetter = null;
+
+    try {
+      if (useDefaultResume === "true") {
+        newResume = await resumeFromDefault(fileParams);
+      } else if (isUploadedFile(resume)) {
+        newResume = await uploadApplicationFile({ ...fileParams, kind: "resume", file: resume });
+      }
+      // Only a real file replaces the cover letter; an empty string or empty File keeps it
+      if (isUploadedFile(coverLetter)) {
+        newCoverLetter = await uploadApplicationFile({
+          ...fileParams,
+          kind: "coverletter",
+          file: coverLetter,
+        });
+      }
+
+      application.jobTitle = jobTitle;
+      application.companyName = companyName;
+      application.status = status;
+      application.description = description;
+      application.location = location;
+      application.salaryRange = salaryRange;
+      application.jobUrl = jobUrl;
+      if (newResume) application.resume = newResume;
+      if (newCoverLetter) application.coverLetter = newCoverLetter;
+
+      await application.save();
+    } catch (error) {
+      // The application still points at its old files, so drop the new ones
+      await deleteFiles([newResume?.key, newCoverLetter?.key]).catch((cleanupError) =>
+        console.error("Failed to clean up S3 files after a failed edit:", cleanupError)
+      );
+      throw error;
     }
-    if (coverLetter) {
-      coverLetterData = {
-        filename: coverLetter?.name,
-        mimetype: coverLetter?.type,
-        data: await getBuffer(coverLetter),
-      };
+
+    // Saved; removing the replaced files can only leave an orphan, so it doesn't fail the edit
+    try {
+      await deleteFiles([
+        newResume && oldResumeKey,
+        newCoverLetter && oldCoverLetterKey,
+      ]);
+    } catch (error) {
+      console.error("Failed to delete replaced S3 files:", error);
     }
 
-    application.jobTitle = jobTitle;
-    application.companyName = companyName;
-    application.status = status;
-    application.description = description;
-    application.location = location;
-    application.salaryRange = salaryRange;
-    application.jobUrl = jobUrl;
-    application.resume = resume ? resumeData : application.resume;
-    application.coverLetter = coverLetter
-      ? coverLetterData
-      : application?.coverLetter;
-
-    await application.save();
     revalidateTag(`applications-${userId}`);
+    revalidateTag(`application-${id}`);
     return {
       success: true,
       message: "Successfully edited",
