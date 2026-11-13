@@ -120,10 +120,11 @@ export const deleteApplication = async (id) => {
     const user = await getUserByEmail(session.user.email);
     const userId = user._id.toString();
 
+    // Only the S3 keys are needed back, not the (legacy) file bytes
     const deleted = await AddApplicationModel.findOneAndDelete({
       _id: id,
       userId,
-    });
+    }).select("resume.key coverLetter.key");
 
     if (!deleted) {
       return {
@@ -132,7 +133,15 @@ export const deleteApplication = async (id) => {
       };
     }
 
+    // The application is gone; failing to remove its files only leaves orphans
+    try {
+      await deleteFiles([deleted.resume?.key, deleted.coverLetter?.key]);
+    } catch (error) {
+      console.error("Failed to delete S3 files for application:", error);
+    }
+
     revalidateTag(`applications-${userId}`);
+    revalidateTag(`application-${id}`);
 
     return {
       success: true,
