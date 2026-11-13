@@ -20,17 +20,21 @@ const addApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    // Files live in S3; `key` points at the object. `data` is the old in-Mongo copy,
+    // kept only until existing files are migrated to S3.
     resume: {
       filename: { type: String }, // Original filename
-      mimetype: { type: String}, // e.g. "application/pdf"
-      data: { type: Buffer}, // The file itself (BLOB)
-      // userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
-      // jobId: { type: Schema.Types.ObjectId, ref: "Job", required: true }
+      mimetype: { type: String }, // e.g. "application/pdf"
+      key: { type: String }, // S3 object key
+      size: { type: Number }, // Bytes
+      data: { type: Buffer }, // Legacy: file bytes stored in Mongo
     },
     coverLetter: {
-      filename: { type: String,  }, // Original filename
-      mimetype: { type: String,  }, // e.g. "application/pdf"
-      data: { type: Buffer,  }, // The file itself (BLOB)
+      filename: { type: String }, // Original filename
+      mimetype: { type: String }, // e.g. "application/pdf"
+      key: { type: String }, // S3 object key
+      size: { type: Number }, // Bytes
+      data: { type: Buffer }, // Legacy: file bytes stored in Mongo
     },
     jobUrl: {
       type: String,
