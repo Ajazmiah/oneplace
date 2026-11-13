@@ -1,7 +1,37 @@
 // File handling shared by the add-application route and editApplication.
 // Every function returns the metadata to store in Mongo ({ filename, mimetype, key, size }).
 import defaultResumeModel from "@/database/models/defaultResume";
-import { buildFileKey, uploadFile, copyFile, deleteFiles } from "./s3";
+import { fileResponseHeaders } from "@/app/lib/utils/utils";
+import { buildFileKey, uploadFile, copyFile, deleteFiles, getViewUrl } from "./s3";
+
+/**
+ * Response that shows a stored resume or cover letter. Call it only after checking that
+ * the signed-in user owns the application.
+ * - S3 files (have a key): 302 to a short-lived signed URL, so S3 serves the bytes.
+ * - Legacy files (bytes still in Mongo): streamed as before, until they're migrated.
+ * @param {object | undefined} file  application.resume or application.coverLetter
+ * @param {string} label             "Resume" or "Cover letter", for the 404 message
+ * @returns {Promise<Response>}
+ */
+export async function fileViewResponse(file, label) {
+  if (file?.key) {
+    const url = await getViewUrl(file.key, file);
+    // Built by hand: Response.redirect() returns immutable headers, so Cache-Control can't be set.
+    // no-store keeps the expiring URL out of browser and shared caches.
+    return new Response(null, {
+      status: 302,
+      headers: { Location: url, "Cache-Control": "private, no-store" },
+    });
+  }
+
+  if (file?.data) {
+    return new Response(file.data, {
+      headers: { ...fileResponseHeaders(file), "Cache-Control": "private, no-store" },
+    });
+  }
+
+  return new Response(`No ${label.toLowerCase()} uploaded`, { status: 404 });
+}
 
 /**
  * Upload a resume or cover letter into the application's folder.

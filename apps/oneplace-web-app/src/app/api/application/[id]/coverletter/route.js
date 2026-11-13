@@ -2,7 +2,7 @@ import Application from "@/database/models/addApplicationModel";
 import { Types } from "mongoose";
 import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
-import { fileResponseHeaders } from "@/app/lib/utils/utils";
+import { fileViewResponse } from "@/app/lib/s3/applicationFiles";
 
 export async function GET(req, context) {
   const session = await getCachedAuthSession();
@@ -17,18 +17,16 @@ export async function GET(req, context) {
   const user = await getUserByEmail(session.user.email);
   if (!user) return new Response("Unauthorized", { status: 401 });
 
-  // findById expects just the id
-  const application = await Application.findById(params.id);
+  // Filtering by userId means another user's id is simply "not found".
+  // No .lean(): a hydrated doc keeps legacy `data` as a Buffer instead of a BSON Binary.
+  const application = await Application.findOne({
+    _id: params.id,
+    userId: user._id,
+  }).select("coverLetter");
 
-  if (!application || application.userId.toString() !== user._id.toString()) {
+  if (!application) {
     return new Response("Cover letter not found", { status: 404 });
   }
 
-  if (!application.coverLetter?.data) {
-    return new Response("No resume uploaded", { status: 404 });
-  }
-
-  return new Response(application.coverLetter.data, {
-    headers:fileResponseHeaders(application.coverLetter)
-  });
+  return fileViewResponse(application.coverLetter, "Cover letter");
 }
