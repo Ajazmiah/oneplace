@@ -20,6 +20,37 @@ const VIEW_URL_EXPIRES_SECONDS = 5 * 60;
 // S3 accepts at most 1000 keys per DeleteObjects request
 const DELETE_BATCH_SIZE = 1000;
 
+const EXTENSIONS = {
+  "application/pdf": "pdf",
+  "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+};
+
+/**
+ * Build the S3 key for a file. Every key lives under users/<userId>/ so a user's files can be
+ * found (and deleted) by prefix. A random UUID per upload means a replacement never
+ * overwrites the old file before Mongo points at the new one, and keys can't be guessed.
+ *
+ *   application file: users/<userId>/applications/<applicationId>/<kind>-<uuid>.<ext>
+ *   default resume:   users/<userId>/default-resume/<uuid>.<ext>
+ *
+ * @param {{ userId: string, kind: "resume" | "coverletter" | "default-resume",
+ *           applicationId?: string, mimetype: string }} params
+ * @returns {string}
+ */
+export function buildFileKey({ userId, kind, applicationId, mimetype }) {
+  const ext = EXTENSIONS[mimetype] ?? "bin";
+  const id = crypto.randomUUID();
+
+  if (kind === "default-resume") {
+    return `users/${userId}/default-resume/${id}.${ext}`;
+  }
+  if (!applicationId) {
+    throw new Error("buildFileKey: applicationId is required for application files");
+  }
+  return `users/${userId}/applications/${applicationId}/${kind}-${id}.${ext}`;
+}
+
 if (!BUCKET || !REGION) {
   throw new Error("AWS_S3_BUCKET and AWS_REGION must be set");
 }
