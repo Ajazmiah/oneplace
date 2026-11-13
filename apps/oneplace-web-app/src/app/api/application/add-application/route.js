@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from "next/cache";
+import { Types } from "mongoose";
 
 // Assuming these imports are correctly configured with path aliases in your project
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "../../../lib/utils/databaseUtils";
 import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
-import { getBuffer, validateFile } from "../../../lib/utils/utils";
-import defaultResume from '@/database/models/defaultResume';
+import { validateFile } from "../../../lib/utils/utils";
+import { deleteFiles } from "@/app/lib/s3/s3";
+import {
+  uploadApplicationFile,
+  resumeFromDefault,
+  saveDefaultResume,
+} from "@/app/lib/s3/applicationFiles";
 
 /**
  * Handles POST requests to create a new application.
@@ -81,54 +87,69 @@ export async function POST(request) {
       }
     }
 
-    // 6. Process File Uploads
+    // 6. Upload files to S3, then create the database entry.
+    // The _id is created up front so file keys can include it.
+    const userId = user._id.toString();
+    const applicationId = new Types.ObjectId();
+    const fileParams = { userId, applicationId: applicationId.toString() };
+    const isUploadedResume =
+      useDefaultResume !== "true" &&
+      resume && typeof resume === "object" && resume.size > 0;
+
     let resumeData = null;
     let coverLetterData = null;
+    let application;
 
-    if (useDefaultResume === "true") {
-      const saved = await defaultResume.findOne({ userId: user._id });
-      if (saved?.resume) resumeData = saved.resume;
-    } else if (resume && typeof resume === "object" && resume.size > 0) {
-      resumeData = {
-        filename: resume.name,
-        mimetype: resume.type,
-        data: await getBuffer(resume),
-      };
-    }
-    if (coverLetter && typeof coverLetter === "object" && coverLetter.size > 0) {
-      coverLetterData = {
-        filename: coverLetter.name,
-        mimetype: coverLetter.type,
-        data: await getBuffer(coverLetter), // Convert File object to a Buffer
-      };
-    }
+    try {
+      if (useDefaultResume === "true") {
+        resumeData = await resumeFromDefault(fileParams);
+      } else if (isUploadedResume) {
+        resumeData = await uploadApplicationFile({ ...fileParams, kind: "resume", file: resume });
+      }
+      if (coverLetter && typeof coverLetter === "object" && coverLetter.size > 0) {
+        coverLetterData = await uploadApplicationFile({
+          ...fileParams,
+          kind: "coverletter",
+          file: coverLetter,
+        });
+      }
 
-    // 7. Create Database Entry
-    const application = await addApplicationModel.create({
-      jobTitle,
-      companyName,
-      status: status === "" ? "applied" : status,
-      description,
-      location,
-      salaryRange,
-      jobUrl,
-      resume: resumeData,
-      coverLetter: coverLetterData,
-      userId: user._id,
-    });
-
-    if (resumeData && useDefaultResume !== "true") {
-      await defaultResume.findOneAndUpdate(
-        { userId: user._id },
-        { resume: resumeData },
-        { upsert: true }
+      // 7. Create Database Entry
+      application = await addApplicationModel.create({
+        _id: applicationId,
+        jobTitle,
+        companyName,
+        status: status === "" ? "applied" : status,
+        description,
+        location,
+        salaryRange,
+        jobUrl,
+        resume: resumeData,
+        coverLetter: coverLetterData,
+        userId: user._id,
+      });
+    } catch (error) {
+      // Nothing points at the files uploaded or copied above, so remove them
+      await deleteFiles([resumeData?.key, coverLetterData?.key]).catch((cleanupError) =>
+        console.error("Failed to clean up S3 files after a failed save:", cleanupError)
       );
-      revalidateTag(`default-resume-${user._id.toString()}`);
+      throw error;
+    }
+
+    // A newly uploaded resume becomes the default. The application is already saved, so a
+    // failure here is logged rather than returned: a 500 would make the user submit it twice.
+    if (isUploadedResume) {
+      try {
+        await saveDefaultResume({ userId, resume: resumeData });
+        revalidateTag(`default-resume-${userId}`);
+      } catch (error) {
+        console.error("Failed to update default resume:", error);
+      }
     }
 
 
     // 8. Revalidate Cache
-    revalidateTag(`applications-${user._id.toString()}`);
+    revalidateTag(`applications-${userId}`);
     revalidatePath("/dashboard/applications");
 
     // 9. Prepare and Send Response
