@@ -22,6 +22,7 @@ import { FileText, X, ChevronDown, Upload } from "lucide-react";
 import { editApplication } from "@/app/lib/actions/applications/applicationActions";
 import AlertDialogBox from "../AlertDialog/AlertDialog";
 import ApplicationFormHeader from "./ApplicationFormHeader";
+import { appendUpload } from "@/app/lib/utils/uploadToS3";
 
 function EditApplicationForm({ application }) {
   const [resume, setResume] = useState(application.resume || null);
@@ -59,14 +60,16 @@ function EditApplicationForm({ application }) {
     }
   }
 
-  const getFormData = () => {
+  // New files go straight to S3 first; the server action then receives only their keys.
+  // `resume` may be the existing saved file (not a File), which appendUpload skips.
+  const getFormData = async () => {
     const formData = new FormData();
     if (resumeMode === "default") {
       formData.append("useDefaultResume", "true");
-    } else if (resume instanceof File) {
-      formData.append("resume", resume);
+    } else {
+      await appendUpload(formData, "resume", resume);
     }
-    if (coverLetter !== null) formData.append("coverLetter", coverLetter);
+    await appendUpload(formData, "coverLetter", coverLetter);
     formData.append("jobTitle", jobTitle);
     formData.append("status", status);
     formData.append("companyName", companyName);
@@ -81,7 +84,7 @@ function EditApplicationForm({ application }) {
     setOpen(false);
     setIsSubmitting(true);
     try {
-      const formData = getFormData();
+      const formData = await getFormData();
       const response = await editApplication(application._id, formData);
       if (!response?.success) {
         setError(response?.message || "Something went wrong");
@@ -90,7 +93,10 @@ function EditApplicationForm({ application }) {
       toast(response.message);
       router.back();
     } catch (err) {
-      setError("Network error — please try again");
+      // fetch() throws TypeError when offline; upload errors carry a readable message
+      setError(
+        err instanceof TypeError ? "Network error — please try again" : err.message
+      );
     } finally {
       setIsSubmitting(false);
     }
