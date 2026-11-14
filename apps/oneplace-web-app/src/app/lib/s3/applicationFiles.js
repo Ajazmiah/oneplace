@@ -1,7 +1,7 @@
 // File handling shared by the add-application route and editApplication.
 // Every function returns the metadata to store in Mongo ({ filename, mimetype, key, size }).
 import defaultResumeModel from "@/database/models/defaultResume";
-import { fileResponseHeaders, validateFile } from "@/app/lib/utils/utils";
+import { validateFile } from "@/app/lib/utils/utils";
 import {
   buildFileKey,
   isUploadKeyOf,
@@ -15,10 +15,9 @@ import {
 export class UploadError extends Error {}
 
 /**
- * Response that shows a stored resume or cover letter. Call it only after checking that
- * the signed-in user owns the application.
- * - S3 files (have a key): 302 to a short-lived signed URL, so S3 serves the bytes.
- * - Legacy files (bytes still in Mongo): streamed as before, until they're migrated.
+ * Response that shows a stored resume or cover letter: a 302 to a short-lived signed S3 URL,
+ * so S3 serves the bytes. Call it only after checking that the signed-in user owns the
+ * application.
  * @param {object | undefined} file  application.resume or application.coverLetter
  * @param {string} label             "Resume" or "Cover letter", for the 404 message
  * @returns {Promise<Response>}
@@ -31,12 +30,6 @@ export async function fileViewResponse(file, label) {
     return new Response(null, {
       status: 302,
       headers: { Location: url, "Cache-Control": "private, no-store" },
-    });
-  }
-
-  if (file?.data) {
-    return new Response(file.data, {
-      headers: { ...fileResponseHeaders(file), "Cache-Control": "private, no-store" },
     });
   }
 
@@ -87,40 +80,28 @@ export async function claimUpload({ userId, applicationId, kind, key, filename }
 
 /**
  * Resume metadata for an application that uses the saved default resume.
- * S3 defaults are copied into the application's folder so the application owns its copy.
- * Legacy defaults (bytes still in Mongo, no key) are returned as-is until they're migrated.
+ * The default is copied into the application's folder so the application owns its copy.
  * @param {{ userId: string, applicationId: string }} params
  * @returns {Promise<object | null>} null when the user has no default resume
  */
 export async function resumeFromDefault({ userId, applicationId }) {
   const saved = await defaultResumeModel.findOne({ userId }).lean();
   const resume = saved?.resume;
+  if (!resume?.key) return null;
 
-  if (resume?.key) {
-    const key = buildFileKey({
-      userId,
-      applicationId,
-      kind: "resume",
-      mimetype: resume.mimetype,
-    });
-    await copyFile(resume.key, key);
-    return {
-      filename: resume.filename,
-      mimetype: resume.mimetype,
-      size: resume.size,
-      key,
-    };
-  }
-
-  if (resume?.data) {
-    return {
-      filename: resume.filename,
-      mimetype: resume.mimetype,
-      data: resume.data,
-    };
-  }
-
-  return null;
+  const key = buildFileKey({
+    userId,
+    applicationId,
+    kind: "resume",
+    mimetype: resume.mimetype,
+  });
+  await copyFile(resume.key, key);
+  return {
+    filename: resume.filename,
+    mimetype: resume.mimetype,
+    size: resume.size,
+    key,
+  };
 }
 
 /**
@@ -138,8 +119,7 @@ export async function saveDefaultResume({ userId, resume }) {
 
   let previous;
   try {
-    // Replacing the whole `resume` subdocument also drops any legacy `data` bytes.
-    // `new: false` returns the doc as it was, so the old file can be cleaned up.
+    // `new: false` returns the doc as it was, so the old file can be cleaned up
     previous = await defaultResumeModel
       .findOneAndUpdate(
         { userId },
