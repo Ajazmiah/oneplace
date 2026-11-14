@@ -16,6 +16,11 @@
 //        node --env-file=.env scripts/migrate-files-to-s3.mjs --remove-data
 //
 // Back up the database before step 4. It is the only step that deletes anything.
+//
+// The app no longer reads bytes from Mongo. If a database's old files are worth keeping,
+// run --upload and --remove-data against it right before deploying, then deploy straight
+// away (until then the old code can't open migrated files). If they aren't worth keeping,
+// use scripts/remove-legacy-files.mjs instead.
 
 import crypto from "node:crypto";
 import mongoose from "mongoose";
