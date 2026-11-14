@@ -140,14 +140,9 @@ export async function POST(request) {
     revalidateTag(`applications-${userId}`);
     revalidatePath("/dashboard/applications");
 
-    // 9. Prepare and Send Response
-    // Remove binary data before sending the JSON response
-    const responseData = application.toObject();
-    delete responseData.resume?.data;
-    delete responseData.coverLetter?.data;
-
+    // 9. Send Response
     return NextResponse.json(
-      { success: true, data: responseData },
+      { success: true, data: application.toObject() },
       { status: 201 } // Created
     );
   } catch (error) {

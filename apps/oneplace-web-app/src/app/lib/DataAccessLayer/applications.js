@@ -11,7 +11,6 @@ async function getCachedApplications(userId) {
   cacheTag(`applications-${userId}`);
 
   const applications = await AddApplicationModel.find({ userId })
-    .select("-resume.data -coverLetter.data")
     .populate({ path: "userId" })
     .sort({ createdAt: -1 })
     .lean();
@@ -27,9 +26,7 @@ async function getCachedApplication(id, userId) {
   const application = await AddApplicationModel.findOne({
     _id: id,
     userId,
-  })
-    .select("-resume.data -coverLetter.data")
-    .lean();
+  }).lean();
 
   return JSON.parse(JSON.stringify(application));
 }

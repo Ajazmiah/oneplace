@@ -118,7 +118,7 @@ export const deleteApplication = async (id) => {
     const user = await getUserByEmail(session.user.email);
     const userId = user._id.toString();
 
-    // Only the S3 keys are needed back, not the (legacy) file bytes
+    // Only the S3 keys are needed back
     const deleted = await AddApplicationModel.findOneAndDelete({
       _id: id,
       userId,
