@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from "next/cache";
 import { Types } from "mongoose";
-
-// Assuming these imports are correctly configured with path aliases in your project
 import addApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "../../../lib/utils/databaseUtils";
 import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
@@ -31,7 +29,6 @@ export async function POST(request) {
       );
     }
 
-    // 2. Find User
     const user = await getUserByEmail(session.user.email);
 
     if (!user) {
