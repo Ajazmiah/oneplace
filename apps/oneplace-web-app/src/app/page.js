@@ -44,12 +44,12 @@ export default function Example() {
             <div className="mt-10 flex items-center gap-6">
               <div className="flex flex-col">
                 <span className="text-2xl font-bold leading-none">500+</span>
-                <span className="text-xs text-white/60 mt-1">apps tracked</span>
+                <span className="text-xs text-white/70 mt-1">apps tracked</span>
               </div>
               <div className="w-px h-10 bg-white/20" />
               <div className="flex flex-col">
                 <span className="text-2xl font-bold leading-none">1 min</span>
-                <span className="text-xs text-white/60 mt-1">to get started</span>
+                <span className="text-xs text-white/70 mt-1">to get started</span>
               </div>
             </div>
 
