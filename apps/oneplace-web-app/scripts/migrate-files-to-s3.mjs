@@ -39,13 +39,20 @@ const MODE = process.argv.includes("--remove-data")
     ? "upload"
     : "dry-run";
 
-const { MONGO_URI, AWS_REGION, AWS_S3_BUCKET } = process.env;
-if (!MONGO_URI || !AWS_REGION || !AWS_S3_BUCKET) {
-  console.error("MONGO_URI, AWS_REGION and AWS_S3_BUCKET must be set (run with --env-file=.env)");
+const { MONGO_URI, S3_REGION, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY } =
+  process.env;
+if (!MONGO_URI || !S3_REGION || !S3_BUCKET || !S3_ACCESS_KEY_ID || !S3_SECRET_ACCESS_KEY) {
+  console.error(
+    "MONGO_URI, S3_REGION, S3_BUCKET, S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY must be set (run with --env-file=.env)"
+  );
   process.exit(1);
 }
 
-const s3 = new S3Client({ region: AWS_REGION });
+// Same S3_* names and explicit credentials as src/app/lib/s3/s3.js
+const s3 = new S3Client({
+  region: S3_REGION,
+  credentials: { accessKeyId: S3_ACCESS_KEY_ID, secretAccessKey: S3_SECRET_ACCESS_KEY },
+});
 
 // Same key format and extensions as buildFileKey() in src/app/lib/s3/s3.js.
 // Copied rather than imported: that module uses the "@/" alias, which plain node can't resolve.
@@ -113,7 +120,7 @@ async function uploadTarget({ name, model, field, kind }) {
     try {
       await s3.send(
         new PutObjectCommand({
-          Bucket: AWS_S3_BUCKET,
+          Bucket: S3_BUCKET,
           Key: key,
           Body: bytes,
           ContentType: file.mimetype || "application/octet-stream",
@@ -128,7 +135,7 @@ async function uploadTarget({ name, model, field, kind }) {
       );
 
       if (result.modifiedCount === 0) {
-        await s3.send(new DeleteObjectCommand({ Bucket: AWS_S3_BUCKET, Key: key }));
+        await s3.send(new DeleteObjectCommand({ Bucket: S3_BUCKET, Key: key }));
         console.warn(`  skip ${label}: changed during migration`);
         stats.skipped++;
         continue;
@@ -157,7 +164,7 @@ async function removeDataTarget({ name, model, field }) {
 
     try {
       const head = await s3.send(
-        new HeadObjectCommand({ Bucket: AWS_S3_BUCKET, Key: file.key })
+        new HeadObjectCommand({ Bucket: S3_BUCKET, Key: file.key })
       );
 
       if (bytes && head.ContentLength !== bytes.length) {
@@ -184,7 +191,7 @@ async function removeDataTarget({ name, model, field }) {
 
 async function main() {
   await mongoose.connect(MONGO_URI);
-  console.log(`Mode: ${MODE}   DB: ${mongoose.connection.name}   Bucket: ${AWS_S3_BUCKET} (${AWS_REGION})\n`);
+  console.log(`Mode: ${MODE}   DB: ${mongoose.connection.name}   Bucket: ${S3_BUCKET} (${S3_REGION})\n`);
 
   for (const target of TARGETS) {
     console.log(`${target.name}s (collection "${target.model.collection.collectionName}")`);

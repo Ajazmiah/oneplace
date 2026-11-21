@@ -11,8 +11,12 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 import { fileResponseHeaders, MAX_FILE_SIZE_BYTES } from "@/app/lib/utils/utils";
 
-const BUCKET = process.env.AWS_S3_BUCKET;
-const REGION = process.env.AWS_REGION;
+// Not named AWS_*: Vercel runs functions on AWS Lambda, which reserves AWS_REGION,
+// AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY for its own values.
+const BUCKET = process.env.S3_BUCKET;
+const REGION = process.env.S3_REGION;
+const ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID;
+const SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY;
 
 // How long a view link works. Long enough that refreshing the PDF tab during a normal
 // read still works, short enough that a copied link is useless soon after.
@@ -75,14 +79,21 @@ export function isUploadKeyOf(userId, key) {
   return typeof key === "string" && pattern.test(key);
 }
 
-if (!BUCKET || !REGION) {
-  throw new Error("AWS_S3_BUCKET and AWS_REGION must be set");
+if (!BUCKET || !REGION || !ACCESS_KEY_ID || !SECRET_ACCESS_KEY) {
+  throw new Error(
+    "S3_BUCKET, S3_REGION, S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY must be set"
+  );
 }
 
-// Credentials come from AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY, which the SDK reads automatically.
+// Credentials are passed in explicitly: the SDK only finds them on its own under the
+// AWS_* names, and on Vercel those hold Lambda's credentials, not ours.
 // Cached on global so dev hot reloads reuse one client (same pattern as dbConnection.js).
 const s3 =
-  global._s3Client ?? (global._s3Client = new S3Client({ region: REGION }));
+  global._s3Client ??
+  (global._s3Client = new S3Client({
+    region: REGION,
+    credentials: { accessKeyId: ACCESS_KEY_ID, secretAccessKey: SECRET_ACCESS_KEY },
+  }));
 
 /**
  * Signed form that lets the browser upload one file straight to S3, so the bytes never pass
