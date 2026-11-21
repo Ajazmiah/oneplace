@@ -11,7 +11,6 @@ export default function QuestionAnswersView({ questions }) {
   return (
     <SharedQuestionAnswersView
       questions={questions}
-      title="Interview Prep"
       subtitle="Polished responses to common interview and application questions"
       allowEdit
       allowDelete
