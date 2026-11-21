@@ -1,7 +1,52 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./QuestionAnswersView.module.css";
+
+// Inline icons (lucide paths) so the shared package needs no icon dependency.
+const Icon = ({ children }) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    {children}
+  </svg>
+);
+
+const CopyIcon = () => (
+  <Icon>
+    <rect x="9" y="9" width="13" height="13" rx="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </Icon>
+);
+
+const CheckIcon = () => (
+  <Icon>
+    <path d="M20 6 9 17l-5-5" />
+  </Icon>
+);
+
+const PencilIcon = () => (
+  <Icon>
+    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+    <path d="m15 5 4 4" />
+  </Icon>
+);
+
+const TrashIcon = () => (
+  <Icon>
+    <path d="M3 6h18" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </Icon>
+);
 
 export function QuestionAnswersView({
   questions,
@@ -10,6 +55,7 @@ export function QuestionAnswersView({
   subtitle,
   allowEdit = false,
   allowDelete = false,
+  allowCopy = true,
   onEdit,
   onDelete,
   emptyStateHref,
@@ -23,10 +69,15 @@ export function QuestionAnswersView({
   const [draft, setDraft] = useState({ question: "", answer: "" });
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
+  const copyTimer = useRef(null);
 
   useEffect(() => {
     setAllQuestions(questions);
   }, [questions]);
+
+  useEffect(() => () => clearTimeout(copyTimer.current), []);
 
   const filteredQuestions = useMemo(() => {
     if (filterQuery === "" || filterQuery === "all") return allQuestions;
@@ -38,6 +89,7 @@ export function QuestionAnswersView({
   const paginated = filteredQuestions.slice((page - 1) * pageSize, page * pageSize);
 
   const startEdit = (item) => {
+    setConfirmDeleteId(null);
     setEditingId(item._id);
     setDraft({ question: item.question, answer: item.answer });
   };
@@ -45,6 +97,18 @@ export function QuestionAnswersView({
   const cancelEdit = () => {
     setEditingId(null);
     setDraft({ question: "", answer: "" });
+  };
+
+  const handleCopy = async (item) => {
+    try {
+      await navigator.clipboard.writeText(item.answer);
+      setCopiedId(item._id);
+      clearTimeout(copyTimer.current);
+      copyTimer.current = setTimeout(() => setCopiedId(null), 1500);
+      onNotify?.("Answer copied.", "success");
+    } catch {
+      onNotify?.("Couldn't copy the answer.", "error");
+    }
   };
 
   const handleSave = async (id) => {
@@ -71,7 +135,6 @@ export function QuestionAnswersView({
 
   const handleDelete = async (item) => {
     if (!onDelete) return;
-    if (!window.confirm("Delete this question? This action cannot be undone.")) return;
 
     setDeletingId(item._id);
     try {
@@ -82,6 +145,7 @@ export function QuestionAnswersView({
       onNotify?.("Something went wrong. Please try again.", "error");
     } finally {
       setDeletingId(null);
+      setConfirmDeleteId(null);
     }
   };
 
@@ -97,13 +161,14 @@ export function QuestionAnswersView({
       {allQuestions.length !== 0 && (
         <select
           className={styles.filterSelect}
+          aria-label="Filter questions"
           value={filterQuery}
           onChange={(e) => {
             setFilterQuery(e.target.value);
             setCurrentPage(1);
           }}
         >
-          <option value="all">All</option>
+          <option value="all">All questions</option>
           {allQuestions.map((q) => (
             <option key={q._id} value={q.question}>
               {q.question}
@@ -125,14 +190,23 @@ export function QuestionAnswersView({
         <div className={styles.list}>
           {paginated.map((item) => {
             const isEditing = editingId === item._id;
+            const isConfirmingDelete = confirmDeleteId === item._id;
+            const isDeleting = deletingId === item._id;
+            const isCopied = copiedId === item._id;
 
             return (
-              <div key={item._id} className={styles.card}>
+              <div
+                key={item._id}
+                className={isEditing ? `${styles.card} ${styles.cardEditing}` : styles.card}
+              >
                 {isEditing ? (
                   <div className={styles.editForm}>
                     <div className={styles.field}>
-                      <label className={styles.label}>Question</label>
+                      <label className={styles.label} htmlFor={`q-${item._id}`}>
+                        Question
+                      </label>
                       <input
+                        id={`q-${item._id}`}
                         className={styles.input}
                         value={draft.question}
                         onChange={(e) =>
@@ -141,8 +215,11 @@ export function QuestionAnswersView({
                       />
                     </div>
                     <div className={styles.field}>
-                      <label className={styles.label}>Answer</label>
+                      <label className={styles.label} htmlFor={`a-${item._id}`}>
+                        Answer
+                      </label>
                       <textarea
+                        id={`a-${item._id}`}
                         className={styles.textarea}
                         value={draft.answer}
                         onChange={(e) =>
@@ -166,39 +243,83 @@ export function QuestionAnswersView({
                         onClick={() => handleSave(item._id)}
                         disabled={saving}
                       >
-                        {saving ? "Saving..." : "Save"}
+                        {saving ? "Saving..." : "Save changes"}
                       </button>
                     </div>
                   </div>
                 ) : (
                   <>
                     <div className={styles.cardHeader}>
-                      <h2 className={styles.question}>{item.question}</h2>
-                      {(allowEdit || allowDelete) && (
-                        <div className={styles.cardActions}>
-                          {allowEdit && (
-                            <button
-                              type="button"
-                              className={styles.iconButton}
-                              onClick={() => startEdit(item)}
-                            >
-                              Edit
-                            </button>
-                          )}
-                          {allowDelete && (
-                            <button
-                              type="button"
-                              className={styles.iconButtonDanger}
-                              onClick={() => handleDelete(item)}
-                              disabled={deletingId === item._id}
-                            >
-                              {deletingId === item._id ? "Deleting..." : "Delete"}
-                            </button>
-                          )}
-                        </div>
-                      )}
+                      <div className={styles.questionRow}>
+                        <span className={styles.badge} aria-hidden="true">
+                          Q
+                        </span>
+                        <h2 className={styles.question}>{item.question}</h2>
+                      </div>
+
+                      <div className={styles.cardActions}>
+                        {allowCopy && (
+                          <button
+                            type="button"
+                            className={isCopied ? `${styles.iconButton} ${styles.iconButtonCopied}` : styles.iconButton}
+                            onClick={() => handleCopy(item)}
+                            aria-label={isCopied ? "Answer copied" : "Copy answer"}
+                            title={isCopied ? "Copied" : "Copy answer"}
+                          >
+                            {isCopied ? <CheckIcon /> : <CopyIcon />}
+                          </button>
+                        )}
+                        {allowEdit && (
+                          <button
+                            type="button"
+                            className={styles.iconButton}
+                            onClick={() => startEdit(item)}
+                            aria-label="Edit question"
+                            title="Edit"
+                          >
+                            <PencilIcon />
+                          </button>
+                        )}
+                        {allowDelete && (
+                          <button
+                            type="button"
+                            className={`${styles.iconButton} ${styles.iconButtonDanger}`}
+                            onClick={() => setConfirmDeleteId(item._id)}
+                            disabled={isDeleting}
+                            aria-label="Delete question"
+                            title="Delete"
+                          >
+                            <TrashIcon />
+                          </button>
+                        )}
+                      </div>
                     </div>
+
                     <p className={styles.answer}>{item.answer}</p>
+
+                    {isConfirmingDelete && (
+                      <div className={styles.confirmBar} role="alert">
+                        <span>Delete this question? This can&apos;t be undone.</span>
+                        <div className={styles.confirmActions}>
+                          <button
+                            type="button"
+                            className={styles.secondaryButton}
+                            onClick={() => setConfirmDeleteId(null)}
+                            disabled={isDeleting}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.dangerButton}
+                            onClick={() => handleDelete(item)}
+                            disabled={isDeleting}
+                          >
+                            {isDeleting ? "Deleting..." : "Delete"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
@@ -214,6 +335,7 @@ export function QuestionAnswersView({
             className={styles.pageButton}
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
+            aria-label="Previous page"
           >
             ‹
           </button>
@@ -223,6 +345,7 @@ export function QuestionAnswersView({
               type="button"
               className={n === page ? styles.pageButtonActive : styles.pageButton}
               onClick={() => setCurrentPage(n)}
+              aria-current={n === page ? "page" : undefined}
             >
               {n}
             </button>
@@ -232,6 +355,7 @@ export function QuestionAnswersView({
             className={styles.pageButton}
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
+            aria-label="Next page"
           >
             ›
           </button>
