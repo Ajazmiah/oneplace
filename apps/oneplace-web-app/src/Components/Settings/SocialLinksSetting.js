@@ -194,8 +194,11 @@ export default function SocialLinksSetting() {
         title="Are you sure you want to delete this link?"
         description="This action cannot be undone. You'll need to re-add the link if you change your mind."
       />
-      {/* Social media card */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+      {/* Social media card (#social-links is linked to from the profile page) */}
+      <div
+        id="social-links"
+        className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 scroll-mt-4 target:ring-2 target:ring-brand/50"
+      >
         <p className="text-xs font-semibold tracking-widest uppercase text-gray-500 mb-4">
           Social profiles
         </p>

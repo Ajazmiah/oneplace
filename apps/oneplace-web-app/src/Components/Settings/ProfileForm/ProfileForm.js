@@ -7,45 +7,16 @@ import ProfileSection from "./ProfileSection";
 import ProfileFormShell from "./ProfileFormShell";
 import EducationEntries from "./EducationEntries";
 import { Field, TextInput, NativeSelect, ChoicePills } from "./FormFields";
-
-const VISA_STATUS = [
-  { value: "citizen", label: "Citizen" },
-  { value: "permanent-resident", label: "Permanent resident" },
-  { value: "work-visa", label: "Work visa" },
-  { value: "student-visa", label: "Student visa" },
-  { value: "other", label: "Other" },
-];
-
-const YES_NO = [
-  { value: "yes", label: "Yes" },
-  { value: "no", label: "No" },
-];
-
-const RELOCATE = [...YES_NO, { value: "maybe", label: "Maybe" }];
-
-const WORK_MODES = [
-  { value: "remote", label: "Remote" },
-  { value: "hybrid", label: "Hybrid" },
-  { value: "on-site", label: "On-site" },
-];
-
-const NOTICE_PERIODS = [
-  { value: "immediately", label: "Immediately" },
-  { value: "1-week", label: "1 week" },
-  { value: "2-weeks", label: "2 weeks" },
-  { value: "1-month", label: "1 month" },
-  { value: "2-months", label: "2 months" },
-  { value: "3-months-plus", label: "3+ months" },
-];
-
-const TRAVEL = [
-  { value: "none", label: "No travel" },
-  { value: "25", label: "Up to 25%" },
-  { value: "50", label: "Up to 50%" },
-  { value: "75-plus", label: "75% or more" },
-];
-
-const PRONOUN_SUGGESTIONS = ["she/her", "he/him", "they/them"];
+import {
+  VISA_STATUS,
+  YES_NO,
+  RELOCATE,
+  WORK_MODES,
+  NOTICE_PERIODS,
+  TRAVEL,
+  PRONOUN_SUGGESTIONS,
+  SECTION_IDS,
+} from "./profileOptions";
 
 // Saved dates arrive as ISO strings; <input type="date"> wants "YYYY-MM-DD"
 const toDateInput = (iso) => (iso ? iso.slice(0, 10) : undefined);
@@ -56,6 +27,7 @@ export default async function ProfileForm() {
   return (
     <ProfileFormShell>
       <ProfileSection
+        id={SECTION_IDS.personal}
         icon={User}
         accent="brand"
         title="Personal"
@@ -147,6 +119,7 @@ export default async function ProfileForm() {
       </ProfileSection>
 
       <ProfileSection
+        id={SECTION_IDS.workAuthorization}
         icon={BadgeCheck}
         accent="sky"
         title="Work authorization"
@@ -194,6 +167,7 @@ export default async function ProfileForm() {
       </ProfileSection>
 
       <ProfileSection
+        id={SECTION_IDS.preferences}
         icon={SlidersHorizontal}
         accent="amber"
         title="Preferences"
@@ -236,6 +210,7 @@ export default async function ProfileForm() {
       </ProfileSection>
 
       <ProfileSection
+        id={SECTION_IDS.education}
         icon={GraduationCap}
         accent="violet"
         title="Education"

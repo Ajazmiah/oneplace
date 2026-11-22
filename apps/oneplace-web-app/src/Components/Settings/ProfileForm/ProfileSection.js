@@ -9,15 +9,19 @@ const ACCENTS = {
   violet: { bar: "before:bg-violet-400", chip: "bg-violet-100 text-violet-700" },
 };
 
-export default function ProfileSection({ icon: Icon, title, description, accent = "brand", children }) {
+// `id` is the anchor other pages link to (/dashboard/settings#education). The section
+// gets a brand ring while it's the URL's #target, so it's clear where the link landed.
+export default function ProfileSection({ id, icon: Icon, title, description, accent = "brand", children }) {
   const { bar, chip } = ACCENTS[accent] ?? ACCENTS.brand;
   const headingId = `section-${title.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
     <section
+      id={id}
       aria-labelledby={headingId}
       className={cn(
         "relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8",
+        "scroll-mt-4 transition-shadow target:ring-2 target:ring-brand/50",
         "before:absolute before:inset-y-0 before:left-0 before:w-[3px] before:content-['']",
         bar
       )}
