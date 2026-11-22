@@ -3,16 +3,25 @@
 import { useRef, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Field, TextInput } from "./FormFields";
+import { FieldError } from "./ProfileFormShell";
+
+const EMPTY = { current: false };
 
 // The only client part of the profile form: adding/removing entries and the
 // "Currently studying" toggle. Inputs are uncontrolled and named education[i][field].
-export default function EducationEntries() {
-  const nextId = useRef(1);
-  const [entries, setEntries] = useState([{ id: 0, current: false }]);
+// `initialEntries` is the saved education list, if any.
+export default function EducationEntries({ initialEntries }) {
+  const startEntries = initialEntries?.length ? initialEntries : [EMPTY];
+
+  // Starting entries are numbered by position; ids for added entries continue after them
+  const [entries, setEntries] = useState(() =>
+    startEntries.map((entry, i) => ({ ...entry, id: i }))
+  );
+  const nextId = useRef(startEntries.length);
 
   const addEntry = () => {
     const id = nextId.current++;
-    setEntries((prev) => [...prev, { id, current: false }]);
+    setEntries((prev) => [...prev, { ...EMPTY, id }]);
   };
 
   const removeEntry = (id) => setEntries((prev) => prev.filter((e) => e.id !== id));
@@ -22,9 +31,13 @@ export default function EducationEntries() {
 
   return (
     <div className="flex flex-col gap-4">
+      <FieldError name="education" />
+
       {entries.map((entry, index) => {
         const prefix = `education[${index}]`;
         const fieldId = (name) => `edu-${entry.id}-${name}`;
+        // saveProfile reports errors as "education.<index>.<field>"
+        const errorKey = (name) => `education.${index}.${name}`;
 
         return (
           <div
@@ -48,41 +61,74 @@ export default function EducationEntries() {
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Field label="School name" htmlFor={fieldId("school")} className="sm:col-span-2">
+              <Field
+                label="School name"
+                htmlFor={fieldId("school")}
+                errorFor={errorKey("school")}
+                className="sm:col-span-2"
+              >
                 <TextInput
                   id={fieldId("school")}
                   name={`${prefix}[school]`}
+                  defaultValue={entry.school}
                   placeholder="e.g. University of Toronto"
                 />
               </Field>
-              <Field label="City" htmlFor={fieldId("city")}>
-                <TextInput id={fieldId("city")} name={`${prefix}[city]`} placeholder="Toronto" />
+              <Field label="City" htmlFor={fieldId("city")} errorFor={errorKey("city")}>
+                <TextInput
+                  id={fieldId("city")}
+                  name={`${prefix}[city]`}
+                  defaultValue={entry.city}
+                  placeholder="Toronto"
+                />
               </Field>
-              <Field label="Country" htmlFor={fieldId("country")}>
-                <TextInput id={fieldId("country")} name={`${prefix}[country]`} placeholder="Canada" />
+              <Field label="Country" htmlFor={fieldId("country")} errorFor={errorKey("country")}>
+                <TextInput
+                  id={fieldId("country")}
+                  name={`${prefix}[country]`}
+                  defaultValue={entry.country}
+                  placeholder="Canada"
+                />
               </Field>
-              <Field label="Degree" htmlFor={fieldId("degree")}>
+              <Field label="Degree" htmlFor={fieldId("degree")} errorFor={errorKey("degree")}>
                 <TextInput
                   id={fieldId("degree")}
                   name={`${prefix}[degree]`}
+                  defaultValue={entry.degree}
                   placeholder="e.g. Bachelor of Science"
                 />
               </Field>
-              <Field label="Field of study" htmlFor={fieldId("field")}>
+              <Field
+                label="Field of study"
+                htmlFor={fieldId("field")}
+                errorFor={errorKey("fieldOfStudy")}
+              >
                 <TextInput
                   id={fieldId("field")}
                   name={`${prefix}[fieldOfStudy]`}
+                  defaultValue={entry.fieldOfStudy}
                   placeholder="e.g. Computer Science"
                 />
               </Field>
-              <Field label="Start date" htmlFor={fieldId("start")}>
-                <TextInput id={fieldId("start")} type="month" name={`${prefix}[startDate]`} />
+              <Field label="Start date" htmlFor={fieldId("start")} errorFor={errorKey("startDate")}>
+                <TextInput
+                  id={fieldId("start")}
+                  type="month"
+                  name={`${prefix}[startDate]`}
+                  defaultValue={entry.startDate}
+                />
               </Field>
               <Field
                 label={entry.current ? "Expected graduation" : "End date"}
                 htmlFor={fieldId("end")}
+                errorFor={errorKey("endDate")}
               >
-                <TextInput id={fieldId("end")} type="month" name={`${prefix}[endDate]`} />
+                <TextInput
+                  id={fieldId("end")}
+                  type="month"
+                  name={`${prefix}[endDate]`}
+                  defaultValue={entry.endDate}
+                />
               </Field>
             </div>
 

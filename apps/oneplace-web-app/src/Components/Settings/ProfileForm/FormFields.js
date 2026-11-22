@@ -1,12 +1,18 @@
 // Field building blocks for the profile form. No hooks or handlers, so they render on the
 // server in ProfileForm and can also be used inside the client EducationEntries.
+// Save errors come from the client <FieldError>, which reads them from ProfileFormShell.
 import { ChevronDown } from "lucide-react";
 import { Input } from "@/Components/ui/input";
 import { cn } from "@/lib/utils";
+import { FieldError } from "./ProfileFormShell";
 
 const focusRing = "focus-visible:ring-brand/40 focus-visible:border-brand";
 
-export function Field({ label, htmlFor, optional, hint, className, children }) {
+/**
+ * Label + control + hint + save error. `errorFor` is the saveProfile fieldErrors key
+ * (or keys) to show; it defaults to `htmlFor`, which matches the field name.
+ */
+export function Field({ label, htmlFor, errorFor = htmlFor, optional, hint, className, children }) {
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <label htmlFor={htmlFor} className="text-sm font-medium text-gray-700">
@@ -15,6 +21,7 @@ export function Field({ label, htmlFor, optional, hint, className, children }) {
       </label>
       {children}
       {hint && <p className="text-xs text-gray-500">{hint}</p>}
+      {errorFor && <FieldError name={errorFor} />}
     </div>
   );
 }
@@ -23,11 +30,11 @@ export function TextInput({ className, ...props }) {
   return <Input className={cn("bg-white", focusRing, className)} {...props} />;
 }
 
-export function NativeSelect({ options, placeholder = "Select…", className, ...props }) {
+export function NativeSelect({ options, placeholder = "Select…", defaultValue, className, ...props }) {
   return (
     <div className="relative">
       <select
-        defaultValue=""
+        defaultValue={defaultValue ?? ""}
         className={cn(
           "h-9 w-full appearance-none rounded-md border border-input bg-white pl-3 pr-9 text-sm text-gray-900 shadow-xs outline-none transition-[color,box-shadow]",
           "focus-visible:ring-[3px]",
@@ -36,9 +43,8 @@ export function NativeSelect({ options, placeholder = "Select…", className, ..
         )}
         {...props}
       >
-        <option value="" disabled>
-          {placeholder}
-        </option>
+        {/* Selectable, so a saved choice can be cleared again */}
+        <option value="">{placeholder}</option>
         {options.map(({ value, label }) => (
           <option key={value} value={value}>
             {label}
@@ -56,8 +62,11 @@ export function NativeSelect({ options, placeholder = "Select…", className, ..
 /**
  * Pill-style radios (type="radio") or checkboxes (type="checkbox"). The selected state is
  * pure CSS (has-[:checked]), so no client JS is needed.
+ * `defaultValue` is the saved value (radio) or list of values (checkbox).
  */
-export function ChoicePills({ name, type = "radio", options, legend, optional }) {
+export function ChoicePills({ name, type = "radio", options, legend, optional, defaultValue }) {
+  const selected = new Set([defaultValue ?? []].flat());
+
   return (
     <fieldset className="flex flex-col gap-1.5">
       <legend className="mb-1.5 text-sm font-medium text-gray-700">
@@ -75,11 +84,18 @@ export function ChoicePills({ name, type = "radio", options, legend, optional })
               "has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-brand/40"
             )}
           >
-            <input type={type} name={name} value={value} className="sr-only" />
+            <input
+              type={type}
+              name={name}
+              value={value}
+              defaultChecked={selected.has(value)}
+              className="sr-only"
+            />
             {label}
           </label>
         ))}
       </div>
+      <FieldError name={name} />
     </fieldset>
   );
 }

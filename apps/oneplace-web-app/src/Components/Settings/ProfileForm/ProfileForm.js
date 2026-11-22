@@ -1,7 +1,10 @@
-// Autofill profile form. Server component: only EducationEntries runs on the client.
-// UI only for now. Every field has a name, so saving later just needs a form action.
+// Autofill profile form. Server component: loads the saved profile and renders the
+// sections; ProfileFormShell (client) submits them to saveProfile, and EducationEntries
+// (client) handles the repeating education list. Field names match profileModel.
 import { User, BadgeCheck, SlidersHorizontal, GraduationCap } from "lucide-react";
+import { getProfile } from "@/app/lib/DataAccessLayer/profile";
 import ProfileSection from "./ProfileSection";
+import ProfileFormShell from "./ProfileFormShell";
 import EducationEntries from "./EducationEntries";
 import { Field, TextInput, NativeSelect, ChoicePills } from "./FormFields";
 
@@ -44,10 +47,14 @@ const TRAVEL = [
 
 const PRONOUN_SUGGESTIONS = ["she/her", "he/him", "they/them"];
 
-export default function ProfileForm() {
+// Saved dates arrive as ISO strings; <input type="date"> wants "YYYY-MM-DD"
+const toDateInput = (iso) => (iso ? iso.slice(0, 10) : undefined);
+
+export default async function ProfileForm() {
+  const p = (await getProfile()) ?? {};
+
   return (
-    // No submit button yet, so pressing Enter can't submit (and put values in the URL)
-    <form className="flex flex-col gap-6" aria-label="Autofill profile">
+    <ProfileFormShell>
       <ProfileSection
         icon={User}
         accent="brand"
@@ -56,16 +63,36 @@ export default function ProfileForm() {
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Legal first name" htmlFor="firstName">
-            <TextInput id="firstName" name="firstName" autoComplete="given-name" />
+            <TextInput
+              id="firstName"
+              name="firstName"
+              defaultValue={p.firstName}
+              autoComplete="given-name"
+            />
           </Field>
           <Field label="Legal last name" htmlFor="lastName">
-            <TextInput id="lastName" name="lastName" autoComplete="family-name" />
+            <TextInput
+              id="lastName"
+              name="lastName"
+              defaultValue={p.lastName}
+              autoComplete="family-name"
+            />
           </Field>
           <Field label="Preferred name" htmlFor="preferredName" optional>
-            <TextInput id="preferredName" name="preferredName" autoComplete="nickname" />
+            <TextInput
+              id="preferredName"
+              name="preferredName"
+              defaultValue={p.preferredName}
+              autoComplete="nickname"
+            />
           </Field>
           <Field label="Pronouns" htmlFor="pronouns" optional>
-            <TextInput id="pronouns" name="pronouns" list="pronoun-suggestions" />
+            <TextInput
+              id="pronouns"
+              name="pronouns"
+              defaultValue={p.pronouns}
+              list="pronoun-suggestions"
+            />
             <datalist id="pronoun-suggestions">
               {PRONOUN_SUGGESTIONS.map((p) => (
                 <option key={p} value={p} />
@@ -73,13 +100,24 @@ export default function ProfileForm() {
             </datalist>
           </Field>
           <Field label="Email" htmlFor="email">
-            <TextInput id="email" name="email" type="email" autoComplete="email" />
+            <TextInput
+              id="email"
+              name="email"
+              type="email"
+              defaultValue={p.email}
+              autoComplete="email"
+            />
           </Field>
-          <Field label="Phone" htmlFor="phoneNumber">
+          <Field
+            label="Phone"
+            htmlFor="phoneNumber"
+            errorFor={["phoneCountryCode", "phoneNumber"]}
+          >
             <div className="flex gap-2">
               <TextInput
                 aria-label="Country code"
                 name="phoneCountryCode"
+                defaultValue={p.phoneCountryCode}
                 placeholder="+1"
                 autoComplete="tel-country-code"
                 className="w-20 shrink-0"
@@ -88,16 +126,22 @@ export default function ProfileForm() {
                 id="phoneNumber"
                 name="phoneNumber"
                 type="tel"
+                defaultValue={p.phoneNumber}
                 placeholder="555 123 4567"
                 autoComplete="tel-national"
               />
             </div>
           </Field>
           <Field label="City" htmlFor="city">
-            <TextInput id="city" name="city" autoComplete="address-level2" />
+            <TextInput id="city" name="city" defaultValue={p.city} autoComplete="address-level2" />
           </Field>
           <Field label="Country" htmlFor="country">
-            <TextInput id="country" name="country" autoComplete="country-name" />
+            <TextInput
+              id="country"
+              name="country"
+              defaultValue={p.country}
+              autoComplete="country-name"
+            />
           </Field>
         </div>
       </ProfileSection>
@@ -118,19 +162,31 @@ export default function ProfileForm() {
             <TextInput
               id="authorizedCountries"
               name="authorizedCountries"
+              defaultValue={p.authorizedCountries?.join(", ")}
               placeholder="e.g. Canada, United States"
             />
           </Field>
           <Field label="Citizenship or visa status" htmlFor="visaStatus">
-            <NativeSelect id="visaStatus" name="visaStatus" options={VISA_STATUS} />
+            <NativeSelect
+              id="visaStatus"
+              name="visaStatus"
+              defaultValue={p.visaStatus}
+              options={VISA_STATUS}
+            />
           </Field>
           <Field label="Visa expiry date" htmlFor="visaExpiry" optional>
-            <TextInput id="visaExpiry" name="visaExpiry" type="date" />
+            <TextInput
+              id="visaExpiry"
+              name="visaExpiry"
+              type="date"
+              defaultValue={toDateInput(p.visaExpiry)}
+            />
           </Field>
           <div className="sm:col-span-2">
             <ChoicePills
               legend="Will you need sponsorship now or in the future?"
               name="requiresSponsorship"
+              defaultValue={p.requiresSponsorship}
               options={YES_NO}
             />
           </div>
@@ -144,16 +200,37 @@ export default function ProfileForm() {
         description="The kind of roles you're open to."
       >
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <ChoicePills legend="Willing to relocate?" name="willingToRelocate" options={RELOCATE} />
-          <ChoicePills legend="Work mode" name="workModes" type="checkbox" options={WORK_MODES} />
+          <ChoicePills
+            legend="Willing to relocate?"
+            name="willingToRelocate"
+            defaultValue={p.willingToRelocate}
+            options={RELOCATE}
+          />
+          <ChoicePills
+            legend="Work mode"
+            name="workModes"
+            type="checkbox"
+            defaultValue={p.workModes}
+            options={WORK_MODES}
+          />
           <Field label="Notice period" htmlFor="noticePeriod">
-            <NativeSelect id="noticePeriod" name="noticePeriod" options={NOTICE_PERIODS} />
+            <NativeSelect
+              id="noticePeriod"
+              name="noticePeriod"
+              defaultValue={p.noticePeriod}
+              options={NOTICE_PERIODS}
+            />
           </Field>
           <Field label="Earliest start date" htmlFor="earliestStartDate" optional>
-            <TextInput id="earliestStartDate" name="earliestStartDate" type="date" />
+            <TextInput
+              id="earliestStartDate"
+              name="earliestStartDate"
+              type="date"
+              defaultValue={toDateInput(p.earliestStartDate)}
+            />
           </Field>
           <Field label="Willing to travel" htmlFor="travel" optional>
-            <NativeSelect id="travel" name="travel" options={TRAVEL} />
+            <NativeSelect id="travel" name="travel" defaultValue={p.travel} options={TRAVEL} />
           </Field>
         </div>
       </ProfileSection>
@@ -164,18 +241,8 @@ export default function ProfileForm() {
         title="Education"
         description="Add each school, starting with the most recent."
       >
-        <EducationEntries />
+        <EducationEntries initialEntries={p.education} />
       </ProfileSection>
-
-      <div className="flex items-center justify-end gap-4">
-        <p className="text-xs text-gray-400">Saving comes next</p>
-        <button
-          type="button"
-          className="rounded-lg bg-brand-strong px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-strong-hover"
-        >
-          Save profile
-        </button>
-      </div>
-    </form>
+    </ProfileFormShell>
   );
 }
