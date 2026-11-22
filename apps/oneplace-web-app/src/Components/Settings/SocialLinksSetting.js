@@ -109,10 +109,21 @@ export default function SocialLinksSetting() {
   };
 
   const handleSave = async () => {
-    const filled = socialLinks.filter((link) => link.url.trim() !== "");
-    const res = await saveSocialLinks(filled);
+    // What's typed lives in draftValues until saved, so apply it on top of the saved links.
+    // The server replaces the whole list, so links left out (deleted or blank) are removed.
+    const links = socialFields
+      .map(({ name }) => {
+        const saved = socialLinks.find((link) => link.socialLabel === name)?.url ?? "";
+        return { socialLabel: name, url: (draftValues[name] ?? saved).trim() };
+      })
+      .filter((link) => link.url !== "");
+
+    const res = await saveSocialLinks(links);
 
     if (res.success) {
+      setSocialLinks(links);
+      setDraftValues({});
+      setEditingFields(new Set());
       toast.success(res.message);
     } else {
       toast.error(res.message);
