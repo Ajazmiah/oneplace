@@ -6,6 +6,35 @@ const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL;
 const LOGIN_URL = `${WEB_APP_URL}/signin`;
 const DASHBOARD_URL = `${WEB_APP_URL}/dashboard/applications`;
 const ADD_APPLICATION_URL = `${WEB_APP_URL}/api/application/add-application`;
+const PRESIGN_URL = `${WEB_APP_URL}/api/uploads/presign`;
+
+// Upload a file straight to S3 and add its key to the form, so the bytes never pass through
+// the web app's server (Vercel rejects request bodies over 4.5MB). Same flow as
+// uploadToS3.js in the web app. The bucket URL must be in manifest.json host_permissions.
+async function appendUpload(formData: FormData, field: "resume" | "coverLetter", file: File) {
+  const res = await fetch(PRESIGN_URL, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ mimetype: file.type, size: file.size }),
+  });
+  const presign = await res.json().catch(() => null);
+  if (!res.ok || !presign?.success) {
+    throw new Error(presign?.message || "Could not start the upload.");
+  }
+
+  const form = new FormData();
+  Object.entries(presign.fields as Record<string, string>).forEach(([name, value]) =>
+    form.append(name, value)
+  );
+  form.append("file", file); // S3 requires the file to be the last field
+
+  const upload = await fetch(presign.url, { method: "POST", body: form });
+  if (!upload.ok) throw new Error("Upload failed. Please try again.");
+
+  formData.append(`${field}Key`, presign.key);
+  formData.append(`${field}Name`, file.name);
+}
 
 type AuthUser = {
   name?: string;
@@ -231,9 +260,9 @@ function AddApplicationForm() {
       formData.append("salaryRange", salaryRange);
       formData.append("status", status);
       formData.append("details", details);
-      if (resume) formData.append("resume", resume);
+      if (resume) await appendUpload(formData, "resume", resume);
       else formData.append("useDefaultResume", "true");
-      if (coverLetter) formData.append("coverLetter", coverLetter);
+      if (coverLetter) await appendUpload(formData, "coverLetter", coverLetter);
 
       const res = await fetch(ADD_APPLICATION_URL, {
         method: "POST",
@@ -249,8 +278,13 @@ function AddApplicationForm() {
       reset();
       setSuccess("Application saved");
       setTimeout(() => setSuccess(""), 3000);
-    } catch {
-      setError("Network error — please try again");
+    } catch (err) {
+      // fetch() throws TypeError when offline; upload errors carry a readable message
+      setError(
+        err instanceof TypeError || !(err instanceof Error)
+          ? "Network error — please try again"
+          : err.message
+      );
     } finally {
       setIsSubmitting(false);
     }

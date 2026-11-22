@@ -1,12 +1,15 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import CopyButton from "@/Components/CopyButton/CopyButton";
+import ProfileDetails from "./ProfileDetails";
 
 export default function ProfilePage({
   name,
   email,
   image,
-  socialLinks,
+  socialLinks = [],
   applications = [],
+  profile,
 }) {
   const initials = name?.[0]?.toUpperCase() ?? "?";
 
@@ -151,12 +154,23 @@ export default function ProfilePage({
               })}
             </div>
 
-            <Link
-              href="/dashboard/settings"
-              className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-500 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-all duration-200"
-            >
-              + Add another link
-            </Link>
+            {socialLinks.length === 0 ? (
+              // Plain <a> so the #hash scrolls to and highlights the card in Settings
+              <a
+                href="/dashboard/settings#social-links"
+                className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-white px-4 py-2 text-sm font-medium text-brand-strong shadow-xs transition-colors hover:border-brand hover:bg-brand/10"
+              >
+                <Plus className="h-4 w-4" aria-hidden="true" />
+                Social links
+              </a>
+            ) : (
+              <a
+                href="/dashboard/settings#social-links"
+                className="mt-3 flex w-full items-center justify-center py-2.5 rounded-xl text-xs font-medium border border-dashed border-gray-200 text-gray-500 hover:border-[#0bbcaa] hover:text-brand-strong hover:bg-[#0bbcaa]/5 transition-all duration-200"
+              >
+                + Add another link
+              </a>
+            )}
           </div>
 
           {/* Stats card */}
@@ -194,6 +208,8 @@ export default function ProfilePage({
             </div>
           </div>
         </div>
+
+        <ProfileDetails profile={profile} />
       </div>
     </div>
   );

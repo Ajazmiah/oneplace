@@ -20,6 +20,7 @@ import {
 import { Textarea } from "@/Components/ui/textarea";
 import { FileText, X, ChevronDown, Upload } from "lucide-react";
 import ApplicationFormHeader from "./ApplicationFormHeader";
+import { appendUpload } from "@/app/lib/utils/uploadToS3";
 function ApplicationForm() {
   const [resume, setResume] = useState(null);
   const [defaultResume, setDefaultResume] = useState(null);
@@ -80,14 +81,15 @@ function ApplicationForm() {
     getDefaultResume();
   }, []);
 
-  const getFormData = () => {
+  // Files go straight to S3 first; the form then carries only their keys
+  const getFormData = async () => {
     const formData = new FormData();
     if (!resume) {
       formData.append("useDefaultResume", "true");
-    } else if (resume instanceof File) {
-      formData.append("resume", resume);
+    } else {
+      await appendUpload(formData, "resume", resume);
     }
-    if (coverLetter !== null) formData.append("coverLetter", coverLetter);
+    await appendUpload(formData, "coverLetter", coverLetter);
     formData.append("jobTitle", jobTitle);
     formData.append("status", status);
     formData.append("companyName", companyName);
@@ -108,7 +110,7 @@ function ApplicationForm() {
 
     setIsSubmitting(true);
     try {
-      const formData = getFormData();
+      const formData = await getFormData();
       const res = await fetch("/api/application/add-application", {
         method: "POST",
         body: formData,
@@ -130,7 +132,10 @@ function ApplicationForm() {
       setError("");
       router.push("/dashboard/applications");
     } catch (err) {
-      setError("Network error — please try again");
+      // fetch() throws TypeError when offline; upload errors carry a readable message
+      setError(
+        err instanceof TypeError ? "Network error — please try again" : err.message
+      );
     } finally {
       setIsSubmitting(false);
     }

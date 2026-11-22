@@ -9,9 +9,7 @@ async function getCachedDefaultResume(userId) {
   cacheLife("hours");
   cacheTag(`default-resume-${userId}`);
 
-  const resumeData = await DefaultResumeModel.findOne({ userId })
-    .select("-resume.data")
-    .lean();
+  const resumeData = await DefaultResumeModel.findOne({ userId }).lean();
 
   return JSON.parse(JSON.stringify(resumeData));
 }

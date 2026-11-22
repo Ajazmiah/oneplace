@@ -1,13 +1,17 @@
 import { getSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 import { getApplications } from "@/app/lib/DataAccessLayer/applications";
+import { getProfile } from "@/app/lib/DataAccessLayer/profile";
 import { auth } from "@/auth";
 import ProfilePage from "@/Components/Profile/ProfilePage";
 
 export default async function ProfileRoute() {
   const session = await auth();
 
-  const socialLinks = await getSocialLinks();
-  const applications = await getApplications();
+  const [socialLinks, applications, profile] = await Promise.all([
+    getSocialLinks(),
+    getApplications(),
+    getProfile(),
+  ]);
 
   return (
     <ProfilePage
@@ -16,6 +20,7 @@ export default async function ProfileRoute() {
       image={session?.user?.image}
       socialLinks={socialLinks}
       applications={applications}
+      profile={profile}
     />
   );
 }

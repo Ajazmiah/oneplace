@@ -29,10 +29,6 @@ export const formatDate = (date) => {
   return formatedDate;
 };
 
-export const getBuffer = async (file) => {
-  return Buffer.from(await file.arrayBuffer());
-};
-
 export const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 export const ALLOWED_FILE_TYPES = [
   "application/pdf",

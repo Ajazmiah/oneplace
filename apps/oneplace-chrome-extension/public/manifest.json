@@ -1,6 +1,10 @@
 {
   "manifest_version": 3,
-  "host_permissions": ["http://localhost:3000/*", "https://resumind-lilac.vercel.app/*"],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://resumind-lilac.vercel.app/*",
+    "https://symplifyd-resume-cover-letter-bucket.s3.us-east-2.amazonaws.com/*"
+  ],
   "name": "OneSimplifyd",
   "version": "0.1.0",
   "description": "Track your job applications directly from your browser.",
