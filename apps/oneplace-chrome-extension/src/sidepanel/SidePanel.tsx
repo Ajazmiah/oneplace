@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import SocialLinks, { type SocialLink } from "./components/SocialLinks";
 import QuestionAnswersView, { type QAItem } from "./components/QuestionAnswersView";
 import ProfileInfo, { type Profile } from "./components/ProfileInfo";
+import ResumePicker, {
+  initialResumeChoice,
+  type LibraryResume,
+  type ResumeChoice,
+} from "./components/ResumePicker";
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL;
 const LOGIN_URL = `${WEB_APP_URL}/signin`;
@@ -197,7 +202,7 @@ function InfoTab({ socialLinks, profile }: { socialLinks: SocialLink[]; profile:
   );
 }
 
-function AddApplicationForm() {
+function AddApplicationForm({ resumes }: { resumes: LibraryResume[] }) {
   const [jobTitle, setJobTitle] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [location, setLocation] = useState("");
@@ -205,7 +210,13 @@ function AddApplicationForm() {
   const [salaryRange, setSalaryRange] = useState("");
   const [status, setStatus] = useState("applied");
   const [details, setDetails] = useState("");
-  const [resume, setResume] = useState<File | null>(null);
+  // undefined = not touched: follow the most recently used resume, even if the list changes
+  // while the panel is open. A picked resume that's since been deleted falls back to that too.
+  const [pickedResume, setPickedResume] = useState<ResumeChoice | undefined>(undefined);
+  const pickedIsGone =
+    pickedResume?.type === "library" && !resumes.some((r) => r._id === pickedResume.id);
+  const resumeChoice =
+    pickedResume === undefined || pickedIsGone ? initialResumeChoice(resumes) : pickedResume;
   const [coverLetter, setCoverLetter] = useState<File | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -246,7 +257,7 @@ function AddApplicationForm() {
     setSalaryRange("");
     setStatus("applied");
     setDetails("");
-    setResume(null);
+    setPickedResume(undefined);
     setCoverLetter(null);
   };
 
@@ -270,8 +281,8 @@ function AddApplicationForm() {
       formData.append("salaryRange", salaryRange);
       formData.append("status", status);
       formData.append("details", details);
-      if (resume) await appendUpload(formData, "resume", resume);
-      else formData.append("useDefaultResume", "true");
+      if (resumeChoice?.type === "library") formData.append("resumeId", resumeChoice.id);
+      if (resumeChoice?.type === "new") await appendUpload(formData, "resume", resumeChoice.file);
       if (coverLetter) await appendUpload(formData, "coverLetter", coverLetter);
 
       const res = await fetch(ADD_APPLICATION_URL, {
@@ -284,6 +295,14 @@ function AddApplicationForm() {
       if (!data?.success) {
         setError(data?.message || "Something went wrong");
         return;
+      }
+      // The resume just used (picked, or newly added to the library) moves to the top as
+      // "last used"; update the stored list now instead of waiting for a dashboard sync
+      const used: LibraryResume | null = data.resume ?? null;
+      if (used) {
+        chrome.storage.local.set({
+          resumes: [used, ...resumes.filter((r) => r._id !== used._id)],
+        });
       }
       reset();
       setSuccess("Application saved");
@@ -380,11 +399,11 @@ function AddApplicationForm() {
 
         <div style={s.field}>
           <label style={s.label}>Resume</label>
-          <input
-            style={s.fileInput}
-            type="file"
-            accept=".pdf,.doc,.docx"
-            onChange={(e) => setResume(e.target.files?.[0] ?? null)}
+          <ResumePicker
+            resumes={resumes}
+            value={resumeChoice}
+            onChange={setPickedResume}
+            webAppUrl={WEB_APP_URL}
           />
         </div>
 
@@ -415,16 +434,18 @@ function SidePanel() {
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [questionsAndAnswers, setQuestionsAndAnswers] = useState<QAItem[]>([]);
   const [profile, setProfile] = useState<Profile>(null);
+  const [resumes, setResumes] = useState<LibraryResume[]>([]);
   const [tab, setTab] = useState<Tab>("home");
 
   useEffect(() => {
     chrome.storage.local.get(
-      ["authUser", "socialLinks", "questionsAndAnswers", "profile"],
+      ["authUser", "socialLinks", "questionsAndAnswers", "profile", "resumes"],
       (result) => {
         setAuthUser(result.authUser ?? null);
         setSocialLinks(result.socialLinks ?? []);
         setQuestionsAndAnswers(result.questionsAndAnswers ?? []);
         setProfile(result.profile ?? null);
+        setResumes(result.resumes ?? []);
       }
     );
 
@@ -439,6 +460,7 @@ function SidePanel() {
         setQuestionsAndAnswers(changes.questionsAndAnswers.newValue ?? []);
       }
       if (changes.profile) setProfile(changes.profile.newValue ?? null);
+      if (changes.resumes) setResumes(changes.resumes.newValue ?? []);
     };
     chrome.storage.onChanged.addListener(onChange);
     return () => chrome.storage.onChanged.removeListener(onChange);
@@ -483,7 +505,7 @@ function SidePanel() {
 
           {tab === "home" && <HomeTab questionsAndAnswers={questionsAndAnswers} />}
           {tab === "info" && <InfoTab socialLinks={socialLinks} profile={profile} />}
-          {tab === "form" && <AddApplicationForm />}
+          {tab === "form" && <AddApplicationForm resumes={resumes} />}
         </>
       ) : (
         <button onClick={login} style={s.button}>

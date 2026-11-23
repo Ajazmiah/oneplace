@@ -5,6 +5,7 @@ import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
 import { getSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 import { getQuestionsAndAnswers } from "@/app/lib/DataAccessLayer/getQuestionsAndAnswers";
 import { getProfile } from "@/app/lib/DataAccessLayer/profile";
+import { getResumes } from "@/app/lib/DataAccessLayer/resumes";
 import { APP_NAME } from "@/app/lib/constants";
 
 export const metadata = {
@@ -22,9 +23,15 @@ export default async function RootLayout({ children }) {
         image: session.user.image,
       }
     : null;
-  const [socialLinks, questionsAndAnswers, profile] = user
-    ? await Promise.all([getSocialLinks(), getQuestionsAndAnswers(), getProfile()])
-    : [[], [], null];
+  // getResumes() returns no S3 keys, so the list is safe to hand to the extension
+  const [socialLinks, questionsAndAnswers, profile, resumes] = user
+    ? await Promise.all([
+        getSocialLinks(),
+        getQuestionsAndAnswers(),
+        getProfile(),
+        getResumes(),
+      ])
+    : [[], [], null, []];
 
   return (
     <div className="flex min-h-screen">
@@ -41,6 +48,7 @@ export default async function RootLayout({ children }) {
         socialLinks={socialLinks}
         questionsAndAnswers={questionsAndAnswers}
         profile={profile}
+        resumes={resumes}
       />
     </div>
   );
