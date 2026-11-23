@@ -47,5 +47,6 @@ chrome.runtime.onMessageExternal.addListener((message, sender) => {
     authUser: message.user,
     socialLinks: message.user ? (message.socialLinks ?? []) : [],
     questionsAndAnswers: message.user ? (message.questionsAndAnswers ?? []) : [],
+    profile: message.user ? (message.profile ?? null) : null,
   });
 });

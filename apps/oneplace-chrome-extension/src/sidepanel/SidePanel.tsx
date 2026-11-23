@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import SocialLinks, { type SocialLink } from "./components/SocialLinks";
 import QuestionAnswersView, { type QAItem } from "./components/QuestionAnswersView";
+import ProfileInfo, { type Profile } from "./components/ProfileInfo";
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL;
 const LOGIN_URL = `${WEB_APP_URL}/signin`;
 const DASHBOARD_URL = `${WEB_APP_URL}/dashboard/applications`;
+const SETTINGS_URL = `${WEB_APP_URL}/dashboard/settings`;
 const ADD_APPLICATION_URL = `${WEB_APP_URL}/api/application/add-application`;
 const PRESIGN_URL = `${WEB_APP_URL}/api/uploads/presign`;
 
@@ -50,7 +52,13 @@ type ScrapedJob = {
   details: string;
 };
 
-type Tab = "home" | "form";
+type Tab = "home" | "info" | "form";
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: "home", label: "Home" },
+  { id: "info", label: "Info" },
+  { id: "form", label: "Save Application" },
+];
 
 const s: Record<string, React.CSSProperties> = {
   wrap: {
@@ -172,17 +180,19 @@ const s: Record<string, React.CSSProperties> = {
   hintText: { margin: 0, fontSize: 12, color: "#888" },
 };
 
-function HomeTab({
-  socialLinks,
-  questionsAndAnswers,
-}: {
-  socialLinks: SocialLink[];
-  questionsAndAnswers: QAItem[];
-}) {
+function HomeTab({ questionsAndAnswers }: { questionsAndAnswers: QAItem[] }) {
+  return (
+    <div style={s.tabContent}>
+      <QuestionAnswersView questions={questionsAndAnswers} />
+    </div>
+  );
+}
+
+function InfoTab({ socialLinks, profile }: { socialLinks: SocialLink[]; profile: Profile }) {
   return (
     <div style={s.tabContent}>
       <SocialLinks links={socialLinks} />
-      <QuestionAnswersView questions={questionsAndAnswers} />
+      <ProfileInfo profile={profile} settingsUrl={SETTINGS_URL} />
     </div>
   );
 }
@@ -404,14 +414,19 @@ function SidePanel() {
   const [authUser, setAuthUser] = useState<AuthUser | undefined>(undefined);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [questionsAndAnswers, setQuestionsAndAnswers] = useState<QAItem[]>([]);
+  const [profile, setProfile] = useState<Profile>(null);
   const [tab, setTab] = useState<Tab>("home");
 
   useEffect(() => {
-    chrome.storage.local.get(["authUser", "socialLinks", "questionsAndAnswers"], (result) => {
-      setAuthUser(result.authUser ?? null);
-      setSocialLinks(result.socialLinks ?? []);
-      setQuestionsAndAnswers(result.questionsAndAnswers ?? []);
-    });
+    chrome.storage.local.get(
+      ["authUser", "socialLinks", "questionsAndAnswers", "profile"],
+      (result) => {
+        setAuthUser(result.authUser ?? null);
+        setSocialLinks(result.socialLinks ?? []);
+        setQuestionsAndAnswers(result.questionsAndAnswers ?? []);
+        setProfile(result.profile ?? null);
+      }
+    );
 
     const onChange = (
       changes: { [key: string]: chrome.storage.StorageChange },
@@ -423,6 +438,7 @@ function SidePanel() {
       if (changes.questionsAndAnswers) {
         setQuestionsAndAnswers(changes.questionsAndAnswers.newValue ?? []);
       }
+      if (changes.profile) setProfile(changes.profile.newValue ?? null);
     };
     chrome.storage.onChanged.addListener(onChange);
     return () => chrome.storage.onChanged.removeListener(onChange);
@@ -454,25 +470,20 @@ function SidePanel() {
           </button>
 
           <div style={s.tabBar}>
-            <button
-              style={tab === "home" ? s.tabButtonActive : s.tabButton}
-              onClick={() => setTab("home")}
-            >
-              Home
-            </button>
-            <button
-              style={tab === "form" ? s.tabButtonActive : s.tabButton}
-              onClick={() => setTab("form")}
-            >
-              Save Application
-            </button>
+            {TABS.map(({ id, label }) => (
+              <button
+                key={id}
+                style={tab === id ? s.tabButtonActive : s.tabButton}
+                onClick={() => setTab(id)}
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
-          {tab === "home" ? (
-            <HomeTab socialLinks={socialLinks} questionsAndAnswers={questionsAndAnswers} />
-          ) : (
-            <AddApplicationForm />
-          )}
+          {tab === "home" && <HomeTab questionsAndAnswers={questionsAndAnswers} />}
+          {tab === "info" && <InfoTab socialLinks={socialLinks} profile={profile} />}
+          {tab === "form" && <AddApplicationForm />}
         </>
       ) : (
         <button onClick={login} style={s.button}>

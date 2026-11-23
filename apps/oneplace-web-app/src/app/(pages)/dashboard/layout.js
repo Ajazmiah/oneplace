@@ -4,6 +4,7 @@ import ExtensionAuthSync from "@/Components/ExtensionAuthSync/ExtensionAuthSync"
 import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
 import { getSocialLinks } from "@/app/lib/DataAccessLayer/socialLinks";
 import { getQuestionsAndAnswers } from "@/app/lib/DataAccessLayer/getQuestionsAndAnswers";
+import { getProfile } from "@/app/lib/DataAccessLayer/profile";
 import { APP_NAME } from "@/app/lib/constants";
 
 export const metadata = {
@@ -21,8 +22,9 @@ export default async function RootLayout({ children }) {
         image: session.user.image,
       }
     : null;
-  const socialLinks = user ? await getSocialLinks() : [];
-  const questionsAndAnswers = user ? await getQuestionsAndAnswers() : [];
+  const [socialLinks, questionsAndAnswers, profile] = user
+    ? await Promise.all([getSocialLinks(), getQuestionsAndAnswers(), getProfile()])
+    : [[], [], null];
 
   return (
     <div className="flex min-h-screen">
@@ -38,6 +40,7 @@ export default async function RootLayout({ children }) {
         user={user}
         socialLinks={socialLinks}
         questionsAndAnswers={questionsAndAnswers}
+        profile={profile}
       />
     </div>
   );
