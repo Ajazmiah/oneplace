@@ -1,10 +1,8 @@
-"use client";
+import ApplicationForm from "@/Components/Applications/ApplicationForm";
+import { getResumes } from "@/app/lib/DataAccessLayer/resumes";
 
-import { useEffect, useState } from "react";
-
-import ApplicationForm from "../../../../Components/Applications/ApplicationForm";
-
-function AddApplicationForm() {
-  return <ApplicationForm  />;
+// Server component so the resume list arrives with the page (cached, no client fetch)
+export default async function AddApplicationPage() {
+  const resumes = await getResumes();
+  return <ApplicationForm resumes={resumes} />;
 }
-export default AddApplicationForm;

@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/Components/ui/input";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
@@ -11,22 +11,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
-import { FileText, X, ChevronDown, Upload } from "lucide-react";
+import { FileText, X } from "lucide-react";
 import ApplicationFormHeader from "./ApplicationFormHeader";
+import ResumeSelect, {
+  appendResumeChoice,
+  initialResumeChoice,
+} from "@/Components/Resumes/ResumeSelect";
 import { appendUpload } from "@/app/lib/utils/uploadToS3";
-function ApplicationForm() {
-  const [resume, setResume] = useState(null);
-  const [defaultResume, setDefaultResume] = useState(null);
-  const [isDefaultLoading, setIsDefaultLoading] = useState(true);
+
+/** @param {{ resumes: Array<{ _id: string, filename: string }> }} props  most recently used first */
+function ApplicationForm({ resumes = [] }) {
+  const [resumeChoice, setResumeChoice] = useState(() => initialResumeChoice(resumes));
   const [coverLetter, setCoverLetter] = useState(null);
-  const resumeInputRef = useRef(null);
 
   const [jobTitle, setJobTitle] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -57,38 +54,13 @@ function ApplicationForm() {
       return;
     }
 
-    if (e.target.name === "resume") {
-      setResume(file);
-    } else {
-      setCoverLetter(file);
-    }
+    setCoverLetter(file);
   }
-
-  const getDefaultResume = async () => {
-    try {
-      const res = await fetch("/api/default-resume");
-      if (!res.ok) return;
-      const saved = await res.json();
-      setDefaultResume(saved?.resumeData?.resume ?? null);
-    } catch {
-      setDefaultResume(null);
-    } finally {
-      setIsDefaultLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getDefaultResume();
-  }, []);
 
   // Files go straight to S3 first; the form then carries only their keys
   const getFormData = async () => {
     const formData = new FormData();
-    if (!resume) {
-      formData.append("useDefaultResume", "true");
-    } else {
-      await appendUpload(formData, "resume", resume);
-    }
+    await appendResumeChoice(formData, resumeChoice);
     await appendUpload(formData, "coverLetter", coverLetter);
     formData.append("jobTitle", jobTitle);
     formData.append("status", status);
@@ -271,89 +243,12 @@ function ApplicationForm() {
               Documents
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Resume — dropdown: use default or upload new */}
-              <div className="relative">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    {/* A real button so the resume menu opens with Tab + Enter/Space */}
-                    <button
-                      type="button"
-                      className={`w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0bbcaa]/40 ${
-                        resume || defaultResume
-                          ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
-                          : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
-                      }`}
-                    >
-                      <FileText
-                        aria-hidden="true"
-                        className={`w-6 h-6 ${resume || defaultResume ? "text-[#0bbcaa]" : "text-gray-400"}`}
-                      />
-                      <span className="block">
-                        <span className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
-                          {isDefaultLoading && !resume ? (
-                            <span className="h-4 w-28 rounded bg-gray-100 motion-safe:animate-pulse" />
-                          ) : (
-                            resume?.name || defaultResume?.filename
-                          )}
-                          <ChevronDown aria-hidden="true" className="w-3.5 h-3.5 text-gray-400" />
-                        </span>
-                        <span className="block text-xs text-gray-500 mt-0.5">
-                          {isDefaultLoading && !resume
-                            ? ""
-                            : !resume
-                              ? "Last used"
-                              : "PDF, DOC, DOCX"}
-                        </span>
-                      </span>
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="center" className="w-52">
-                    {resume ? (
-                      <>
-                        <DropdownMenuItem
-                          className="cursor-pointer gap-2"
-                          onClick={() => {
-                            setResume(null);
-                          }}
-                        >
-                          <FileText className="w-4 h-4 text-[#0bbcaa]" />
-                          {defaultResume?.filename}
-                        </DropdownMenuItem>
-                      </>
-                    ) : null}
-
-                    <DropdownMenuItem
-                      className="cursor-pointer gap-2"
-                      onClick={() => resumeInputRef.current?.click()}
-                    >
-                      <Upload className="w-4 h-4 text-gray-500" />
-                      Upload new
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {resume && (
-                  <button
-                    type="button"
-                    aria-label="Remove resume"
-                    onClick={() => {
-                      setResume(null);
-                    }}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 transition-colors"
-                  >
-                    <X className="w-3 h-3" aria-hidden="true" />
-                  </button>
-                )}
-
-                <input
-                  ref={resumeInputRef}
-                  name="resume"
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  className="hidden"
-                  onChange={handleFileUpload}
-                />
-              </div>
+              {/* Resume — saved resumes or upload new, with View */}
+              <ResumeSelect
+                resumes={resumes}
+                value={resumeChoice}
+                onChange={setResumeChoice}
+              />
 
               {/* Cover Letter — plain upload */}
               <label

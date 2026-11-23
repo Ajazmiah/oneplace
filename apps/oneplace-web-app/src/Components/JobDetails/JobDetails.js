@@ -185,7 +185,7 @@ function JobDetails({ job }) {
                 <CardTitle>Documents</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {job.resume ? (
+                {job.resumeId || job.resume?.key ? (
                   <Button
                     variant="outline"
                     className="w-full justify-start border-slate-200"

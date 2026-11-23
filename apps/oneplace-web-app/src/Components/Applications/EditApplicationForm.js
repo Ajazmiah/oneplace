@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/Components/ui/input";
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import {
@@ -11,25 +11,56 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/Components/ui/dropdown-menu";
 import { Textarea } from "@/Components/ui/textarea";
-import { FileText, X, ChevronDown, Upload } from "lucide-react";
+import { FileText, X } from "lucide-react";
 import { editApplication } from "@/app/lib/actions/applications/applicationActions";
 import AlertDialogBox from "../AlertDialog/AlertDialog";
 import ApplicationFormHeader from "./ApplicationFormHeader";
+import ResumeSelect, { appendResumeChoice } from "@/Components/Resumes/ResumeSelect";
 import { appendUpload } from "@/app/lib/utils/uploadToS3";
 
 function EditApplicationForm({ application }) {
-  const [resume, setResume] = useState(application.resume || null);
-  const [resumeMode, setResumeMode] = useState(application.resume ? "upload" : null);
+  // The application's current resume: a library resume (populated to { _id, filename }),
+  // or its own copy if it was made before the library
+  const currentLibrary = application.resumeId;
+  const currentId =
+    typeof currentLibrary === "object" ? currentLibrary?._id : currentLibrary;
+  const currentFilename = currentLibrary?.filename ?? application.resume?.filename;
+  const hasResume = Boolean(currentId || application.resume?.key);
+
+  const [resumes, setResumes] = useState([]);
+  // "keep" sends nothing, so saving without touching the field leaves the resume as it is
+  const [resumeChoice, setResumeChoice] = useState(hasResume ? { type: "keep" } : null);
   const [coverLetter, setCoverLetter] = useState(null);
   const [open, setOpen] = useState(false);
-  const resumeInputRef = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/resumes")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!cancelled && data?.success) setResumes(data.resumes);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // If the current resume is one of the saved ones, show it selected in the list instead of
+  // as a separate "Current resume" entry
+  const currentInLibrary = Boolean(currentId) && resumes.some((r) => r._id === currentId);
+  const keep =
+    hasResume && !currentInLibrary
+      ? {
+          filename: currentFilename || "Current resume",
+          viewUrl: `/api/application/${application._id}/resume`,
+        }
+      : null;
+  const shownChoice =
+    resumeChoice?.type === "keep" && currentInLibrary
+      ? { type: "library", id: currentId }
+      : resumeChoice;
 
   const [jobTitle, setJobTitle] = useState(application.jobTitle || "");
   const [companyName, setCompanyName] = useState(application.companyName || "");
@@ -52,23 +83,13 @@ function EditApplicationForm({ application }) {
     const file = e.target.files[0];
     if (!file || !allowedTypes.includes(file.type)) return;
 
-    if (e.target.name === "resume") {
-      setResume(file);
-      setResumeMode("upload");
-    } else {
-      setCoverLetter(file);
-    }
+    setCoverLetter(file);
   }
 
-  // New files go straight to S3 first; the server action then receives only their keys.
-  // `resume` may be the existing saved file (not a File), which appendUpload skips.
+  // New files go straight to S3 first; the server action then receives only their keys
   const getFormData = async () => {
     const formData = new FormData();
-    if (resumeMode === "default") {
-      formData.append("useDefaultResume", "true");
-    } else {
-      await appendUpload(formData, "resume", resume);
-    }
+    await appendResumeChoice(formData, resumeChoice);
     await appendUpload(formData, "coverLetter", coverLetter);
     formData.append("jobTitle", jobTitle);
     formData.append("status", status);
@@ -243,76 +264,13 @@ function EditApplicationForm({ application }) {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-              {/* Resume — dropdown: use default or upload new */}
-              <div className="relative">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    {/* A real button so the resume menu opens with Tab + Enter/Space */}
-                    <button
-                      type="button"
-                      className={`w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed rounded-xl p-6 cursor-pointer text-center transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0bbcaa]/40 ${
-                        resume || resumeMode === "default"
-                          ? "border-[#0bbcaa]/50 bg-[#0bbcaa]/5"
-                          : "border-gray-200 hover:border-[#0bbcaa]/40 hover:bg-[#0bbcaa]/5"
-                      }`}
-                    >
-                      <FileText
-                        aria-hidden="true"
-                        className={`w-6 h-6 ${resume || resumeMode === "default" ? "text-[#0bbcaa]" : "text-gray-400"}`}
-                      />
-                      <span className="block">
-                        <span className="text-sm font-medium text-gray-700 flex items-center justify-center gap-1">
-                          {resumeMode === "default"
-                            ? "Using default resume"
-                            : resume
-                            ? resume.name || resume.filename
-                            : "Resume"}
-                          <ChevronDown aria-hidden="true" className="w-3.5 h-3.5 text-gray-400" />
-                        </span>
-                        <span className="block text-xs text-gray-500 mt-0.5">
-                          {resumeMode === "default" ? "Your saved default" : "PDF, DOC, DOCX"}
-                        </span>
-                      </span>
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="center" className="w-52">
-                    <DropdownMenuItem
-                      className="cursor-pointer gap-2"
-                      onClick={() => { setResumeMode("default"); setResume(null); }}
-                    >
-                      <FileText className="w-4 h-4 text-[#0bbcaa]" />
-                      Use default resume
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="cursor-pointer gap-2"
-                      onClick={() => resumeInputRef.current?.click()}
-                    >
-                      <Upload className="w-4 h-4 text-gray-500" />
-                      Upload new
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                {(resume || resumeMode === "default") && (
-                  <button
-                    type="button"
-                    aria-label="Remove resume"
-                    onClick={() => { setResume(null); setResumeMode(null); }}
-                    className="absolute top-2 right-2 p-1 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 transition-colors"
-                  >
-                    <X className="w-3 h-3" aria-hidden="true" />
-                  </button>
-                )}
-
-                <input
-                  ref={resumeInputRef}
-                  name="resume"
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  className="hidden"
-                  onChange={handleFileUpload}
-                />
-              </div>
+              {/* Resume — current, saved resumes or upload new, with View */}
+              <ResumeSelect
+                resumes={resumes}
+                value={shownChoice}
+                onChange={setResumeChoice}
+                keep={keep}
+              />
 
               {/* Cover Letter — plain upload */}
               <label
