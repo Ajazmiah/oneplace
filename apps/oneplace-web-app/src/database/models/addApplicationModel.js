@@ -20,7 +20,14 @@ const addApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // Files live in S3; `key` points at the object
+    // The resume from the user's library (resumeModel) this application was sent with
+    resumeId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "resume",
+    },
+    // Files live in S3; `key` points at the object.
+    // `resume` is only on applications created before the resume library: each kept its
+    // own copy. Read-only now; new and edited applications use resumeId.
     resume: {
       filename: { type: String }, // Original filename
       mimetype: { type: String }, // e.g. "application/pdf"

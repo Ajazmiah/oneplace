@@ -1,6 +1,5 @@
-// File handling shared by the add-application route and editApplication.
+// File handling shared by the add-application route, editApplication and the resume library.
 // Every function returns the metadata to store in Mongo ({ filename, mimetype, key, size }).
-import defaultResumeModel from "@/database/models/defaultResume";
 import { validateFile } from "@/app/lib/utils/utils";
 import {
   buildFileKey,
@@ -37,11 +36,12 @@ export async function fileViewResponse(file, label) {
 }
 
 /**
- * Turn a browser upload (tmp/<userId>/...) into an application's resume or cover letter:
- * check it belongs to this user, check what actually arrived in S3, then move it into the
- * application's folder. Type and size come from S3, never from the client.
- * @param {{ userId: string, applicationId: string, kind: "resume" | "coverletter",
- *           key: string, filename: string }} params
+ * Turn a browser upload (tmp/<userId>/...) into a stored file: check it belongs to this user,
+ * check what actually arrived in S3, then move it into place (an application's folder, or the
+ * resume library). Type and size come from S3, never from the client.
+ * @param {{ userId: string, applicationId?: string,
+ *           kind: "coverletter" | "library-resume", key: string, filename: string }} params
+ *        applicationId is required for "coverletter"
  * @returns {Promise<{ filename: string, mimetype: string, size: number, key: string }>}
  * @throws {UploadError} when the key isn't this user's upload, or the file is missing or invalid
  */
@@ -78,71 +78,3 @@ export async function claimUpload({ userId, applicationId, kind, key, filename }
   };
 }
 
-/**
- * Resume metadata for an application that uses the saved default resume.
- * The default is copied into the application's folder so the application owns its copy.
- * @param {{ userId: string, applicationId: string }} params
- * @returns {Promise<object | null>} null when the user has no default resume
- */
-export async function resumeFromDefault({ userId, applicationId }) {
-  const saved = await defaultResumeModel.findOne({ userId }).lean();
-  const resume = saved?.resume;
-  if (!resume?.key) return null;
-
-  const key = buildFileKey({
-    userId,
-    applicationId,
-    kind: "resume",
-    mimetype: resume.mimetype,
-  });
-  await copyFile(resume.key, key);
-  return {
-    filename: resume.filename,
-    mimetype: resume.mimetype,
-    size: resume.size,
-    key,
-  };
-}
-
-/**
- * Make an uploaded application resume the user's default: copy it into default-resume/,
- * point the defaultResume doc at the copy, then delete the previous default's file.
- * @param {{ userId: string, resume: { key: string, filename: string, mimetype: string, size: number } }} params
- */
-export async function saveDefaultResume({ userId, resume }) {
-  const key = buildFileKey({
-    userId,
-    kind: "default-resume",
-    mimetype: resume.mimetype,
-  });
-  await copyFile(resume.key, key);
-
-  let previous;
-  try {
-    // `new: false` returns the doc as it was, so the old file can be cleaned up
-    previous = await defaultResumeModel
-      .findOneAndUpdate(
-        { userId },
-        {
-          resume: {
-            filename: resume.filename,
-            mimetype: resume.mimetype,
-            size: resume.size,
-            key,
-          },
-        },
-        { upsert: true, new: false }
-      )
-      .lean();
-  } catch (error) {
-    await deleteFiles([key]).catch(() => {});
-    throw error;
-  }
-
-  // The new default is saved; failing to remove the old file only leaves an orphan
-  try {
-    await deleteFiles([previous?.resume?.key]);
-  } catch (error) {
-    console.error("Failed to delete previous default resume:", error);
-  }
-}

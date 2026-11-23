@@ -5,12 +5,12 @@ import addApplicationModel from "@/database/models/addApplicationModel";
 import { getUserByEmail } from "../../../lib/utils/databaseUtils";
 import { getCachedAuthSession } from "@/app/lib/utils/getCachedSession";
 import { deleteFiles } from "@/app/lib/s3/s3";
+import { claimUpload, UploadError } from "@/app/lib/s3/applicationFiles";
 import {
-  claimUpload,
-  resumeFromDefault,
-  saveDefaultResume,
-  UploadError,
-} from "@/app/lib/s3/applicationFiles";
+  resolveResumeChoice,
+  discardNewResume,
+  publicResume,
+} from "@/app/lib/s3/resumeLibrary";
 
 /**
  * Handles POST requests to create a new application.
@@ -52,12 +52,15 @@ export async function POST(request) {
     const jobUrl = formData.get("jobUrl");
 
     // Files were already uploaded straight to S3 (see /api/uploads/presign);
-    // the client sends each upload's key and original filename instead of the bytes
+    // the client sends each upload's key and original filename instead of the bytes.
+    // Resume: `resumeId` picks one from the user's library, `resumeKey` adds a new upload
+    // to it. `useDefaultResume` comes from older extension builds: the last used resume.
+    const resumeId = formData.get("resumeId");
     const resumeKey = formData.get("resumeKey");
     const resumeName = formData.get("resumeName");
     const coverLetterKey = formData.get("coverLetterKey");
     const coverLetterName = formData.get("coverLetterName");
-    const useDefaultResume = formData.get("useDefaultResume");
+    const useDefaultResume = formData.get("useDefaultResume") === "true";
 
     // 4. Basic Validation
     if (!jobTitle || !companyName) {
@@ -67,29 +70,26 @@ export async function POST(request) {
       );
     }
 
-    // 5. Move uploads into the application's folder, then create the database entry.
-    // The _id is created up front so file keys can include it. claimUpload checks each
-    // key belongs to this user and validates the stored file's type and size.
+    // 5. Pick or add the library resume, move the cover letter into the application's
+    // folder, then create the database entry. The _id is created up front so file keys can
+    // include it. claimUpload checks each key belongs to this user and validates the
+    // stored file's type and size.
     const userId = user._id.toString();
     const applicationId = new Types.ObjectId();
     const fileParams = { userId, applicationId: applicationId.toString() };
-    const isUploadedResume = useDefaultResume !== "true" && Boolean(resumeKey);
 
-    let resumeData = null;
+    let resumeChoice = { resume: null, created: false };
     let coverLetterData = null;
     let application;
 
     try {
-      if (useDefaultResume === "true") {
-        resumeData = await resumeFromDefault(fileParams);
-      } else if (isUploadedResume) {
-        resumeData = await claimUpload({
-          ...fileParams,
-          kind: "resume",
-          key: resumeKey,
-          filename: resumeName,
-        });
-      }
+      resumeChoice = await resolveResumeChoice({
+        userId,
+        resumeId,
+        resumeKey,
+        resumeName,
+        useDefault: useDefaultResume,
+      });
       if (coverLetterKey) {
         coverLetterData = await claimUpload({
           ...fileParams,
@@ -109,37 +109,35 @@ export async function POST(request) {
         location,
         salaryRange,
         jobUrl,
-        resume: resumeData,
+        resumeId: resumeChoice.resume?._id,
         coverLetter: coverLetterData,
         userId: user._id,
       });
     } catch (error) {
-      // Nothing points at the files uploaded or copied above, so remove them
-      await deleteFiles([resumeData?.key, coverLetterData?.key]).catch((cleanupError) =>
-        console.error("Failed to clean up S3 files after a failed save:", cleanupError)
+      // Nothing points at the files added above, so remove them. A resume picked from the
+      // library is left alone; only one uploaded for this application is undone.
+      await Promise.all([
+        resumeChoice.created && discardNewResume(resumeChoice.resume),
+        deleteFiles([coverLetterData?.key]),
+      ]).catch((cleanupError) =>
+        console.error("Failed to clean up files after a failed save:", cleanupError)
       );
       throw error;
     }
 
-    // A newly uploaded resume becomes the default. The application is already saved, so a
-    // failure here is logged rather than returned: a 500 would make the user submit it twice.
-    if (isUploadedResume) {
-      try {
-        await saveDefaultResume({ userId, resume: resumeData });
-        revalidateTag(`default-resume-${userId}`);
-      } catch (error) {
-        console.error("Failed to update default resume:", error);
-      }
-    }
-
-
-    // 8. Revalidate Cache
+    // 8. Revalidate Cache. The library changed too: a new resume, or a new "last used" order.
+    // Route handlers can't use updateTag; expire: 0 refreshes on the very next read.
     revalidateTag(`applications-${userId}`);
+    if (resumeChoice.resume) revalidateTag(`resumes-${userId}`, { expire: 0 });
     revalidatePath("/dashboard/applications");
 
-    // 9. Send Response
+    // 9. Send Response. `resume` lets the extension update its list without a resync.
     return NextResponse.json(
-      { success: true, data: application.toObject() },
+      {
+        success: true,
+        data: application.toObject(),
+        resume: publicResume(resumeChoice.resume),
+      },
       { status: 201 } // Created
     );
   } catch (error) {

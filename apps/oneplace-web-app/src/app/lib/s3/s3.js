@@ -40,13 +40,13 @@ const EXTENSIONS = {
  * overwrites the old file before Mongo points at the new one, and keys can't be guessed.
  *
  *   application file: users/<userId>/applications/<applicationId>/<kind>-<uuid>.<ext>
- *   default resume:   users/<userId>/default-resume/<uuid>.<ext>
+ *   library resume:   users/<userId>/resumes/<uuid>.<ext>
  *   browser upload:   tmp/<userId>/<uuid>.<ext>   (moved into place on submit)
  *
  * Uploads sit under a top-level tmp/ because an S3 lifecycle rule can only match a key's
  * start, so "expire tmp/ after 1 day" cleans up uploads that were never submitted.
  *
- * @param {{ userId: string, kind: "resume" | "coverletter" | "default-resume" | "upload",
+ * @param {{ userId: string, kind: "resume" | "coverletter" | "library-resume" | "upload",
  *           applicationId?: string, mimetype: string }} params
  * @returns {string}
  */
@@ -57,8 +57,8 @@ export function buildFileKey({ userId, kind, applicationId, mimetype }) {
   if (kind === "upload") {
     return `tmp/${userId}/${id}.${ext}`;
   }
-  if (kind === "default-resume") {
-    return `users/${userId}/default-resume/${id}.${ext}`;
+  if (kind === "library-resume") {
+    return `users/${userId}/resumes/${id}.${ext}`;
   }
   if (!applicationId) {
     throw new Error("buildFileKey: applicationId is required for application files");

@@ -1,5 +1,6 @@
 "use server";
 import AddApplicationModel from "@/database/models/addApplicationModel";
+import "@/database/models/resumeModel"; // registers the model for .populate("resumeId")
 import { getUserByEmail } from "@/app/lib/utils/databaseUtils";
 import { getUserSession } from "./getSession";
 import { notFound } from "next/navigation";
@@ -23,10 +24,13 @@ async function getCachedApplication(id, userId) {
   cacheLife("hours");
   cacheTag(`application-${id}`, `applications-${userId}`);
 
+  // resumeId → { _id, filename, archived } so the detail and edit pages can name the file
   const application = await AddApplicationModel.findOne({
     _id: id,
     userId,
-  }).lean();
+  })
+    .populate({ path: "resumeId", select: "filename archived" })
+    .lean();
 
   return JSON.parse(JSON.stringify(application));
 }
