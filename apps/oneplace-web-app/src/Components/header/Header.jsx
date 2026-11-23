@@ -6,11 +6,11 @@ import Navigation from "./navigation/Navigation";
 async function Header() {
   const session = await auth();
 
+  // Signed-in users don't need About; it's only in loggedOutNavigation
   const Allnavigation = [
     { name: "Dashboard", href: "/dashboard/applications" },
     { name: "Features", href: "/features" },
     { name: "Pricing", href: "/pricing" },
-    { name: "About", href: "/about" },
   ];
 
   const userNavigationItems = [
