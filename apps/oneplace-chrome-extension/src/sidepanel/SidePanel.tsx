@@ -7,6 +7,18 @@ import ResumePicker, {
   type LibraryResume,
   type ResumeChoice,
 } from "./components/ResumePicker";
+import {
+  AlertIcon,
+  CheckIcon,
+  ExternalIcon,
+  FileIcon,
+  HomeIcon,
+  PlusIcon,
+  SparklesIcon,
+  UploadIcon,
+  UserIcon,
+  XIcon,
+} from "./components/Icons";
 
 const WEB_APP_URL = import.meta.env.VITE_WEB_APP_URL;
 const LOGIN_URL = `${WEB_APP_URL}/signin`;
@@ -59,146 +71,35 @@ type ScrapedJob = {
 
 type Tab = "home" | "info" | "form";
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: "home", label: "Home" },
-  { id: "info", label: "Info" },
-  { id: "form", label: "Save Application" },
+// "Save" rather than "Save Application" so three tabs with icons fit a narrow side panel
+const TABS: { id: Tab; label: string; Icon: (p: { size?: number }) => React.ReactElement }[] = [
+  { id: "home", label: "Home", Icon: HomeIcon },
+  { id: "info", label: "Info", Icon: UserIcon },
+  { id: "form", label: "Save", Icon: PlusIcon },
 ];
-
-const s: Record<string, React.CSSProperties> = {
-  wrap: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    minHeight: "100vh",
-    gap: 16,
-    padding: "20px 20px 32px",
-    overflowY: "auto",
-    fontFamily: "system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif",
-  },
-  logo: { width: "100%", maxWidth: 200 },
-  headerRow: { display: "flex", alignItems: "center", gap: 10, width: "100%" },
-  avatar: { width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 },
-  name: {
-    fontSize: 14,
-    fontWeight: 600,
-    color: "#111",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-  button: {
-    padding: "10px 24px",
-    fontSize: 15,
-    fontWeight: 500,
-    color: "#fff",
-    background: "#0bbcaa",
-    border: "none",
-    borderRadius: 8,
-    cursor: "pointer",
-  },
-  buttonFull: {
-    width: "100%",
-    padding: "10px 0",
-    fontSize: 14,
-    fontWeight: 600,
-    color: "#fff",
-    background: "#0bbcaa",
-    border: "none",
-    borderRadius: 8,
-    cursor: "pointer",
-  },
-  tabBar: {
-    display: "flex",
-    width: "100%",
-    background: "#f3f3f3",
-    borderRadius: 8,
-    padding: 3,
-    gap: 2,
-  },
-  tabButton: {
-    flex: 1,
-    padding: "7px 0",
-    fontSize: 13,
-    fontWeight: 600,
-    color: "#666",
-    background: "transparent",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-  },
-  tabButtonActive: {
-    flex: 1,
-    padding: "7px 0",
-    fontSize: 13,
-    fontWeight: 600,
-    color: "#111",
-    background: "#fff",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-    boxShadow: "0 1px 2px rgba(0,0,0,0.08)",
-  },
-  tabContent: { width: "100%", display: "flex", flexDirection: "column", gap: 16 },
-  formWrap: { width: "100%", display: "flex", flexDirection: "column", gap: 12 },
-  field: { display: "flex", flexDirection: "column", gap: 4 },
-  label: { fontSize: 12, fontWeight: 500, color: "#555" },
-  input: {
-    padding: "8px 10px",
-    fontSize: 13,
-    border: "1px solid #ddd",
-    borderRadius: 6,
-    fontFamily: "inherit",
-  },
-  select: {
-    padding: "8px 10px",
-    fontSize: 13,
-    border: "1px solid #ddd",
-    borderRadius: 6,
-    fontFamily: "inherit",
-    background: "#fff",
-  },
-  textarea: {
-    padding: "8px 10px",
-    fontSize: 13,
-    border: "1px solid #ddd",
-    borderRadius: 6,
-    fontFamily: "inherit",
-    resize: "vertical",
-    minHeight: 70,
-  },
-  fileInput: { fontSize: 12 },
-  errorText: { margin: 0, fontSize: 12, color: "#dc2626" },
-  successText: { margin: 0, fontSize: 12, color: "#16a34a" },
-  secondaryButton: {
-    width: "100%",
-    padding: "8px 0",
-    fontSize: 13,
-    fontWeight: 500,
-    color: "#0bbcaa",
-    background: "transparent",
-    border: "1px solid #0bbcaa",
-    borderRadius: 8,
-    cursor: "pointer",
-  },
-  hintText: { margin: 0, fontSize: 12, color: "#888" },
-};
 
 function HomeTab({ questionsAndAnswers }: { questionsAndAnswers: QAItem[] }) {
   return (
-    <div style={s.tabContent}>
+    <section className="qa" aria-labelledby="qa-title">
+      <div className="qa-header">
+        <span className="section-pill" id="qa-title">
+          Saved answers
+        </span>
+        {questionsAndAnswers.length > 0 && (
+          <span className="card-count">{questionsAndAnswers.length}</span>
+        )}
+      </div>
       <QuestionAnswersView questions={questionsAndAnswers} />
-    </div>
+    </section>
   );
 }
 
 function InfoTab({ socialLinks, profile }: { socialLinks: SocialLink[]; profile: Profile }) {
   return (
-    <div style={s.tabContent}>
-      <SocialLinks links={socialLinks} />
+    <>
       <ProfileInfo profile={profile} settingsUrl={SETTINGS_URL} />
-    </div>
+      <SocialLinks links={socialLinks} />
+    </>
   );
 }
 
@@ -320,111 +221,195 @@ function AddApplicationForm({ resumes }: { resumes: LibraryResume[] }) {
   };
 
   return (
-    <div style={s.formWrap}>
-      <button type="button" style={s.secondaryButton} onClick={autofillFromPage} disabled={isAutofilling}>
-        {isAutofilling ? "Reading page..." : "Fill from page"}
+    <>
+      <button
+        type="button"
+        className="autofill-card"
+        onClick={autofillFromPage}
+        disabled={isAutofilling}
+      >
+        <span className="autofill-icon">
+          {isAutofilling ? <span className="spinner" /> : <SparklesIcon size={18} />}
+        </span>
+        <span>
+          <span className="autofill-title">
+            {isAutofilling ? "Reading this page…" : "Read this job page"}
+          </span>
+          <span className="autofill-sub">Fill in the title, company and details for you</span>
+        </span>
       </button>
-      {autofillHint && <p style={s.hintText}>{autofillHint}</p>}
+      {autofillHint && (
+        <p className="banner banner-info" role="status">
+          <AlertIcon size={15} />
+          {autofillHint}
+        </p>
+      )}
 
-      <form onSubmit={handleSubmit} style={s.formWrap}>
-        <div style={s.field}>
-          <label style={s.label}>Job Title *</label>
-          <input
-            style={s.input}
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-            placeholder="e.g. Senior Frontend Engineer"
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="form" noValidate>
+        <section className="card form-card" aria-label="Role details">
+          <span className="section-pill">Role</span>
+          <div className="form-grid">
+            <div className="field field-full">
+              <label className="label" htmlFor="jobTitle">
+                Job title <span className="required">*</span>
+              </label>
+              <input
+                id="jobTitle"
+                className="input"
+                value={jobTitle}
+                onChange={(e) => setJobTitle(e.target.value)}
+                placeholder="e.g. Senior Frontend Engineer"
+              />
+            </div>
 
-        <div style={s.field}>
-          <label style={s.label}>Company *</label>
-          <input
-            style={s.input}
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-            placeholder="e.g. Acme Corp"
-          />
-        </div>
+            <div className="field field-full">
+              <label className="label" htmlFor="companyName">
+                Company <span className="required">*</span>
+              </label>
+              <input
+                id="companyName"
+                className="input"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                placeholder="e.g. Acme Corp"
+              />
+            </div>
 
-        <div style={s.field}>
-          <label style={s.label}>Location</label>
-          <input
-            style={s.input}
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            placeholder="e.g. London, UK / Remote"
-          />
-        </div>
+            <div className="field">
+              <label className="label" htmlFor="location">
+                Location
+              </label>
+              <input
+                id="location"
+                className="input"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="London / Remote"
+              />
+            </div>
 
-        <div style={s.field}>
-          <label style={s.label}>Job URL</label>
-          <input
-            style={s.input}
-            value={jobUrl}
-            onChange={(e) => setJobUrl(e.target.value)}
-            placeholder="https://..."
-          />
-        </div>
+            <div className="field">
+              <label className="label" htmlFor="status">
+                Status
+              </label>
+              <select
+                id="status"
+                className="select"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              >
+                <option value="applied">Applied</option>
+                <option value="interviewing">Interviewing</option>
+                <option value="offer">Offer</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
 
-        <div style={s.field}>
-          <label style={s.label}>Salary Range</label>
-          <input
-            style={s.input}
-            value={salaryRange}
-            onChange={(e) => setSalaryRange(e.target.value)}
-            placeholder="e.g. £60,000 – £80,000"
-          />
-        </div>
+            <div className="field">
+              <label className="label" htmlFor="salaryRange">
+                Salary range
+              </label>
+              <input
+                id="salaryRange"
+                className="input"
+                value={salaryRange}
+                onChange={(e) => setSalaryRange(e.target.value)}
+                placeholder="£60k – £80k"
+              />
+            </div>
 
-        <div style={s.field}>
-          <label style={s.label}>Status</label>
-          <select style={s.select} value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option value="applied">Applied</option>
-            <option value="interviewing">Interviewing</option>
-            <option value="offer">Offer</option>
-            <option value="rejected">Rejected</option>
-          </select>
-        </div>
+            <div className="field">
+              <label className="label" htmlFor="jobUrl">
+                Job URL
+              </label>
+              <input
+                id="jobUrl"
+                className="input"
+                value={jobUrl}
+                onChange={(e) => setJobUrl(e.target.value)}
+                placeholder="https://…"
+              />
+            </div>
 
-        <div style={s.field}>
-          <label style={s.label}>Notes</label>
-          <textarea
-            style={s.textarea}
-            value={details}
-            onChange={(e) => setDetails(e.target.value)}
-            placeholder="Add any notes about the role, requirements, or interview process..."
-          />
-        </div>
+            <div className="field field-full">
+              <label className="label" htmlFor="details">
+                Notes
+              </label>
+              <textarea
+                id="details"
+                className="textarea"
+                value={details}
+                onChange={(e) => setDetails(e.target.value)}
+                placeholder="Requirements, contacts, interview process…"
+              />
+            </div>
+          </div>
+        </section>
 
-        <div style={s.field}>
-          <label style={s.label}>Resume</label>
-          <ResumePicker
-            resumes={resumes}
-            value={resumeChoice}
-            onChange={setPickedResume}
-            webAppUrl={WEB_APP_URL}
-          />
-        </div>
+        <section className="card form-card" aria-label="Documents">
+          <span className="section-pill">Documents</span>
 
-        <div style={s.field}>
-          <label style={s.label}>Cover Letter</label>
-          <input
-            style={s.fileInput}
-            type="file"
-            accept=".pdf,.doc,.docx"
-            onChange={(e) => setCoverLetter(e.target.files?.[0] ?? null)}
-          />
-        </div>
+          <div className="field">
+            <span className="label">Resume</span>
+            <ResumePicker
+              resumes={resumes}
+              value={resumeChoice}
+              onChange={setPickedResume}
+              webAppUrl={WEB_APP_URL}
+            />
+          </div>
 
-        {error && <p style={s.errorText}>{error}</p>}
-        {success && <p style={s.successText}>{success} ✓</p>}
+          <div className="field">
+            <span className="label">Cover letter</span>
+            {coverLetter ? (
+              <div className="file-chosen">
+                <FileIcon size={16} />
+                <span className="file-name" title={coverLetter.name}>
+                  {coverLetter.name}
+                </span>
+                <button
+                  type="button"
+                  className="icon-btn"
+                  aria-label="Remove cover letter"
+                  onClick={() => setCoverLetter(null)}
+                >
+                  <XIcon size={15} />
+                </button>
+              </div>
+            ) : (
+              <label className="file-drop">
+                <UploadIcon size={16} />
+                <span>Upload cover letter (optional)</span>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="visually-hidden"
+                  onChange={(e) => setCoverLetter(e.target.files?.[0] ?? null)}
+                />
+              </label>
+            )}
+          </div>
+        </section>
 
-        <button type="submit" style={s.buttonFull} disabled={isSubmitting}>
-          {isSubmitting ? "Saving..." : "Save Application"}
+        {error && (
+          <p className="banner banner-error" role="alert">
+            <AlertIcon size={15} />
+            {error}
+          </p>
+        )}
+        {success && (
+          <p className="banner banner-success" role="status">
+            <CheckIcon size={15} />
+            {success}
+          </p>
+        )}
+
+        <button type="submit" className="btn btn-primary btn-block" disabled={isSubmitting}>
+          {isSubmitting && <span className="spinner" />}
+          {isSubmitting ? "Saving…" : "Save application"}
         </button>
       </form>
-    </div>
+    </>
   );
 }
 
@@ -471,47 +456,92 @@ function SidePanel() {
 
   if (authUser === undefined) {
     // Avoid flashing the logged-out view while storage is still being read.
-    return <div style={s.wrap} />;
+    return <div className="app" />;
   }
 
-  return (
-    <div style={s.wrap}>
-      <img src="/logo.svg" alt="OneSimplifyd" style={s.logo} />
-
-      {authUser ? (
-        <>
-          <div style={s.headerRow}>
-            {authUser.image && (
-              <img src={authUser.image} alt={authUser.name ?? "User"} style={s.avatar} />
-            )}
-            <span style={s.name}>{authUser.name ?? authUser.email}</span>
-          </div>
-
-          <button onClick={openDashboard} style={s.button}>
-            Open Dashboard
+  if (!authUser) {
+    return (
+      <div className="app">
+        <main className="welcome">
+          <img src="/logo.svg" alt="OneSimplifyd" className="welcome-logo" />
+          <h1 className="welcome-title">Apply faster, from any job page</h1>
+          <p className="welcome-text">
+            Sign in to save applications, reuse your answers and keep your details one click away.
+          </p>
+          <ul className="welcome-points">
+            <li>
+              <CheckIcon size={15} /> Save a job straight from the listing
+            </li>
+            <li>
+              <CheckIcon size={15} /> Copy your saved answers and details
+            </li>
+            <li>
+              <CheckIcon size={15} /> Pick from your saved resumes
+            </li>
+          </ul>
+          <button type="button" className="btn btn-primary btn-block" onClick={login}>
+            Sign in
           </button>
+        </main>
+      </div>
+    );
+  }
 
-          <div style={s.tabBar}>
-            {TABS.map(({ id, label }) => (
-              <button
-                key={id}
-                style={tab === id ? s.tabButtonActive : s.tabButton}
-                onClick={() => setTab(id)}
-              >
-                {label}
-              </button>
-            ))}
+  const displayName = authUser.name ?? authUser.email ?? "";
+
+  return (
+    <div className="app">
+      <header className="topbar">
+        <div className="topbar-row">
+          <img src="/logo.svg" alt="OneSimplifyd" className="topbar-logo" />
+          <span className="topbar-spacer" />
+          <div className="user-chip">
+            {authUser.image ? (
+              <img src={authUser.image} alt="" className="avatar" />
+            ) : (
+              <span className="avatar avatar-fallback" aria-hidden="true">
+                {displayName.charAt(0).toUpperCase()}
+              </span>
+            )}
+            <span className="user-name" title={displayName}>
+              {displayName}
+            </span>
           </div>
+          <button
+            type="button"
+            className="icon-btn"
+            onClick={openDashboard}
+            aria-label="Open dashboard"
+            title="Open dashboard"
+          >
+            <ExternalIcon size={16} />
+          </button>
+        </div>
 
-          {tab === "home" && <HomeTab questionsAndAnswers={questionsAndAnswers} />}
-          {tab === "info" && <InfoTab socialLinks={socialLinks} profile={profile} />}
-          {tab === "form" && <AddApplicationForm resumes={resumes} />}
-        </>
-      ) : (
-        <button onClick={login} style={s.button}>
-          Log in
-        </button>
-      )}
+        <div className="tabs" role="tablist" aria-label="Sections">
+          {TABS.map(({ id, label, Icon }) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              id={`tab-${id}`}
+              aria-selected={tab === id}
+              aria-controls="tab-panel"
+              className="tab"
+              onClick={() => setTab(id)}
+            >
+              <Icon size={15} />
+              {label}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <main className="content" id="tab-panel" role="tabpanel" aria-labelledby={`tab-${tab}`}>
+        {tab === "home" && <HomeTab questionsAndAnswers={questionsAndAnswers} />}
+        {tab === "info" && <InfoTab socialLinks={socialLinks} profile={profile} />}
+        {tab === "form" && <AddApplicationForm resumes={resumes} />}
+      </main>
     </div>
   );
 }

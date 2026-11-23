@@ -1,4 +1,5 @@
 import CopyButton from "./CopyButton";
+import { GraduationIcon, SettingsIcon, UserIcon } from "./Icons";
 
 export type Education = {
   school?: string;
@@ -84,67 +85,6 @@ const formatMonth = (yyyyMm?: string) =>
 const join = (parts: (string | undefined)[], sep = ", ") =>
   parts.filter(Boolean).join(sep) || undefined;
 
-const s: Record<string, React.CSSProperties> = {
-  wrap: { display: "flex", flexDirection: "column", gap: 16 },
-  sectionTitle: {
-    margin: "0 0 6px",
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: 0.4,
-    textTransform: "uppercase",
-    color: "#888",
-  },
-  rows: { display: "flex", flexDirection: "column", gap: 8 },
-  row: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 8,
-    padding: "8px 12px",
-    border: "1px solid #eee",
-    borderRadius: 8,
-    fontSize: 13,
-  },
-  rowText: { display: "flex", flexDirection: "column", gap: 2, minWidth: 0 },
-  rowLabel: { fontSize: 11, color: "#888" },
-  rowValue: {
-    color: "#111",
-    fontWeight: 500,
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-  eduCard: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-    padding: "8px 12px",
-    border: "1px solid #eee",
-    borderRadius: 8,
-    fontSize: 13,
-  },
-  eduSchool: { color: "#111", fontWeight: 600 },
-  eduMeta: { color: "#666", fontSize: 12 },
-  empty: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    gap: 8,
-    fontSize: 13,
-    color: "#999",
-  },
-  emptyButton: {
-    padding: "6px 14px",
-    fontSize: 13,
-    fontWeight: 500,
-    color: "#0bbcaa",
-    background: "transparent",
-    border: "1px solid #0bbcaa",
-    borderRadius: 8,
-    cursor: "pointer",
-  },
-};
-
 type Row = [string, string | undefined];
 
 function Section({ title, rows }: { title: string; rows: Row[] }) {
@@ -152,22 +92,24 @@ function Section({ title, rows }: { title: string; rows: Row[] }) {
   if (filled.length === 0) return null;
 
   return (
-    <div>
-      <p style={s.sectionTitle}>{title}</p>
-      <div style={s.rows}>
+    <section className="card" aria-label={title}>
+      <div className="card-header">
+        <span className="section-pill">{title}</span>
+      </div>
+      <div className="rows">
         {filled.map(([name, value]) => (
-          <div key={name} style={s.row}>
-            <div style={s.rowText}>
-              <span style={s.rowLabel}>{name}</span>
-              <span style={s.rowValue} title={value}>
+          <div key={name} className="row">
+            <div className="row-text">
+              <span className="row-label">{name}</span>
+              <span className="row-value" title={value}>
                 {value}
               </span>
             </div>
-            <CopyButton text={value} />
+            <CopyButton text={value} label={`Copy ${name.toLowerCase()}`} />
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -176,32 +118,36 @@ function EducationSection({ entries }: { entries: Education[] }) {
   if (filled.length === 0) return null;
 
   return (
-    <div>
-      <p style={s.sectionTitle}>Education</p>
-      <div style={s.rows}>
-        {filled.map((e, i) => {
-          const end = e.current
-            ? e.endDate
-              ? `Expected ${formatMonth(e.endDate)}`
-              : "Present"
-            : formatMonth(e.endDate);
-          return (
-            <div key={`${e.school}-${i}`} style={s.eduCard}>
-              {e.school && <span style={s.eduSchool}>{e.school}</span>}
-              {join([e.degree, e.fieldOfStudy], " · ") && (
-                <span>{join([e.degree, e.fieldOfStudy], " · ")}</span>
-              )}
-              {join([formatMonth(e.startDate), end], " – ") && (
-                <span style={s.eduMeta}>{join([formatMonth(e.startDate), end], " – ")}</span>
-              )}
-              {join([e.city, e.country]) && (
-                <span style={s.eduMeta}>{join([e.city, e.country])}</span>
+    <section className="card" aria-label="Education">
+      <div className="card-header">
+        <span className="section-pill">Education</span>
+      </div>
+      {filled.map((e, i) => {
+        const end = e.current
+          ? e.endDate
+            ? `Expected ${formatMonth(e.endDate)}`
+            : "Present"
+          : formatMonth(e.endDate);
+        const study = join([e.degree, e.fieldOfStudy], " · ");
+        const dates = join([formatMonth(e.startDate), end], " – ");
+        const place = join([e.city, e.country]);
+        return (
+          <div key={`${e.school}-${i}`} className="row">
+            <span className="row-icon">
+              <GraduationIcon size={15} />
+            </span>
+            <div className="row-text">
+              {e.school && <span className="sub-title">{e.school}</span>}
+              {study && <span className="row-value">{study}</span>}
+              {(dates || place) && (
+                <span className="sub-meta">{join([dates, place], " · ")}</span>
               )}
             </div>
-          );
-        })}
-      </div>
-    </div>
+            {e.school && <CopyButton text={e.school} label="Copy school name" />}
+          </div>
+        );
+      })}
+    </section>
   );
 }
 
@@ -214,26 +160,29 @@ export default function ProfileInfo({
 }) {
   if (!profile) {
     return (
-      <div>
-        <p style={s.sectionTitle}>Profile</p>
-        <div style={s.empty}>
-          <span>No profile saved yet.</span>
+      <section className="card">
+        <div className="empty">
+          <span className="empty-icon">
+            <UserIcon size={18} />
+          </span>
+          <span>No profile saved yet. Add your details once and copy them into any form.</span>
           <button
             type="button"
-            style={s.emptyButton}
+            className="btn btn-secondary"
             onClick={() => chrome.tabs.create({ url: settingsUrl })}
           >
+            <SettingsIcon size={15} />
             Add your details
           </button>
         </div>
-      </div>
+      </section>
     );
   }
 
   const p = profile;
 
   return (
-    <div style={s.wrap}>
+    <>
       <Section
         title="Personal"
         rows={[
@@ -267,6 +216,6 @@ export default function ProfileInfo({
         ]}
       />
       {p.education && <EducationSection entries={p.education} />}
-    </div>
+    </>
   );
 }

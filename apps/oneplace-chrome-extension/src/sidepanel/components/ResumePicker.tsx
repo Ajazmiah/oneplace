@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { CheckIcon, ChevronDownIcon, EyeIcon, FileIcon, SettingsIcon, UploadIcon } from "./Icons";
 
 // One of the user's saved resumes, as synced by ExtensionAuthSync (never the S3 key)
 export type LibraryResume = {
@@ -24,90 +25,10 @@ const MAX_SIZE_BYTES = 5 * 1024 * 1024;
 export const initialResumeChoice = (resumes: LibraryResume[]): ResumeChoice =>
   resumes.length ? { type: "library", id: resumes[0]._id } : null;
 
-const s: Record<string, React.CSSProperties> = {
-  wrap: { display: "flex", flexDirection: "column", gap: 6 },
-  row: { display: "flex", alignItems: "stretch", gap: 8 },
-  dropdown: { position: "relative", flex: 1, minWidth: 0 },
-  trigger: {
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    padding: "8px 10px",
-    fontSize: 13,
-    fontFamily: "inherit",
-    textAlign: "left",
-    color: "#111",
-    background: "rgba(11, 188, 170, 0.05)",
-    border: "1px solid rgba(11, 188, 170, 0.4)",
-    borderRadius: 6,
-    cursor: "pointer",
-  },
-  triggerEmpty: { color: "#666", background: "#fff", border: "1px dashed #ccc" },
-  text: { flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 1 },
-  fileName: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
-  hint: { fontSize: 11, color: "#888" },
-  chevron: { fontSize: 10, color: "#888", flexShrink: 0 },
-  menu: {
-    position: "absolute",
-    top: "calc(100% + 4px)",
-    left: 0,
-    right: 0,
-    zIndex: 10,
-    display: "flex",
-    flexDirection: "column",
-    padding: 4,
-    background: "#fff",
-    border: "1px solid #e5e5e5",
-    borderRadius: 8,
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-  },
-  item: {
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-    padding: "8px 10px",
-    fontSize: 13,
-    fontFamily: "inherit",
-    textAlign: "left",
-    color: "#111",
-    background: "transparent",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-  },
-  itemActive: { background: "rgba(11, 188, 170, 0.1)" },
-  itemDisabled: { color: "#aaa", cursor: "not-allowed" },
-  separator: { height: 1, margin: "4px 0", background: "#eee" },
-  link: {
-    padding: "4px 10px 6px 30px",
-    fontSize: 12,
-    color: "#0bbcaa",
-    background: "transparent",
-    border: "none",
-    textAlign: "left",
-    cursor: "pointer",
-  },
-  check: { width: 12, color: "#0bbcaa", flexShrink: 0 },
-  viewButton: {
-    padding: "0 14px",
-    fontSize: 12,
-    fontWeight: 500,
-    color: "#0bbcaa",
-    background: "transparent",
-    border: "1px solid #0bbcaa",
-    borderRadius: 6,
-    cursor: "pointer",
-    flexShrink: 0,
-  },
-  error: { margin: 0, fontSize: 12, color: "#dc2626" },
-};
-
 /**
  * Resume field for the Save Application form: saved resumes on top, "Upload new" below, and
  * View for whichever is selected. At MAX_RESUMES uploading is disabled and the Resume page is
- * offered instead.
- * Nothing is downloaded until the user clicks View.
+ * offered instead. Nothing is downloaded until the user clicks View.
  */
 export default function ResumePicker({
   resumes,
@@ -202,33 +123,31 @@ export default function ResumePicker({
           }
         : null;
 
-  const item = (active: boolean): React.CSSProperties =>
-    active ? { ...s.item, ...s.itemActive } : s.item;
-
   return (
-    <div style={s.wrap}>
-      <div style={s.row}>
-        <div ref={wrapRef} style={s.dropdown}>
+    <div className="field">
+      <div className="picker">
+        <div ref={wrapRef} className="picker-dropdown">
           <button
             type="button"
-            style={selected ? s.trigger : { ...s.trigger, ...s.triggerEmpty }}
+            className={selected ? "picker-trigger" : "picker-trigger is-empty"}
             aria-haspopup="menu"
             aria-expanded={open}
             onClick={() => setOpen((o) => !o)}
           >
-            <span style={s.text}>
-              <span style={s.fileName} title={selected?.name}>
+            <FileIcon size={18} className="picker-file-icon" />
+            <span className="picker-text">
+              <span className="file-name" title={selected?.name}>
                 {selected?.name ?? "Choose a resume"}
               </span>
-              {selected && <span style={s.hint}>{selected.hint}</span>}
+              <span className="picker-hint">
+                {selected?.hint ?? "PDF, DOC, DOCX · max 5MB"}
+              </span>
             </span>
-            <span style={s.chevron} aria-hidden="true">
-              ▼
-            </span>
+            <ChevronDownIcon size={16} className="picker-chevron" />
           </button>
 
           {open && (
-            <div style={s.menu} role="menu">
+            <div className="menu" role="menu">
               {resumes.map((resume, index) => {
                 const checked = value?.type === "library" && value.id === resume._id;
                 return (
@@ -237,59 +156,59 @@ export default function ResumePicker({
                     type="button"
                     role="menuitemradio"
                     aria-checked={checked}
-                    style={item(checked)}
+                    className="menu-item"
                     onClick={() => choose({ type: "library", id: resume._id })}
                   >
-                    <span style={s.check} aria-hidden="true">
-                      {checked ? "✓" : ""}
-                    </span>
-                    <span style={s.text}>
-                      <span style={s.fileName} title={resume.filename}>
+                    <span className="menu-check">{checked && <CheckIcon size={16} />}</span>
+                    <span className="picker-text">
+                      <span className="file-name" title={resume.filename}>
                         {resume.filename}
                       </span>
-                      {index === 0 && <span style={s.hint}>Last used</span>}
+                      {index === 0 && <span className="picker-hint">Last used</span>}
                     </span>
                   </button>
                 );
               })}
 
               {value?.type === "new" && (
-                <button type="button" role="menuitemradio" aria-checked style={item(true)}>
-                  <span style={s.check} aria-hidden="true">
-                    ✓
+                <button type="button" role="menuitemradio" aria-checked className="menu-item">
+                  <span className="menu-check">
+                    <CheckIcon size={16} />
                   </span>
-                  <span style={s.text}>
-                    <span style={s.fileName} title={value.file.name}>
+                  <span className="picker-text">
+                    <span className="file-name" title={value.file.name}>
                       {value.file.name}
                     </span>
-                    <span style={s.hint}>New upload</span>
+                    <span className="picker-hint">New upload</span>
                   </span>
                 </button>
               )}
 
-              {(resumes.length > 0 || value?.type === "new") && <div style={s.separator} />}
+              {(resumes.length > 0 || value?.type === "new") && (
+                <div className="menu-separator" />
+              )}
 
               <button
                 type="button"
                 role="menuitem"
                 aria-disabled={full}
-                style={full ? { ...s.item, ...s.itemDisabled } : s.item}
+                className="menu-item"
                 onClick={chooseUpload}
               >
-                <span style={s.check} aria-hidden="true" />
-                <span style={s.text}>
+                <span className="menu-check">
+                  <UploadIcon size={16} />
+                </span>
+                <span className="picker-text">
                   <span>Upload new</span>
-                  <span style={s.hint}>
-                    {full
-                      ? `${MAX_RESUMES} of ${MAX_RESUMES} saved`
-                      : "PDF, DOC, DOCX · max 5MB"}
+                  <span className="picker-hint">
+                    {full ? `${MAX_RESUMES} of ${MAX_RESUMES} saved` : "PDF, DOC, DOCX · max 5MB"}
                   </span>
                 </span>
               </button>
 
               {full && (
-                <button type="button" style={s.link} onClick={openResumePage}>
-                  Manage resumes →
+                <button type="button" className="menu-link" onClick={openResumePage}>
+                  <SettingsIcon size={12} /> Manage resumes
                 </button>
               )}
             </div>
@@ -297,19 +216,20 @@ export default function ResumePicker({
         </div>
 
         {selected && (
-          <button type="button" style={s.viewButton} onClick={view}>
+          <button type="button" className="btn btn-secondary" onClick={view}>
+            <EyeIcon size={15} />
             View
           </button>
         )}
       </div>
 
-      {error && <p style={s.error}>{error}</p>}
+      {error && <p className="field-error">{error}</p>}
 
       <input
         ref={inputRef}
         type="file"
         accept=".pdf,.doc,.docx"
-        style={{ display: "none" }}
+        hidden
         onChange={handleFile}
       />
     </div>
