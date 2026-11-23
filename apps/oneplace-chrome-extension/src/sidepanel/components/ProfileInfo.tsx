@@ -71,8 +71,15 @@ const formatDate = (iso?: string) =>
       })
     : undefined;
 
+// "2016-09" → "Sep 2016"
 const formatMonth = (yyyyMm?: string) =>
-  yyyyMm ? formatDate(`${yyyyMm}-01`)?.replace(/^\d+\s/, "") : undefined;
+  yyyyMm
+    ? new Date(`${yyyyMm}-01`).toLocaleDateString(undefined, {
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+      })
+    : undefined;
 
 const join = (parts: (string | undefined)[], sep = ", ") =>
   parts.filter(Boolean).join(sep) || undefined;
