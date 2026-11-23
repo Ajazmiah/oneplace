@@ -1,7 +1,16 @@
 "use client";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { PlusCircle, FileText, MessageSquareText, Settings, Menu, X, ChevronRight } from "lucide-react";
+import {
+  PlusCircle,
+  FileText,
+  FileUser,
+  MessageSquareText,
+  Settings,
+  Menu,
+  X,
+  ChevronRight,
+} from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { APP_NAME } from "@/app/lib/constants";
@@ -9,6 +18,7 @@ import { APP_NAME } from "@/app/lib/constants";
 const navItems = [
   { href: "/dashboard/applications", label: "Applications", icon: FileText },
   { href: "/dashboard/add-application", label: "New Application", icon: PlusCircle },
+  { href: "/dashboard/resume", label: "Resume", icon: FileUser },
   { href: "/dashboard/interview-answers", label: "Q&A", icon: MessageSquareText },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
